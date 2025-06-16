@@ -1,88 +1,43 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom';
 
-function Navbar() {
+function Sidebar() {
     return (
-        <>
-            <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
-                <div class="px-3 py-3 lg:px-5 lg:pl-3">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <div class="flex items-center ms-3">
-                                <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-sm shadow-sm dark:bg-gray-700 dark:divide-gray-600" id="dropdown-user">
-                                    <div class="px-4 py-3" role="none">
-                                        <p class="text-sm text-gray-900 dark:text-white" role="none">
-                                            Neil Sims
-                                        </p>
-                                        <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
-                                            neil.sims@flowbite.com
-                                        </p>
-                                    </div>
-                                    <ul class="py-1" role="none">
-                                        <li>
-                                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Dashboard</a>
-                                        </li>
-                                        <li>
-                                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Settings</a>
-                                        </li>
-                                        <li>
-                                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Earnings</a>
-                                        </li>
-                                        <li>
-                                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-
-            <aside id="logo-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700" aria-label="Sidebar">
-                <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
-                    <ul class="space-y-2 font-medium">
-                        <li>
-                            <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                                <span class="ms-3">Dashboard</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                                <span class="flex-1 ms-3 whitespace-nowrap">Kanban</span>
-                                <span class="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">Pro</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                                <span class="flex-1 ms-3 whitespace-nowrap">Inbox</span>
-                                <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">3</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                                <span class="flex-1 ms-3 whitespace-nowrap">Users</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                                <span class="flex-1 ms-3 whitespace-nowrap">Products</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                                <span class="flex-1 ms-3 whitespace-nowrap">Sign In</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                                <span class="flex-1 ms-3 whitespace-nowrap">Sign Up</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </aside>
-        </>
+        <aside className="fixed top-0 left-0 z-50 w-64 h-screen bg-white border-r border-gray-200">
+            <div className="h-full px-3 py-4 overflow-y-auto bg-white">
+                <Link to="/" className="flex items-center mb-5">
+                    <span className="self-center text-xl font-semibold">TDI500</span>
+                </Link>
+                <ul className="space-y-2 font-medium">
+                    <li>
+                        <Link to="/" className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                            <span className="ms-3">Dashboard</span>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="/Onderhoud" className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                            <span className="ms-3">Onderhoud</span>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="/Storingen" className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                            <span className="ms-3">Storingen</span>
+                        </Link>
+                    </li>
+                </ul>
+            </div>
+        </aside>
     )
 }
 
-export default Navbar
+function Navbar() {
+    return (
+        <nav className="fixed top-0 left-64 z-40 w-screen bg-white">
+            <div className="w-3/5 p-3">
+                <input type="text" className="w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Voer klantnaam of locatie in..." />
+            </div>
+        </nav>
+    )
+}
+
+export { Sidebar, Navbar };
