@@ -5,32 +5,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 
 const pompData = [
-    { x: 1, y: 160 },
-    { x: 2, y: 160 },
-    { x: 3, y: 165 },
-    { x: 4, y: 155 },
-    { x: 5, y: 162 },
-    { x: 6, y: 167 },
-    { x: 9, y: 159 },
-    { x: 10, y: 164 },
-    { x: 11, y: 166 },
-    { x: 12, y: 167 },
-    { x: 13, y: 167 },
-    { x: 14, y: 165 },
-    { x: 15, y: 163 },
-    { x: 16, y: 160 },
-    { x: 17, y: 159 },
-    { x: 18, y: 158 },
-    { x: 19, y: 161 },
-    { x: 20, y: 163 },
-    { x: 21, y: 165 },
-    { x: 24, y: 164 },
-    { x: 25, y: 163 },
-    { x: 26, y: 162 },
-    { x: 27, y: 161 },
-    { x: 29, y: 161 },
-    { x: 30, y: 165 },
-    { x: 31, y: 155 }
+      { x: 1, y: 160 }, { x: 2, y: 160 }, { x: 3, y: 165 },
+      { x: 4, y: 155 }, { x: 5, y: 162 }, { x: 6, y: 167 },
+      { x: 7, y: 164 }, { x: 8, y: 162 }, { x: 9, y: 159 },
+      { x: 10, y: 164 }, { x: 11, y: 166 }, { x: 12, y: 167 },
+      { x: 13, y: 167 }, { x: 14, y: 165 }, { x: 15, y: 163 },
+      { x: 16, y: 160 }, { x: 17, y: 159 }, { x: 18, y: 158 },
+      { x: 19, y: 161 }, { x: 20, y: 163 }, { x: 21, y: 165 },
+      { x: 22, y: 165 }, { x: 23, y: 164 }, { x: 24, y: 164 },
+      { x: 25, y: 163 }, { x: 26, y: 162 }, { x: 27, y: 161 },
+      { x: 28, y: 161 }, { x: 29, y: 161 }, { x: 30, y: 165 },
+      { x: 31, y: 155 }
 ];
 
 function Home() {
@@ -83,20 +68,20 @@ function Home() {
     return (
         <div className="ml-64 p-4">
             <LineChart
+                dataset={pompData}
                 xAxis={[{
-                    data: Array.from({ length: 31 }, (_, i) => i + 1),
-                    label: 'Dagen',
+                    dataKey: 'x',
+                    label: 'Dag',
                     scaleType: 'linear',
-                    tickMinStep: 1,
+                    tickMaxStep: 1,
                 }]}
                 yAxis={[{
+                    label: 'Warmtepompverbruik (kW)',
                     min: 0,
                     max: 200,
-                    label: 'Warmtepompverbruik (kW)',
-                    tickInterval: 40,
                 }]}
                 series={[{
-                    data: pompData.map(point => ({ x: point.x, y: point.y })),
+                    dataKey: 'y',
                     label: 'Verbruik',
                     showMark: true,
                 }]}
