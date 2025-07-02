@@ -30,14 +30,4 @@ function Sidebar() {
     )
 }
 
-function Navbar() {
-    return (
-        <nav className="fixed top-0 left-64 z-40 w-screen bg-white">
-            <div className="w-3/5 p-3">
-                <input type="text" className="w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Voer klantnaam of locatie in..." />
-            </div>
-        </nav>
-    )
-}
-
-export { Sidebar, Navbar };
+export { Sidebar };

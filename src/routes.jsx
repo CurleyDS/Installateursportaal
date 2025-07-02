@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Sidebar, Navbar } from './components/NavComponent';
+import { Sidebar } from './components/NavComponent';
 import District from './pages/District';
 import Home from './pages/Home';
 
@@ -8,8 +8,8 @@ const AppRoutes = () => (
         <Sidebar />
         
         <Routes>
-            <Route path="/wijken" element={<><Navbar /><District /></>} />
-            <Route path="/" element={<><Navbar /><Home /></>} />
+            <Route path="/wijken" element={<District />} />
+            <Route path="/" element={<Home />} />
         </Routes>
         
     </Router>

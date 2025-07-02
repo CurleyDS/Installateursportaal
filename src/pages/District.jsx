@@ -66,84 +66,91 @@ function District() {
     // { data: [1, 2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 24, 25, 26, 27, 29, 30, 31] }
 
     return (
-        <div className="ml-64 p-4">
-            <LineChart
-                dataset={pompData}
-                xAxis={[{
-                    dataKey: 'x',
-                    label: 'Dag',
-                    scaleType: 'linear',
-                    tickMaxStep: 1,
-                }]}
-                yAxis={[{
-                    label: 'Warmtepompverbruik (kW)',
-                    min: 0,
-                    max: 200,
-                }]}
-                series={[{
-                    dataKey: 'y',
-                    label: 'Verbruik',
-                    showMark: true,
-                }]}
-                height={300}
-            />
-            <div className="overflow-x-auto">
-                <table className="w-full text-sm text-left text-gray-500">
-                    <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                        <tr>
-                            <th scope="col" className="px-6 py-3">
-                                Wijk
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Actieve Warmtepompen
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Totaal verbruik
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Geschatte flexibiliteit
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Netstatus
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {wijken.map((wijk, index) => (
-                            <tr
-                                key={index}
-                                className={
-                                    selectedWijk === index
-                                        ? "bg-gray-200 border border-gray-700"
-                                        : "bg-white border-b border-gray-200"
-                                }
-                                onClick={() => selectWijk(index)}
-                            >
-                                <th scope="row" className="px-6 py-4 font-medium text-gray-900">
-                                    {wijk.name}
+        <>
+            <nav className="fixed top-0 left-64 z-40 w-screen bg-white">
+                <div className="w-3/5 p-3">
+                    <input type="text" className="w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Voer klantnaam of locatie in..." />
+                </div>
+            </nav>
+            <div className="ml-64 p-4">
+                <LineChart
+                    dataset={pompData}
+                    xAxis={[{
+                        dataKey: 'x',
+                        label: 'Dag',
+                        scaleType: 'linear',
+                        tickMaxStep: 1,
+                    }]}
+                    yAxis={[{
+                        label: 'Warmtepompverbruik (kW)',
+                        min: 0,
+                        max: 200,
+                    }]}
+                    series={[{
+                        dataKey: 'y',
+                        label: 'Verbruik',
+                        showMark: true,
+                    }]}
+                    height={300}
+                />
+                <div className="overflow-x-auto">
+                    <table className="w-full text-sm text-left text-gray-500">
+                        <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                            <tr>
+                                <th scope="col" className="px-6 py-3">
+                                    Wijk
                                 </th>
-                                <td className="px-6 py-4">
-                                    {wijk.actieveWarmtepompen}
-                                </td>
-                                <td className="px-6 py-4">
-                                    {wijk.totaalVerbruik}
-                                </td>
-                                <td className="px-6 py-4">
-                                    {wijk.geschatteFlexibiliteit}
-                                </td>
-                                <td className="px-6 py-4">
-                                    {wijk.netStatus === 'good' ? (
-                                        <FontAwesomeIcon icon={faCircleCheck} className='text-green-600' />
-                                    ) : (
-                                        <FontAwesomeIcon icon={faTriangleExclamation} className='text-red-600' />
-                                    )}
-                                </td>
+                                <th scope="col" className="px-6 py-3">
+                                    Actieve Warmtepompen
+                                </th>
+                                <th scope="col" className="px-6 py-3">
+                                    Totaal verbruik
+                                </th>
+                                <th scope="col" className="px-6 py-3">
+                                    Geschatte flexibiliteit
+                                </th>
+                                <th scope="col" className="px-6 py-3">
+                                    Netstatus
+                                </th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {wijken.map((wijk, index) => (
+                                <tr
+                                    key={index}
+                                    className={
+                                        selectedWijk === index
+                                            ? "bg-gray-200 border border-gray-700"
+                                            : "bg-white border-b border-gray-200"
+                                    }
+                                    onClick={() => selectWijk(index)}
+                                >
+                                    <th scope="row" className="px-6 py-4 font-medium text-gray-900">
+                                        {wijk.name}
+                                    </th>
+                                    <td className="px-6 py-4">
+                                        {wijk.actieveWarmtepompen}
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        {wijk.totaalVerbruik}
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        {wijk.geschatteFlexibiliteit}
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        {wijk.netStatus === 'good' ? (
+                                            <FontAwesomeIcon icon={faCircleCheck} className='text-green-600' />
+                                        ) : (
+                                            <FontAwesomeIcon icon={faTriangleExclamation} className='text-red-600' />
+                                        )}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
+        </>
     )
 }
 
