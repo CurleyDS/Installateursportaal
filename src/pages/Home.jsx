@@ -8,6 +8,7 @@ function Home() {
     const [error, setError] = useState(null);
 
     const [pompen, setPompen] = useState([]);
+    const [filters, setFilters] = useState([]);
 
     useEffect(() => {
         const fetchPompen = async () => {
@@ -40,31 +41,17 @@ function Home() {
         }
     }
 
-    const toggleFabrikantDropdown = () => {
-        let dropdownFabrikantFilter = document.getElementById('dropdownFabrikantFilter');
-        if (dropdownFabrikantFilter.classList.contains('hidden')) {
-            dropdownFabrikantFilter.classList.remove('hidden');
+    const toggleDropdown = (dropdownId) => {
+        let dropdownFilter = document.getElementById(dropdownId);
+        if (dropdownFilter.classList.contains('hidden')) {
+            dropdownFilter.classList.remove('hidden');
         } else {
-            dropdownFabrikantFilter.classList.add('hidden');
+            dropdownFilter.classList.add('hidden');
         }
     }
 
-    const toggleBedrijfDropdown = () => {
-        let dropdownBedrijfFilter = document.getElementById('dropdownBedrijfFilter');
-        if (dropdownBedrijfFilter.classList.contains('hidden')) {
-            dropdownBedrijfFilter.classList.remove('hidden');
-        } else {
-            dropdownBedrijfFilter.classList.add('hidden');
-        }
-    }
-
-    const toggleMerkDropdown = () => {
-        let dropdownMerkFilter = document.getElementById('dropdownMerkFilter');
-        if (dropdownMerkFilter.classList.contains('hidden')) {
-            dropdownMerkFilter.classList.remove('hidden');
-        } else {
-            dropdownMerkFilter.classList.add('hidden');
-        }
+    const selectFilter = (filter) => {
+        console.log(filter);
     }
 
     const pompStatus = (status) => {
@@ -106,42 +93,42 @@ function Home() {
                     <div className="p-3">
                         <ul className="p-2">
                             <li>
-                                <span className="rounded-lg ml-3" onClick={toggleFabrikantDropdown}>Fabrikant</span>
+                                <span className="rounded-lg ml-3" onClick={() => toggleDropdown('dropdownFabrikantFilter')}>Fabrikant</span>
 
                                 <div id="dropdownFabrikantFilter" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg w-44 dark:bg-gray-700">
                                     <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
-                                        <li>
+                                        <li onClick={() => selectFilter({ fabrikant: 'Fabrikant'})}>
                                             <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Fabrikant Filter</span>
                                         </li>
                                     </ul>
                                 </div>
                             </li>
                             <li>
-                                <span className="rounded-lg ml-3" onClick={toggleBedrijfDropdown}>Bedrijf</span>
+                                <span className="rounded-lg ml-3" onClick={() => toggleDropdown('dropdownBedrijfFilter')}>Bedrijf</span>
 
                                 <div id="dropdownBedrijfFilter" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg w-44 dark:bg-gray-700">
                                     <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
-                                        <li>
+                                        <li onClick={() => selectFilter({ bedrijf: 'Intergas'})}>
                                             <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Intergas</span>
                                         </li>
-                                        <li>
+                                        <li onClick={() => selectFilter({ bedrijf: 'Remeha'})}>
                                             <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Remeha</span>
                                         </li>
-                                        <li>
+                                        <li onClick={() => selectFilter({ bedrijf: 'Bosch'})}>
                                             <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Bosch</span>
                                         </li>
-                                        <li>
+                                        <li onClick={() => selectFilter({ bedrijf: 'Vaillant'})}>
                                             <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Vaillant</span>
                                         </li>
                                     </ul>
                                 </div>
                             </li>
                             <li>
-                                <span className="rounded-lg ml-3" onClick={toggleMerkDropdown}>Merk/Type</span>
+                                <span className="rounded-lg ml-3" onClick={() => toggleDropdown('dropdownMerkFilter')}>Merk/Type</span>
 
                                 <div id="dropdownMerkFilter" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg w-44 dark:bg-gray-700">
                                     <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
-                                        <li>
+                                        <li onClick={() => selectFilter({ merk: 'Merk'})}>
                                             <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Merk</span>
                                         </li>
                                     </ul>
