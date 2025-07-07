@@ -6,12 +6,17 @@ import { faCircleCheck, faTriangleExclamation, faLocationDot, faTemperatureHalf,
 function Home() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [data, setData] = useState([]);
 
+    const [filters, setFilters] = useState({
+        fabrikant: null,
+        bedrijf: null,
+        merk: null
+    });
     const [pompen, setPompen] = useState([]);
-    const [filters, setFilters] = useState([]);
 
     useEffect(() => {
-        const fetchPompen = async () => {
+        const fetchData = async () => {
             fetch('/data.json')
             .then((response) => {
                 if (!response.ok) {
@@ -20,7 +25,7 @@ function Home() {
                 return response.json();
             })
             .then((data) => {
-                setPompen(data.heatpumps);
+                setData(data.heatpumps);
                 setLoading(true);
             })
             .catch((error) => {
@@ -29,8 +34,22 @@ function Home() {
             });
         }
 
-        fetchPompen();
+        fetchData();
     }, []);
+
+    useEffect(() => {
+        const filterPompen = () => {
+            let filteredPompen = [...data];
+            Object.keys(filters).forEach(key => {
+                if (filters[key] !== null) {
+                    filteredPompen = filteredPompen.filter(pomp => pomp[key] === filters[key]);
+                }
+            });
+            setPompen(filteredPompen);
+        }
+
+        filterPompen();
+    }, [filters, data]);
 
     const toggleFilter = () => {
         let sidebarFilter = document.getElementById('sidebarFilter');
@@ -51,7 +70,28 @@ function Home() {
     }
 
     const selectFilter = (filter) => {
-        console.log(filter);
+        const key = Object.keys(filter)[0];
+        const newFilters = { ...filters };
+
+        if (filters[key] !== null) {
+            if (filters[key] === filter[key]) {
+                newFilters[key] = null;
+            } else {
+                newFilters[key] = filter[key];
+            }
+        } else {
+            newFilters[key] = filter[key];
+        }
+
+        setFilters(newFilters);
+    }
+
+    const resetFilter = () => {
+        setFilters({
+            fabrikant: null,
+            bedrijf: null,
+            merk: null
+        });
     }
 
     const pompStatus = (status) => {
@@ -90,6 +130,7 @@ function Home() {
                     <div className="p-3 mt-2">
                         <span className='p-2' onClick={toggleFilter}>Sluiten</span>
                     </div>
+                    <hr />
                     <div className="p-3">
                         <ul className="p-2">
                             <li>
@@ -136,12 +177,16 @@ function Home() {
                             </li>
                         </ul>
                     </div>
+                    <hr />
+                    <div className="p-3 mt-2">
+                        <span className='p-2' onClick={resetFilter}>Wissen</span>
+                    </div>
                 </div>
             </aside>
             <div className="ml-64 p-4">
                 <div className="grid grid-cols-4 gap-4">
-                    {pompen.map(pomp => (
-                        <div className="max-w-sm bg-white border border-gray-200 rounded-lg" key={pomp.id}>
+                    {pompen.map((pomp, index) => (
+                        <div className="max-w-sm bg-white border border-gray-200 rounded-lg" key={index}>
                             <div className="flex items-center justify-between p-5">
                                 <p className="mb-3 font-normal text-gray-700">ID: {pomp.id}</p>
                                 <FontAwesomeIcon className={pompStatus(pomp.status).style} icon={pompStatus(pomp.status).icon} />
