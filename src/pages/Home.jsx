@@ -203,10 +203,10 @@ function Home() {
                     </div>
                 </div>
             </aside>
-            <div className="ml-64 p-4">
+            <div>
                 <div className="grid grid-cols-4 gap-4">
                     {pompen.map((pomp, index) => (
-                        <Link to="/Details" key={index}>
+                        <Link to={"/" + pomp.id} key={index}>
                             <div className="max-w-sm bg-white border border-gray-200 rounded-lg">
                                 <div className="flex items-center justify-between p-5">
                                     <p className="mb-3 font-normal text-gray-700">ID: {pomp.id}</p>

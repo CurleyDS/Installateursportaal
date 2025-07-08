@@ -8,25 +8,27 @@
             "bedrijf": "Intergas",
             "merk": "Intergas",
             "serienummer": "1234567890",
-            "laatsteDataUpdate": "19-03",
+            "onderhoudsdatum": "01-01-2024",
+            "installatieDatum": "01-01-2023",
             "huidigeStatus": "active",
             "huidigeTemperatuur": 20,
             "gemiddeldeDruk": 1.2,
             "vermogen": 5.5,
+            "laatsteDataUpdate": "19-03",
             "warmtepompData": [
                 {
-                    "datum": "18-03",
                     "status": "active",
                     "temperatuur": 20,
                     "druk": 1.2,
-                    "vermogen": 5.5
+                    "vermogen": 5.5,
+                    "datum": "18-03"
                 },
                 {
-                    "datum": "17-03",
                     "status": "active",
                     "temperatuur": 19,
                     "druk": 1.1,
-                    "vermogen": 5.0
+                    "vermogen": 5.0,
+                    "datum": "17-03"
                 }
             ],
             "logs": [
@@ -50,25 +52,27 @@
             "bedrijf": "Remeha",
             "merk": "Remeha",
             "serienummer": "1234567890",
-            "laatsteDataUpdate": "19-03",
+            "onderhoudsdatum": "01-01-2024",
+            "installatieDatum": "01-01-2023",
             "huidigeStatus": "onderhoud",
             "huidigeTemperatuur": 21,
             "gemiddeldeDruk": 1.3,
             "vermogen": 5.7,
+            "laatsteDataUpdate": "19-03",
             "warmtepompData": [
                 {
-                    "datum": "18-03",
                     "status": "active",
                     "temperatuur": 20,
                     "druk": 1.2,
-                    "vermogen": 5.5
+                    "vermogen": 5.5,
+                    "datum": "18-03"
                 },
                 {
-                    "datum": "17-03",
                     "status": "active",
                     "temperatuur": 19,
                     "druk": 1.1,
-                    "vermogen": 5.0
+                    "vermogen": 5.0,
+                    "datum": "17-03"
                 }
             ],
             "logs": [
@@ -92,25 +96,27 @@
             "bedrijf": "Bosch",
             "merk": "Bosch",
             "serienummer": "1234567890",
-            "laatsteDataUpdate": "2023",
+            "onderhoudsdatum": "01-01-2024",
+            "installatieDatum": "01-01-2023",
             "huidigeStatus": "storing",
             "huidigeTemperatuur": 19,
             "gemiddeldeDruk": 1.1,
             "vermogen": 5.6,
+            "laatsteDataUpdate": "2023",
             "warmtepompData": [
                 {
-                    "datum": "18-03",
                     "status": "active",
                     "temperatuur": 20,
                     "druk": 1.2,
-                    "vermogen": 5.5
+                    "vermogen": 5.5,
+                    "datum": "18-03"
                 },
                 {
-                    "datum": "17-03",
                     "status": "active",
                     "temperatuur": 20,
                     "druk": 1.2,
-                    "vermogen": 5.2
+                    "vermogen": 5.2,
+                    "datum": "17-03"
                 }
             ],
             "logs": [
@@ -134,25 +140,27 @@
             "bedrijf": "Vaillant",
             "merk": "Vaillant",
             "serienummer": "1234567890",
-            "laatsteDataUpdate": "19-03",
+            "onderhoudsdatum": "01-01-2024",
+            "installatieDatum": "01-01-2023",
             "huidigeStatus": "active",
             "huidigeTemperatuur": 18,
             "gemiddeldeDruk": 1.0,
             "vermogen": 4.3,
+            "laatsteDataUpdate": "19-03",
             "warmtepompData": [
                 {
-                    "datum": "18-03",
                     "status": "active",
                     "temperatuur": 20,
                     "druk": 1.2,
-                    "vermogen": 5.5
+                    "vermogen": 5.5,
+                    "datum": "18-03"
                 },
                 {
-                    "datum": "17-03",
                     "status": "active",
                     "temperatuur": 19,
                     "druk": 1.1,
-                    "vermogen": 5.1
+                    "vermogen": 5.1,
+                    "datum": "17-03"
                 }
             ],
             "logs": [
