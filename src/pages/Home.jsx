@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react'
 import pumpLogo from '../assets/logo-placeholder.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleCheck, faTriangleExclamation, faLocationDot, faTemperatureHalf, faGauge, faBolt, faFilePen } from '@fortawesome/free-solid-svg-icons';
+import { faXmark, faCircleCheck, faTriangleExclamation, faLocationDot, faTemperatureHalf, faGauge, faBolt, faFilePen } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
 
 function Home() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [data, setData] = useState([]);
 
+    const [search, setSearch] = useState(null);
     const [filters, setFilters] = useState({
         fabrikant: null,
         bedrijf: null,
@@ -45,11 +47,28 @@ function Home() {
                     filteredPompen = filteredPompen.filter(pomp => pomp[key] === filters[key]);
                 }
             });
+            if (search !== null) {
+                filteredPompen = filteredPompen.filter(pomp => pomp.postcode.toLowerCase().includes(search));
+            }
             setPompen(filteredPompen);
         }
 
         filterPompen();
-    }, [filters, data]);
+    }, [search, filters, data]);
+
+    const searchInput = () => {
+        const searchValue = document.querySelector('input[type="text"]').value.toLowerCase();
+        if (searchValue === '') {
+            setSearch(null);
+        } else {
+            setSearch(searchValue);
+        }
+    }
+
+    const resetSearch = () => {
+        document.querySelector('input[type="text"]').value = '';
+        setSearch(null);
+    }
 
     const toggleFilter = () => {
         let sidebarFilter = document.getElementById('sidebarFilter');
@@ -117,8 +136,9 @@ function Home() {
         <>
             <nav className="fixed top-0 left-64 z-40 w-screen bg-white">
                 <div className='flex items-center justify-between w-full'>
-                    <div className="w-3/5 p-3">
-                        <input type="text" className="w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Voer klantnaam of locatie in..." />
+                    <div className="flex items-center justify-around w-3/5 p-3">
+                        <input className="w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg mr-2 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" onChange={searchInput} type="text" placeholder="Voer postcode in..." />
+                        {search != null && <FontAwesomeIcon onClick={resetSearch} icon={faXmark} />}
                     </div>
                     <div className='w-1/5 p-3'>
                         <span className='p-2' onClick={toggleFilter}>Filter</span>
@@ -186,60 +206,62 @@ function Home() {
             <div className="ml-64 p-4">
                 <div className="grid grid-cols-4 gap-4">
                     {pompen.map((pomp, index) => (
-                        <div className="max-w-sm bg-white border border-gray-200 rounded-lg" key={index}>
-                            <div className="flex items-center justify-between p-5">
-                                <p className="mb-3 font-normal text-gray-700">ID: {pomp.id}</p>
-                                <FontAwesomeIcon className={pompStatus(pomp.status).style} icon={pompStatus(pomp.status).icon} />
+                        <Link to="/Details" key={index}>
+                            <div className="max-w-sm bg-white border border-gray-200 rounded-lg">
+                                <div className="flex items-center justify-between p-5">
+                                    <p className="mb-3 font-normal text-gray-700">ID: {pomp.id}</p>
+                                    <FontAwesomeIcon className={pompStatus(pomp.huidigeStatus).style} icon={pompStatus(pomp.huidigeStatus).icon} />
+                                </div>
+                                <div className='p-5'>
+                                    <img src={pumpLogo} alt="" />
+                                </div>
+                                <div className="p-5">
+                                    <ul role="list">
+                                        <li className="py-3">
+                                            <div className="flex items-center">
+                                                <FontAwesomeIcon icon={faLocationDot} />
+                                                <p className="flex-1 ml-4 font-normal text-gray-900">
+                                                    [{pomp.postcode}]
+                                                </p>
+                                            </div>
+                                        </li>
+                                        <hr />
+                                        <li className="py-3">
+                                            <div className="flex items-center">
+                                                <FontAwesomeIcon icon={faTemperatureHalf} />
+                                                <p className="flex-1 ml-4 font-normal text-gray-900">
+                                                    {pomp.huidigeTemperatuur}°C
+                                                </p>
+                                            </div>
+                                        </li>
+                                        <li className="py-3">
+                                            <div className="flex items-center">
+                                                <FontAwesomeIcon icon={faGauge} />
+                                                <p className="flex-1 ml-4 font-normal text-gray-900">
+                                                    {pomp.gemiddeldeDruk}
+                                                </p>
+                                            </div>
+                                        </li>
+                                        <li className="py-3">
+                                            <div className="flex items-center">
+                                                <FontAwesomeIcon icon={faBolt} />
+                                                <p className="flex-1 ml-4 font-normal text-gray-900">
+                                                    {pomp.vermogen}kW
+                                                </p>
+                                            </div>
+                                        </li>
+                                        <li className="py-3">
+                                            <div className="flex items-center">
+                                                <FontAwesomeIcon icon={faFilePen} />
+                                                <p className="flex-1 ml-4 font-normal text-gray-900">
+                                                    {pomp.laatsteDataUpdate}
+                                                </p>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
-                            <div className='p-5'>
-                                <img src={pumpLogo} alt="" />
-                            </div>
-                            <div className="p-5">
-                                <ul role="list">
-                                    <li className="py-3">
-                                        <div className="flex items-center">
-                                            <FontAwesomeIcon icon={faLocationDot} />
-                                            <p className="flex-1 ml-4 font-normal text-gray-900">
-                                                [{pomp.postcode}]
-                                            </p>
-                                        </div>
-                                    </li>
-                                    <hr />
-                                    <li className="py-3">
-                                        <div className="flex items-center">
-                                            <FontAwesomeIcon icon={faTemperatureHalf} />
-                                            <p className="flex-1 ml-4 font-normal text-gray-900">
-                                                {pomp.huidigeTemperatuur}°C
-                                            </p>
-                                        </div>
-                                    </li>
-                                    <li className="py-3">
-                                        <div className="flex items-center">
-                                            <FontAwesomeIcon icon={faGauge} />
-                                            <p className="flex-1 ml-4 font-normal text-gray-900">
-                                                {pomp.Druk}
-                                            </p>
-                                        </div>
-                                    </li>
-                                    <li className="py-3">
-                                        <div className="flex items-center">
-                                            <FontAwesomeIcon icon={faBolt} />
-                                            <p className="flex-1 ml-4 font-normal text-gray-900">
-                                                {pomp.Vermogen}kW
-                                            </p>
-                                        </div>
-                                    </li>
-                                    <li className="py-3">
-                                        <div className="flex items-center">
-                                            <FontAwesomeIcon icon={faFilePen} />
-                                            <p className="flex-1 ml-4 font-normal text-gray-900">
-                                                {pomp.laatsteDataUpdate}
-                                            </p>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+                        </Link>
                     ))}
                 </div>
             </div>
