@@ -57,107 +57,103 @@ function Details() {
     return (
         <>
             <div>
-                <div className='w-full'>
-                    <LineChart
-                        dataset={pompData}
-                        xAxis={[{
-                            dataKey: 'x',
-                            label: 'Dag',
-                            scaleType: 'linear',
-                            tickMaxStep: 1,
-                        }]}
-                        yAxis={[{
-                            label: 'Warmtepompverbruik (kW)',
-                            min: 0,
-                            max: 200,
-                        }]}
-                        series={[{
-                            dataKey: 'y',
-                            label: 'Verbruik',
-                            showMark: true,
-                        }]}
-                        height={300}
-                    />
-                </div>
+                <LineChart
+                    dataset={pompData}
+                    xAxis={[{
+                        dataKey: 'x',
+                        label: 'Dag',
+                        scaleType: 'linear',
+                        tickMaxStep: 1,
+                    }]}
+                    yAxis={[{
+                        label: 'Warmtepompverbruik (kW)',
+                        min: 0,
+                        max: 200,
+                    }]}
+                    series={[{
+                        dataKey: 'y',
+                        label: 'Verbruik',
+                        showMark: true,
+                    }]}
+                    height={300}
+                />
             </div>
             <div>
-                <div className="w-full">
-                    <div className='p-3 w-3/5 border border-gray-200 rounded-lg'>
-                        <div className='p-5'>
-                            <ul role='list'>
-                                <li className='py-3'>
-                                    <div className='flex items-center'>
-                                        <p><span className='font-semibold'>ID: </span>{pomp.id}</p>
-                                    </div>
-                                </li>
-                                <li className='py-3'>
-                                    <div className='flex items-center'>
-                                        <p><span className='font-semibold'>Fabrikant: </span>{pomp.fabrikant}</p>
-                                    </div>
-                                </li>
-                                <li className='py-3'>
-                                    <div className='flex items-center'>
-                                        <p><span className='font-semibold'>Postcode: </span>{pomp.postcode}</p>
-                                    </div>
-                                </li>
-                                <hr />
-                                <li className='py-3'>
-                                    <table>
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    <div className='flex items-center'>
-                                                        <span className='font-semibold'>Huidige temperatuur: </span>{pomp.huidigeTemperatuur}
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div className='flex items-center'>
-                                                        <span className='font-semibold'>Druk: </span>{pomp.gemiddeldeDruk}
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div className='flex items-center'>
-                                                        <span className='font-semibold'>Vermogen: </span>{pomp.vermogen}
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div className='flex items-center'>
-                                                        <span className='font-semibold'>Laatste data-update: </span>{pomp.laatsteDataUpdate}
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </li>
-                                <hr />
-                                <li className='py-3'>
-                                    <div className='flex items-center'>
-                                        <p><span className='font-semibold'>Merk: </span>{pomp.merk}</p>
-                                    </div>
-                                </li>
-                                <li className='py-3'>
-                                    <div className='flex items-center'>
-                                        <p><span className='font-semibold'>Serienummer: </span>{pomp.serienummer}</p>
-                                    </div>
-                                </li>
-                                <li className='py-3'>
-                                    <div className='flex items-center'>
-                                        <p><span className='font-semibold'>Onderhoudsdatum: </span>{pomp.onderhoudsdatum}</p>
-                                    </div>
-                                </li>
-                                <li className='py-3'>
-                                    <div className='flex items-center'>
-                                        <p><span className='font-semibold'>Datum van installatie: </span>{pomp.installatieDatum}</p>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+                <div className='p-3 w-3/5 border border-gray-200 rounded-lg'>
+                    <div className='p-5'>
+                        <ul role='list'>
+                            <li className='py-3'>
+                                <div className='flex items-center'>
+                                    <p><span className='font-semibold'>ID: </span>{pomp.id}</p>
+                                </div>
+                            </li>
+                            <li className='py-3'>
+                                <div className='flex items-center'>
+                                    <p><span className='font-semibold'>Fabrikant: </span>{pomp.fabrikant}</p>
+                                </div>
+                            </li>
+                            <li className='py-3'>
+                                <div className='flex items-center'>
+                                    <p><span className='font-semibold'>Postcode: </span>{pomp.postcode}</p>
+                                </div>
+                            </li>
+                            <hr />
+                            <li className='py-3'>
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div className='flex items-center'>
+                                                    <span className='font-semibold'>Huidige temperatuur: </span>{pomp.huidigeTemperatuur}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className='flex items-center'>
+                                                    <span className='font-semibold'>Druk: </span>{pomp.gemiddeldeDruk}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div className='flex items-center'>
+                                                    <span className='font-semibold'>Vermogen: </span>{pomp.vermogen}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className='flex items-center'>
+                                                    <span className='font-semibold'>Laatste data-update: </span>{pomp.laatsteDataUpdate}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </li>
+                            <hr />
+                            <li className='py-3'>
+                                <div className='flex items-center'>
+                                    <p><span className='font-semibold'>Merk: </span>{pomp.merk}</p>
+                                </div>
+                            </li>
+                            <li className='py-3'>
+                                <div className='flex items-center'>
+                                    <p><span className='font-semibold'>Serienummer: </span>{pomp.serienummer}</p>
+                                </div>
+                            </li>
+                            <li className='py-3'>
+                                <div className='flex items-center'>
+                                    <p><span className='font-semibold'>Onderhoudsdatum: </span>{pomp.onderhoudsdatum}</p>
+                                </div>
+                            </li>
+                            <li className='py-3'>
+                                <div className='flex items-center'>
+                                    <p><span className='font-semibold'>Datum van installatie: </span>{pomp.installatieDatum}</p>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
-                    <div className='w-2/5'>
-                        {/* event log */}
-                    </div>
+                </div>
+                <div className='w-2/5'>
+                    {/* event log */}
                 </div>
             </div>
         </>
