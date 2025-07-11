@@ -78,7 +78,7 @@ function Details() {
                     height={300}
                 />
             </div>
-            <div>
+            <div className='w-screen'>
                 <div className='p-3 w-3/5 border border-gray-200 rounded-lg'>
                     <div className='p-5'>
                         <ul role='list'>
