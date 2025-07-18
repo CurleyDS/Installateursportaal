@@ -10,7 +10,10 @@
             "serienummer": "1234567890",
             "onderhoudsdatum": "01-01-2024",
             "installatieDatum": "01-01-2023",
-            "huidigeStatus": "active",
+            "huidigeStatus": {
+                "status": "active",
+                "details": "active"
+            },
             "huidigeTemperatuur": 20,
             "gemiddeldeDruk": 1.2,
             "vermogen": 5.5,
@@ -36,11 +39,6 @@
                     "datum": "18-03",
                     "actie": "Onderhoud uitgevoerd",
                     "details": "Filter vervangen en systeem gereinigd."
-                },
-                {
-                    "datum": "17-03",
-                    "actie": "Storingsmelding",
-                    "details": "Systeem reageerde niet op commando's."
                 }
             ]
         },
@@ -54,7 +52,10 @@
             "serienummer": "1234567890",
             "onderhoudsdatum": "01-01-2024",
             "installatieDatum": "01-01-2023",
-            "huidigeStatus": "onderhoud",
+            "huidigeStatus": {
+                "status": "onderhoud",
+                "details": "Filter vervangen en systeem gereinigd."
+            },
             "huidigeTemperatuur": 21,
             "gemiddeldeDruk": 1.3,
             "vermogen": 5.7,
@@ -78,13 +79,8 @@
             "logs": [
                 {
                     "datum": "18-03",
-                    "actie": "Onderhoud uitgevoerd",
-                    "details": "Filter vervangen en systeem gereinigd."
-                },
-                {
-                    "datum": "17-03",
-                    "actie": "Storingsmelding",
-                    "details": "Systeem reageerde niet op commando's."
+                    "actie": "Onderhoudsmelding",
+                    "details": "Filter moet worden gereinigd of vervangen worden."
                 }
             ]
         },
@@ -98,7 +94,10 @@
             "serienummer": "1234567890",
             "onderhoudsdatum": "01-01-2024",
             "installatieDatum": "01-01-2023",
-            "huidigeStatus": "storing",
+            "huidigeStatus": {
+                "status": "storing",
+                "details": "Systeem reageerde niet op commando's."
+            },
             "huidigeTemperatuur": 19,
             "gemiddeldeDruk": 1.1,
             "vermogen": 5.6,
@@ -122,11 +121,6 @@
             "logs": [
                 {
                     "datum": "18-03",
-                    "actie": "Onderhoud uitgevoerd",
-                    "details": "Filter vervangen en systeem gereinigd."
-                },
-                {
-                    "datum": "17-03",
                     "actie": "Storingsmelding",
                     "details": "Systeem reageerde niet op commando's."
                 }
@@ -142,7 +136,10 @@
             "serienummer": "1234567890",
             "onderhoudsdatum": "01-01-2024",
             "installatieDatum": "01-01-2023",
-            "huidigeStatus": "active",
+            "huidigeStatus": {
+                "status": "active",
+                "details": "Filter vervangen en systeem gereinigd."
+            },
             "huidigeTemperatuur": 18,
             "gemiddeldeDruk": 1.0,
             "vermogen": 4.3,
@@ -168,11 +165,6 @@
                     "datum": "18-03",
                     "actie": "Onderhoud uitgevoerd",
                     "details": "Filter vervangen en systeem gereinigd."
-                },
-                {
-                    "datum": "17-03",
-                    "actie": "Storingsmelding",
-                    "details": "Systeem reageerde niet op commando's."
                 }
             ]
         }

@@ -210,7 +210,7 @@ function Home() {
                             <div className="max-w-sm bg-white border border-gray-200 rounded-lg">
                                 <div className="flex items-center justify-between p-5">
                                     <p className="mb-3 font-normal text-gray-700">ID: {pomp.id}</p>
-                                    <FontAwesomeIcon className={pompStatus(pomp.huidigeStatus).style} icon={pompStatus(pomp.huidigeStatus).icon} />
+                                    <FontAwesomeIcon className={pompStatus(pomp.huidigeStatus.status).style} icon={pompStatus(pomp.huidigeStatus.status).icon} />
                                 </div>
                                 <div className='p-5'>
                                     <img src={pumpLogo} alt="" />
