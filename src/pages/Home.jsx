@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import pumpLogo from '../assets/logo-placeholder.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faXmark, faCircleCheck, faTriangleExclamation, faLocationDot, faTemperatureHalf, faGauge, faBolt, faFilePen } from '@fortawesome/free-solid-svg-icons';
+import { faXmark, faCircleCheck, faTriangleExclamation, faCircleQuestion, faLocationDot, faTemperatureHalf, faGauge, faBolt, faFilePen } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 
 function Home() {
@@ -19,7 +19,7 @@ function Home() {
 
     useEffect(() => {
         const fetchData = async () => {
-            fetch('/data.json')
+            fetch('/dummy-data.json')
             .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -114,20 +114,25 @@ function Home() {
     }
 
     const pompStatus = (status) => {
-        if (status == 'active') {
+        if (status == 200) {
             return {
                 style: "text-green-500",
                 icon: faCircleCheck
             };
-        } else if (status == 'onderhoud') {
+        } else if (status == 300) {
             return {
                 style: "text-yellow-500",
                 icon: faTriangleExclamation
             };
-        } else if (status == 'storing') {
+        } else if (status == 500) {
             return {
                 style: "text-red-500",
                 icon: faTriangleExclamation
+            };
+        } else {
+            return {
+                style: "text-gray-500",
+                icon: faCircleQuestion
             };
         }
     }
@@ -210,13 +215,13 @@ function Home() {
                             <div className="max-w-sm bg-white border border-gray-200 rounded-lg">
                                 <div className="flex items-center justify-between p-5">
                                     <p className="mb-3 font-normal text-gray-700">ID: {pomp.id}</p>
-                                    <FontAwesomeIcon className={pompStatus(pomp.huidigeStatus.status).style} icon={pompStatus(pomp.huidigeStatus.status).icon} />
+                                    <FontAwesomeIcon className={pompStatus(pomp.huidigeStatus).style} icon={pompStatus(pomp.huidigeStatus).icon} />
                                 </div>
                                 <div className='p-5'>
                                     <img src={pumpLogo} alt="" />
                                 </div>
                                 <div className="p-5">
-                                    <ul role="list">
+                                    <ul>
                                         <li className="py-3">
                                             <div className="flex items-center">
                                                 <FontAwesomeIcon icon={faLocationDot} />

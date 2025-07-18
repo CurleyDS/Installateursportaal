@@ -24,7 +24,7 @@ function Details() {
 
     useEffect(() => {
         const fetchData = async () => {
-            fetch('/data.json')
+            fetch('/dummy-data.json')
             .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -54,151 +54,155 @@ function Details() {
     // { data: [160, 160, 165, 155, 162, 167, 159, 164, 166, 167, 167, 165, 163, 160, 159, 158, 161, 163, 165, 164, 163, 162, 161, 161, 165, 155] }
     // { data: [1, 2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 24, 25, 26, 27, 29, 30, 31] }
 
+    const pompStatus = (status) => {
+        if (status == 300) {
+            return {
+                style: "bg-yellow-500",
+                text: "Onderhoud"
+            };
+        } else if (status == 500) {
+            return {
+                style: "bg-red-500",
+                text: "Storing"
+            };
+        } else {
+            return {
+                style: "bg-white",
+                text: "Actief"
+            };
+        }
+    }
+
     return (
         <>
             <div>
-                <LineChart
+                {/* <LineChart
                     dataset={pompData}
                     xAxis={[{
-                        dataKey: 'x',
-                        label: 'Dag',
+                        data: Array.from({ length: 31 }, (_, i) => `Dag ${i + 1}`),
                         scaleType: 'linear',
                         tickMaxStep: 1,
                     }]}
-                    yAxis={[{
-                        label: 'Warmtepompverbruik (kW)',
-                        min: 0,
-                        max: 200,
-                    }]}
                     series={[{
-                        dataKey: 'y',
-                        label: 'Verbruik',
+                        data: Array.from({ length: 31 }, (_, i) => pomp.warmtepompData[0][i] ?? 0),
+                        label: 'Status',
                         showMark: true,
                     }]}
                     height={300}
-                />
+                /> */}
             </div>
             <div className='flex flex-row justify-between items-start w-full gap-4'>
-                <div className='p-5 w-3/5 border border-gray-200 rounded-lg'>
-                    <ul role='list'>
-                        <li>
-                            <div className='flex items-center py-3'>
-                                <p><span className='font-semibold'>ID: </span>{pomp.id}</p>
-                            </div>
-                        </li>
-                        <li>
-                            <div className='flex items-center py-3'>
-                                <p><span className='font-semibold'>Fabrikant: </span>{pomp.fabrikant}</p>
-                            </div>
-                        </li>
-                        <li>
-                            <div className='flex items-center py-3'>
-                                <p><span className='font-semibold'>Postcode: </span>{pomp.postcode}</p>
-                            </div>
-                        </li>
-                        <hr />
-                        <li>
-                            <table className='w-full'>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <div className='flex items-center py-3'>
-                                                <p>
-                                                    <span className='font-semibold'>Huidige temperatuur: </span>
-                                                    {pomp.huidigeTemperatuur}
-                                                </p>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div className='flex items-center py-3'>
-                                                <p>
-                                                    <span className='font-semibold'>Druk: </span>
-                                                    {pomp.gemiddeldeDruk}
-                                                </p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div className='flex items-center py-3'>
-                                                <p>
-                                                    <span className='font-semibold'>Vermogen: </span>
-                                                    {pomp.vermogen}
-                                                </p>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div className='flex items-center py-3'>
-                                                <p>
-                                                    <span className='font-semibold'>Laatste data-update: </span>
-                                                    {pomp.laatsteDataUpdate}
-                                                </p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </li>
-                        <hr />
-                        <li>
-                            <div className='flex items-center py-3'>
-                                <p><span className='font-semibold'>Merk: </span>{pomp.merk}</p>
-                            </div>
-                        </li>
-                        <li>
-                            <div className='flex items-center py-3'>
-                                <p><span className='font-semibold'>Serienummer: </span>{pomp.serienummer}</p>
-                            </div>
-                        </li>
-                        <li>
-                            <div className='flex items-center py-3'>
-                                <p><span className='font-semibold'>Onderhoudsdatum: </span>{pomp.onderhoudsdatum}</p>
-                            </div>
-                        </li>
-                        <li>
-                            <div className='flex items-center py-3'>
-                                <p><span className='font-semibold'>Datum van installatie: </span>{pomp.installatieDatum}</p>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                <div className='p-5 w-2/5 border border-gray-200 rounded-lg'>
-                    {pomp.huidigeStatus && pomp.huidigeStatus.status == "active" ? (
-                        <div className='flex items-center py-5'>
-                            <p>
-                                <span className='font-semibold'>Status: </span>
-                                {pomp.huidigeStatus && pomp.huidigeStatus.details}
-                            </p>
-                        </div>
-                    ) : (pomp.huidigeStatus && pomp.huidigeStatus.status == "onderhoud" ? (
-                        <div className='flex items-center py-5'>
-                            <p>
-                                <span className='font-semibold'>Onderhoudsmelding: </span>
-                                {pomp.huidigeStatus && pomp.huidigeStatus.details}
-                            </p>
-                        </div>
-                    ) : (
-                        <div className='flex items-center py-5'>
-                            <p>
-                                <span className='font-semibold'>Storingsmelding: </span>
-                                {pomp.huidigeStatus && pomp.huidigeStatus.details}
-                            </p>
-                        </div>
-                    ))}
-                    <hr />
-                    <ul role='list p-5'>
-                        {pomp.logs && pomp.logs.map((log, index) => (
-                            <li key={index}>
+                <div className='w-3/5 border border-gray-200 rounded-lg'>
+                    <div className="p-5">
+                        <ul>
+                            <li>
                                 <div className='flex items-center py-3'>
-                                    <p>
-                                        <span className='font-semibold'>{log.datum}: </span>
-                                        <br />{log.actie}. {log.details}
-                                    </p>
+                                    <p><span className='font-semibold'>ID: </span>{pomp.id}</p>
                                 </div>
-                                <hr />
                             </li>
-                        ))}
-                    </ul>
+                            <li>
+                                <div className='flex items-center py-3'>
+                                    <p><span className='font-semibold'>Fabrikant: </span>{pomp.fabrikant}</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div className='flex items-center py-3'>
+                                    <p><span className='font-semibold'>Postcode: </span>{pomp.postcode}</p>
+                                </div>
+                            </li>
+                            <hr />
+                            <li>
+                                <table className='w-full'>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div className='flex items-center py-3'>
+                                                    <p>
+                                                        <span className='font-semibold'>Huidige temperatuur: </span>
+                                                        {pomp.huidigeTemperatuur}
+                                                    </p>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className='flex items-center py-3'>
+                                                    <p>
+                                                        <span className='font-semibold'>Druk: </span>
+                                                        {pomp.gemiddeldeDruk}
+                                                    </p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div className='flex items-center py-3'>
+                                                    <p>
+                                                        <span className='font-semibold'>Vermogen: </span>
+                                                        {pomp.vermogen}
+                                                    </p>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className='flex items-center py-3'>
+                                                    <p>
+                                                        <span className='font-semibold'>Laatste data-update: </span>
+                                                        {pomp.laatsteDataUpdate}
+                                                    </p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </li>
+                            <hr />
+                            <li>
+                                <div className='flex items-center py-3'>
+                                    <p><span className='font-semibold'>Merk: </span>{pomp.merk}</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div className='flex items-center py-3'>
+                                    <p><span className='font-semibold'>Serienummer: </span>{pomp.serienummer}</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div className='flex items-center py-3'>
+                                    <p><span className='font-semibold'>Onderhoudsdatum: </span>{pomp.onderhoudsdatum}</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div className='flex items-center py-3'>
+                                    <p><span className='font-semibold'>Datum van installatie: </span>{pomp.installatieDatum}</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div className='w-2/5 border border-gray-200 rounded-lg'>
+                    <div className={'p-5 rounded-t-lg ' + pompStatus(pomp.huidigeStatus).style}>
+                        <p>
+                            <span className='font-semibold'>{pompStatus(pomp.huidigeStatus).text}</span>
+                        </p>
+                    </div>
+                    <hr />
+                    <div className="p-5">
+                        <ul>
+                            {pomp.logs && pomp.logs.map((log, index) => (
+                                <li key={index}>
+                                    <div className='flex items-center py-3'>
+                                        <p>
+                                            <span className='font-semibold'>{log.datum}: </span>
+                                            <ul className='list-disc'>
+                                                {log.acties && log.acties.map((actie, actieIndex) => (
+                                                    <li key={actieIndex}>{actie.title}. {actie.beschrijving}</li>
+                                                ))}
+                                            </ul>
+                                        </p>
+                                    </div>
+                                    <hr />
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                 </div>
             </div>
         </>
