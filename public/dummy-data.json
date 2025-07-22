@@ -22,6 +22,13 @@
                     "druk": 1.2,
                     "vermogen": 5.5,
                     "datum": "18-03"
+                },
+                {
+                    "status": 200,
+                    "temperatuur": 20,
+                    "druk": 1.2,
+                    "vermogen": 5.5,
+                    "datum": "19-03"
                 }
             ],
             "logs": [
