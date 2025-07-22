@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom';
-import { BarChart } from '@mui/x-charts/BarChart';
-import { LineChart } from '@mui/x-charts/LineChart';
+import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { BarPlot } from '@mui/x-charts/BarChart';
+import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
+import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
+import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 
 const pompData = [
       { x: 1, y: 160 }, { x: 2, y: 160 }, { x: 3, y: 165 },
@@ -78,26 +81,50 @@ function Details() {
         return (
             <>
                 <div>
-                    <BarChart
+                    <ChartContainer
                         dataset={pompData.warmtepompData}
-                        xAxis={[{
-                            data: Array.from({length: 31}, (_, i) => i + 1),
-                            label: 'Dag',
-                        }]}
-                        yAxis={[{
-                            label: 'Status (%)',
-                        }]}
                         series={[
                             {
-                                // data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200],
-                                data: Array.from({length: 31}, (_, i) => {
-                                    return pomp.warmtepompData[i] && pomp.warmtepompData[i].status === 200 ? 100 : 0;
-                                }),
+                                type: 'bar',
+                                data: Array.from({length: 31}, (_, i) => (
+                                    pomp.warmtepompData[i] && pomp.warmtepompData[i].status === 200 ? 100 : 0
+                                )),
                                 label: 'Status',
+                                xAxisKey: 'bar-axis-id'
+                            },
+                            {
+                                type: 'line',
+                                data: Array.from({length: 31}, (_, i) => (
+                                    pomp.warmtepompData[i]?.temperatuur ?? 0
+                                )),
+                                label: 'Temperatuur',
+                                xAxisKey: 'line-axis-id'
+                            }
+                        ]}
+                        yAxis={[
+                            { id: 'y-axis-id' }
+                        ]}
+                        xAxis={[
+                            {
+                                data: Array.from({length: 31}, (_, i) => i + 1),
+                                scaleType: 'band',
+                                id: 'bar-axis-id',
+                            },
+                            {
+                                data: Array.from({length: 31}, (_, i) => i + 0.5),
+                                scaleType: 'band',
+                                id: 'line-axis-id',
                             }
                         ]}
                         height={300}
-                    />
+                    >
+                        <BarPlot />
+                        <LinePlot />
+                        <MarkPlot />
+                        <ChartsYAxis label="Status (%)" axisId="y-axis-id" />
+                        <ChartsXAxis label="Dag" axisId="bar-axis-id" />
+                        <ChartsXAxis label="Dag" axisId="line-axis-id" />
+                    </ChartContainer>
                 </div>
                 <div className='flex flex-row justify-between items-start w-full gap-4'>
                     <div className='w-3/5 border border-gray-200 rounded-lg'>
