@@ -25,6 +25,7 @@ function Details() {
     const [error, setError] = useState(null);
     const { id } = useParams(); // is a string. if it needs to be a number, convert it using Number(id)
     const [pomp, setPomp] = useState({});
+    const [currentChartData, setCurrentChartData] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -44,6 +45,9 @@ function Details() {
             })
             .then((item) => {
                 setPomp(item);
+                setCurrentChartData(item.warmtepompData.map(data => ({
+                    data: data.status
+                })));
                 setLoading(true);
             })
             .catch((error) => {
@@ -55,8 +59,14 @@ function Details() {
         fetchData();
     }, []);
 
-    // { data: [160, 160, 165, 155, 162, 167, 159, 164, 166, 167, 167, 165, 163, 160, 159, 158, 161, 163, 165, 164, 163, 162, 161, 161, 165, 155] }
-    // { data: [1, 2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 24, 25, 26, 27, 29, 30, 31] }
+    const toggleDropdown = (dropdownId) => {
+        let dropdownFilter = document.getElementById(dropdownId);
+        if (dropdownFilter.classList.contains('hidden')) {
+            dropdownFilter.classList.remove('hidden');
+        } else {
+            dropdownFilter.classList.add('hidden');
+        }
+    }
 
     const pompStatus = (status) => {
         if (status == 300) {
@@ -81,24 +91,39 @@ function Details() {
         return (
             <>
                 <div>
+                    <div>
+                        <div className='flex items-center justify-between w-full'>
+                            <div className='p-3'>
+                                <span className="rounded-lg ml-3" onClick={() => toggleDropdown('dropdownChart')}>Chart</span>
+
+                                <div id="dropdownChart" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg w-44 dark:bg-gray-700">
+                                    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
+                                        <li onClick={() => selectFilter({ fabrikant: 'Fabrikant'})}>
+                                            <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Fabrikant Filter</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <ChartContainer
-                        dataset={pompData.warmtepompData}
+                        dataset={currentChartData}
                         series={[
                             {
                                 type: 'bar',
                                 data: Array.from({length: 31}, (_, i) => (
-                                    pomp.warmtepompData[i] && pomp.warmtepompData[i].status === 200 ? 100 : 0
+                                    currentChartData[i] && currentChartData[i] === 200 ? 100 : 0
                                 )),
                                 label: 'Status',
-                                xAxisKey: 'bar-axis-id'
+                                xAxisKey: 'x-axis-id'
                             },
                             {
                                 type: 'line',
                                 data: Array.from({length: 31}, (_, i) => (
-                                    pomp.warmtepompData[i]?.temperatuur ?? 0
+                                    currentChartData[i] ?? 0
                                 )),
                                 label: 'Temperatuur',
-                                xAxisKey: 'line-axis-id'
+                                xAxisKey: 'x-axis-id'
                             }
                         ]}
                         yAxis={[
@@ -108,12 +133,7 @@ function Details() {
                             {
                                 data: Array.from({length: 31}, (_, i) => i + 1),
                                 scaleType: 'band',
-                                id: 'bar-axis-id',
-                            },
-                            {
-                                data: Array.from({length: 31}, (_, i) => i + 0.5),
-                                scaleType: 'band',
-                                id: 'line-axis-id',
+                                id: 'x-axis-id',
                             }
                         ]}
                         height={300}
@@ -122,8 +142,7 @@ function Details() {
                         <LinePlot />
                         <MarkPlot />
                         <ChartsYAxis label="Status (%)" axisId="y-axis-id" />
-                        <ChartsXAxis label="Dag" axisId="bar-axis-id" />
-                        <ChartsXAxis label="Dag" axisId="line-axis-id" />
+                        <ChartsXAxis label="Dag" axisId="x-axis-id" />
                     </ChartContainer>
                 </div>
                 <div className='flex flex-row justify-between items-start w-full gap-4'>
