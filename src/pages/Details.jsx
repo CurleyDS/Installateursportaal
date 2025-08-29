@@ -1,31 +1,67 @@
 import { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 
-const pompData = [
-      { x: 1, y: 160 }, { x: 2, y: 160 }, { x: 3, y: 165 },
-      { x: 4, y: 155 }, { x: 5, y: 162 }, { x: 6, y: 167 },
-      { x: 7, y: 164 }, { x: 8, y: 162 }, { x: 9, y: 159 },
-      { x: 10, y: 164 }, { x: 11, y: 166 }, { x: 12, y: 167 },
-      { x: 13, y: 167 }, { x: 14, y: 165 }, { x: 15, y: 163 },
-      { x: 16, y: 160 }, { x: 17, y: 159 }, { x: 18, y: 158 },
-      { x: 19, y: 161 }, { x: 20, y: 163 }, { x: 21, y: 165 },
-      { x: 22, y: 165 }, { x: 23, y: 164 }, { x: 24, y: 164 },
-      { x: 25, y: 163 }, { x: 26, y: 162 }, { x: 27, y: 161 },
-      { x: 28, y: 161 }, { x: 29, y: 161 }, { x: 30, y: 165 },
-      { x: 31, y: 155 }
-];
+// const pompData = [
+//       { x: 1, y: 160 }, { x: 2, y: 160 }, { x: 3, y: 165 },
+//       { x: 4, y: 155 }, { x: 5, y: 162 }, { x: 6, y: 167 },
+//       { x: 7, y: 164 }, { x: 8, y: 162 }, { x: 9, y: 159 },
+//       { x: 10, y: 164 }, { x: 11, y: 166 }, { x: 12, y: 167 },
+//       { x: 13, y: 167 }, { x: 14, y: 165 }, { x: 15, y: 163 },
+//       { x: 16, y: 160 }, { x: 17, y: 159 }, { x: 18, y: 158 },
+//       { x: 19, y: 161 }, { x: 20, y: 163 }, { x: 21, y: 165 },
+//       { x: 22, y: 165 }, { x: 23, y: 164 }, { x: 24, y: 164 },
+//       { x: 25, y: 163 }, { x: 26, y: 162 }, { x: 27, y: 161 },
+//       { x: 28, y: 161 }, { x: 29, y: 161 }, { x: 30, y: 165 },
+//       { x: 31, y: 155 }
+// ];
+
 
 function Details() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const { id } = useParams(); // is a string. if it needs to be a number, convert it using Number(id)
+    const [selectedFilter, setSelectedFilter] = useState("status");
     const [pomp, setPomp] = useState({});
     const [currentChartData, setCurrentChartData] = useState([]);
+
+    const chartConfig = {
+        status: {
+            type: "bar",
+            label: "Status (%)",
+            accessor: (item) => (item.status === 200 ? 100 : 0),
+        },
+        temperatuur: {
+            type: "line",
+            label: "Temperatuur (°C)",
+            accessor: (item) => item.temperatuur,
+        },
+        druk: {
+            type: "line",
+            label: "Druk (bar)",
+            accessor: (item) => item.druk,
+        },
+        vermogen: {
+            type: "line",
+            label: "Vermogen (kW)",
+            accessor: (item) => item.vermogen,
+        },
+    };
+    
+    const currentConfig = chartConfig[selectedFilter];
+
+    const series = [
+        {
+            type: currentConfig.type,
+            data: currentChartData.map(currentConfig.accessor),
+            label: currentConfig.label,
+            xAxisKey: "x-axis-id",
+        },
+    ];
 
     useEffect(() => {
         const fetchData = async () => {
@@ -45,9 +81,7 @@ function Details() {
             })
             .then((item) => {
                 setPomp(item);
-                setCurrentChartData(item.warmtepompData.map(data => ({
-                    data: data.status
-                })));
+                setCurrentChartData(item.warmtepompData);
                 setLoading(true);
             })
             .catch((error) => {
@@ -68,15 +102,20 @@ function Details() {
         }
     }
 
+    const selectFilter = (filter) => {
+        setSelectedFilter(filter);
+        toggleDropdown("dropdownChart");
+    }
+
     const pompStatus = (status) => {
         if (status == 300) {
             return {
-                style: "bg-yellow-500",
+                style: "border border-yellow-500 bg-yellow-200",
                 text: "Onderhoud"
             };
         } else if (status == 500) {
             return {
-                style: "bg-red-500",
+                style: "border border-red-500 bg-red-200",
                 text: "Storing"
             };
         } else {
@@ -94,12 +133,29 @@ function Details() {
                     <div>
                         <div className='flex items-center justify-between w-full'>
                             <div className='p-3'>
+                                <Link to={"/"}>
+                                    <span className="rounded-lg ml-3">Terug</span>
+                                </Link>
+                            </div>
+                            <div className='p-3'>
+                                <span className="rounded-lg ml-3">Dag naar Maand knop</span>
+                            </div>
+                            <div className='relative p-3'>
                                 <span className="rounded-lg ml-3" onClick={() => toggleDropdown('dropdownChart')}>Chart</span>
 
-                                <div id="dropdownChart" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg w-44 dark:bg-gray-700">
+                                <div id="dropdownChart" className="absolute top-8 right-0 z-10 hidden bg-white divide-y divide-gray-100 rounded-lg w-44 dark:bg-gray-700">
                                     <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
-                                        <li onClick={() => selectFilter({ fabrikant: 'Fabrikant'})}>
-                                            <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Fabrikant Filter</span>
+                                        <li onClick={() => selectFilter("status")}>
+                                            <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Status Filter</span>
+                                        </li>
+                                        <li onClick={() => selectFilter("temperatuur")}>
+                                            <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Temperatuur Filter</span>
+                                        </li>
+                                        <li onClick={() => selectFilter("druk")}>
+                                            <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Druk Filter</span>
+                                        </li>
+                                        <li onClick={() => selectFilter("vermogen")}>
+                                            <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Vermogen Filter</span>
                                         </li>
                                     </ul>
                                 </div>
@@ -108,40 +164,21 @@ function Details() {
                     </div>
                     <ChartContainer
                         dataset={currentChartData}
-                        series={[
-                            {
-                                type: 'bar',
-                                data: Array.from({length: 31}, (_, i) => (
-                                    currentChartData[i] && currentChartData[i] === 200 ? 100 : 0
-                                )),
-                                label: 'Status',
-                                xAxisKey: 'x-axis-id'
-                            },
-                            {
-                                type: 'line',
-                                data: Array.from({length: 31}, (_, i) => (
-                                    currentChartData[i] ?? 0
-                                )),
-                                label: 'Temperatuur',
-                                xAxisKey: 'x-axis-id'
-                            }
-                        ]}
-                        yAxis={[
-                            { id: 'y-axis-id' }
-                        ]}
+                        series={series}
+                        yAxis={[{ id: "y-axis-id" }]}
                         xAxis={[
                             {
-                                data: Array.from({length: 31}, (_, i) => i + 1),
-                                scaleType: 'band',
-                                id: 'x-axis-id',
-                            }
+                            data: currentChartData.map((_, i) => i + 1), // dagen
+                            scaleType: "band",
+                            id: "x-axis-id",
+                            },
                         ]}
                         height={300}
                     >
-                        <BarPlot />
-                        <LinePlot />
-                        <MarkPlot />
-                        <ChartsYAxis label="Status (%)" axisId="y-axis-id" />
+                        {currentConfig.type === "bar" && <BarPlot />}
+                        {currentConfig.type === "line" && <LinePlot />}
+                        {currentConfig.type === "line" && <MarkPlot />}
+                        <ChartsYAxis label={currentConfig.label} axisId="y-axis-id" />
                         <ChartsXAxis label="Dag" axisId="x-axis-id" />
                     </ChartContainer>
                 </div>
