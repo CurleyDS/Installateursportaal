@@ -29,6 +29,36 @@ function Details() {
     const [pomp, setPomp] = useState({});
     const [currentChartData, setCurrentChartData] = useState([]);
 
+    useEffect(() => {
+        const fetchData = async () => {
+            fetch('/dummy-data.json')
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                const item = data.heatpumps.find((item) => item.id === Number(id));
+                if (!item) {
+                    throw new Error('Item not found');
+                }
+                return item;
+            })
+            .then((item) => {
+                setPomp(item);
+                setCurrentChartData(item.warmtepompData);
+                setLoading(true);
+            })
+            .catch((error) => {
+                setError(error);
+                setLoading(true);
+            });
+        }
+
+        fetchData();
+    }, []);
+
     const chartConfig = {
         status: {
             type: "bar",
@@ -62,36 +92,6 @@ function Details() {
             xAxisKey: "x-axis-id",
         },
     ];
-
-    useEffect(() => {
-        const fetchData = async () => {
-            fetch('/dummy-data.json')
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then((data) => {
-                const item = data.heatpumps.find((item) => item.id === Number(id));
-                if (!item) {
-                    throw new Error('Item not found');
-                }
-                return item;
-            })
-            .then((item) => {
-                setPomp(item);
-                setCurrentChartData(item.warmtepompData);
-                setLoading(true);
-            })
-            .catch((error) => {
-                setError(error);
-                setLoading(true);
-            });
-        }
-
-        fetchData();
-    }, []);
 
     const toggleDropdown = (dropdownId) => {
         let dropdownFilter = document.getElementById(dropdownId);
@@ -168,7 +168,7 @@ function Details() {
                         yAxis={[{ id: "y-axis-id" }]}
                         xAxis={[
                             {
-                            data: currentChartData.map((_, i) => i + 1), // dagen
+                            data: Array.from({ length: 30 }, (_, i) => i + 1), // dagen
                             scaleType: "band",
                             id: "x-axis-id",
                             },
