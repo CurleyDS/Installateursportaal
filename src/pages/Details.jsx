@@ -29,6 +29,33 @@ function Details() {
     const [pomp, setPomp] = useState({});
     const [currentChartData, setCurrentChartData] = useState([]);
 
+    const chartConfig = {
+        status: {
+            type: "bar",
+            label: "Status (%)",
+            accessor: (item) => (item.status === 200 ? 100 : 0),
+            xAxisKey: "x-band",
+        },
+        temperatuur: {
+            type: "line",
+            label: "Temperatuur (°C)",
+            accessor: (item) => item.temperatuur,
+            xAxisKey: "x-point",
+        },
+        druk: {
+            type: "line",
+            label: "Druk (bar)",
+            accessor: (item) => item.druk,
+            xAxisKey: "x-point",
+        },
+        vermogen: {
+            type: "line",
+            label: "Vermogen (kW)",
+            accessor: (item) => item.vermogen,
+            xAxisKey: "x-point",
+        },
+    };
+
     useEffect(() => {
         const fetchData = async () => {
             fetch('/dummy-data.json')
@@ -58,40 +85,6 @@ function Details() {
 
         fetchData();
     }, []);
-
-    const chartConfig = {
-        status: {
-            type: "bar",
-            label: "Status (%)",
-            accessor: (item) => (item.status === 200 ? 100 : 0),
-        },
-        temperatuur: {
-            type: "line",
-            label: "Temperatuur (°C)",
-            accessor: (item) => item.temperatuur,
-        },
-        druk: {
-            type: "line",
-            label: "Druk (bar)",
-            accessor: (item) => item.druk,
-        },
-        vermogen: {
-            type: "line",
-            label: "Vermogen (kW)",
-            accessor: (item) => item.vermogen,
-        },
-    };
-    
-    const currentConfig = chartConfig[selectedFilter];
-
-    const series = [
-        {
-            type: currentConfig.type,
-            data: currentChartData.map(currentConfig.accessor),
-            label: currentConfig.label,
-            xAxisKey: "x-axis-id",
-        },
-    ];
 
     const toggleDropdown = (dropdownId) => {
         let dropdownFilter = document.getElementById(dropdownId);
@@ -164,22 +157,38 @@ function Details() {
                     </div>
                     <ChartContainer
                         dataset={currentChartData}
-                        series={series}
-                        yAxis={[{ id: "y-axis-id" }]}
-                        xAxis={[
+                        series={[
                             {
-                            data: Array.from({ length: 30 }, (_, i) => i + 1), // dagen
-                            scaleType: "band",
-                            id: "x-axis-id",
+                                type: chartConfig[selectedFilter].type,
+                                data: currentChartData.map(chartConfig[selectedFilter].accessor),
+                                label: chartConfig[selectedFilter].label,
+                                xAxisKey: chartConfig[selectedFilter].xAxisKey,
                             },
                         ]}
+                        xAxis={[
+                            {
+                                id: "x-band",
+                                data: Array.from({ length: 30 }, (_, i) => i + 1), // dagen
+                                scaleType: "band",
+                                label: "Dag",
+                                tickPlacement: "start",
+                                tickLabelPlacement: "tick",
+                            },
+                            {
+                                id: "x-point",
+                                data: Array.from({ length: 30 }, (_, i) => i + 1),
+                                scaleType: "point",
+                                position: "none", // hidden axis
+                            },
+                        ]}
+                        yAxis={[{ id: "y-axis-id" }]}
                         height={300}
                     >
-                        {currentConfig.type === "bar" && <BarPlot />}
-                        {currentConfig.type === "line" && <LinePlot />}
-                        {currentConfig.type === "line" && <MarkPlot />}
-                        <ChartsYAxis label={currentConfig.label} axisId="y-axis-id" />
-                        <ChartsXAxis label="Dag" axisId="x-axis-id" />
+                        {chartConfig[selectedFilter].type === "bar" && <BarPlot />}
+                        {chartConfig[selectedFilter].type === "line" && <LinePlot />}
+                        {chartConfig[selectedFilter].type === "line" && <MarkPlot />}
+                        <ChartsYAxis label={chartConfig[selectedFilter].label} axisId="y-axis-id" />
+                        <ChartsXAxis label="Dag" axisId="x-band" />
                     </ChartContainer>
                 </div>
                 <div className='flex flex-row justify-between items-start w-full gap-4'>
