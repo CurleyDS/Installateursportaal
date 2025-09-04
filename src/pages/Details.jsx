@@ -6,21 +6,6 @@ import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 
-// const pompData = [
-//       { x: 1, y: 160 }, { x: 2, y: 160 }, { x: 3, y: 165 },
-//       { x: 4, y: 155 }, { x: 5, y: 162 }, { x: 6, y: 167 },
-//       { x: 7, y: 164 }, { x: 8, y: 162 }, { x: 9, y: 159 },
-//       { x: 10, y: 164 }, { x: 11, y: 166 }, { x: 12, y: 167 },
-//       { x: 13, y: 167 }, { x: 14, y: 165 }, { x: 15, y: 163 },
-//       { x: 16, y: 160 }, { x: 17, y: 159 }, { x: 18, y: 158 },
-//       { x: 19, y: 161 }, { x: 20, y: 163 }, { x: 21, y: 165 },
-//       { x: 22, y: 165 }, { x: 23, y: 164 }, { x: 24, y: 164 },
-//       { x: 25, y: 163 }, { x: 26, y: 162 }, { x: 27, y: 161 },
-//       { x: 28, y: 161 }, { x: 29, y: 161 }, { x: 30, y: 165 },
-//       { x: 31, y: 155 }
-// ];
-
-
 function Details() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -122,75 +107,63 @@ function Details() {
     if (loading) {
         return (
             <>
-                <div>
-                    <div>
-                        <div className='flex items-center justify-between w-full'>
-                            <div className='p-3'>
-                                <Link to={"/"}>
-                                    <span className="rounded-lg ml-3">Terug</span>
-                                </Link>
-                            </div>
-                            <div className='p-3'>
-                                <span className="rounded-lg ml-3">Dag naar Maand knop</span>
-                            </div>
-                            <div className='relative p-3'>
-                                <span className="rounded-lg ml-3" onClick={() => toggleDropdown('dropdownChart')}>Chart</span>
+                <div className='flex items-center justify-between w-full'>
+                    <div className='p-3'>
+                        <Link to={"/"}>
+                            <span className="rounded-lg ml-3">Terug</span>
+                        </Link>
+                    </div>
+                    <div className='p-3'>
+                        <span className="rounded-lg ml-3">Dag naar Maand knop</span>
+                    </div>
+                    <div className='relative p-3'>
+                        <span className="rounded-lg ml-3" onClick={() => toggleDropdown('dropdownChart')}>Chart</span>
 
-                                <div id="dropdownChart" className="absolute top-8 right-0 z-10 hidden bg-white divide-y divide-gray-100 rounded-lg w-44 dark:bg-gray-700">
-                                    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
-                                        <li onClick={() => selectFilter("status")}>
-                                            <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Status Filter</span>
-                                        </li>
-                                        <li onClick={() => selectFilter("temperatuur")}>
-                                            <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Temperatuur Filter</span>
-                                        </li>
-                                        <li onClick={() => selectFilter("druk")}>
-                                            <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Druk Filter</span>
-                                        </li>
-                                        <li onClick={() => selectFilter("vermogen")}>
-                                            <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Vermogen Filter</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
+                        <div id="dropdownChart" className="absolute top-8 right-0 z-10 hidden bg-white divide-y divide-gray-100 rounded-lg w-44 dark:bg-gray-700">
+                            <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
+                                <li onClick={() => selectFilter("status")}>
+                                    <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Status Filter</span>
+                                </li>
+                                <li onClick={() => selectFilter("temperatuur")}>
+                                    <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Temperatuur Filter</span>
+                                </li>
+                                <li onClick={() => selectFilter("druk")}>
+                                    <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Druk Filter</span>
+                                </li>
+                                <li onClick={() => selectFilter("vermogen")}>
+                                    <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Vermogen Filter</span>
+                                </li>
+                            </ul>
                         </div>
                     </div>
-                    <ChartContainer
-                        dataset={currentChartData}
-                        series={[
-                            {
-                                type: chartConfig[selectedFilter].type,
-                                data: currentChartData.map(chartConfig[selectedFilter].accessor),
-                                label: chartConfig[selectedFilter].label,
-                                xAxisKey: chartConfig[selectedFilter].xAxisKey,
-                            },
-                        ]}
-                        xAxis={[
-                            {
-                                id: "x-band",
-                                data: Array.from({ length: 30 }, (_, i) => i + 1), // dagen
-                                scaleType: "band",
-                                label: "Dag",
-                                tickPlacement: "start",
-                                tickLabelPlacement: "tick",
-                            },
-                            {
-                                id: "x-point",
-                                data: Array.from({ length: 30 }, (_, i) => i + 1),
-                                scaleType: "point",
-                                position: "none", // hidden axis
-                            },
-                        ]}
-                        yAxis={[{ id: "y-axis-id" }]}
-                        height={300}
-                    >
-                        {chartConfig[selectedFilter].type === "bar" && <BarPlot />}
-                        {chartConfig[selectedFilter].type === "line" && <LinePlot />}
-                        {chartConfig[selectedFilter].type === "line" && <MarkPlot />}
-                        <ChartsYAxis label={chartConfig[selectedFilter].label} axisId="y-axis-id" />
-                        <ChartsXAxis label="Dag" axisId="x-band" />
-                    </ChartContainer>
                 </div>
+                <ChartContainer
+                    dataset={currentChartData}
+                    series={[
+                        {
+                            type: chartConfig[selectedFilter].type,
+                            data: currentChartData.map(chartConfig[selectedFilter].accessor),
+                            label: chartConfig[selectedFilter].label,
+                            xAxisKey: chartConfig[selectedFilter].xAxisKey,
+                        },
+                    ]}
+                    xAxis={[
+                        {
+                            id: "x-band",
+                            data: Array.from({ length: 30 }, (_, i) => i + 1), // dagen
+                            scaleType: chartConfig[selectedFilter].type === "bar" ? "band" : "point",
+                            label: "Dag",
+                        },
+                    ]}
+                    yAxis={[{ id: "y-axis-id" }]}
+                    height={300}
+                >
+                    {chartConfig[selectedFilter].type === "bar" && <BarPlot />}
+                    {chartConfig[selectedFilter].type === "line" && <LinePlot />}
+                    {chartConfig[selectedFilter].type === "line" && <MarkPlot />}
+                    <ChartsYAxis label={chartConfig[selectedFilter].label} axisId="y-axis-id" />
+                    <ChartsXAxis label="Dag" axisId="x-band" />
+                </ChartContainer>
                 <div className='flex flex-row justify-between items-start w-full gap-4'>
                     <div className='w-3/5 border border-gray-200 rounded-lg'>
                         <div className="p-5">

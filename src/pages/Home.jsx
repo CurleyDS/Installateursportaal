@@ -139,7 +139,7 @@ function Home() {
 
     return (
         <>
-            <nav className="fixed top-0 left-64 z-40 w-screen bg-white">
+            <nav className="fixed top-0 left-64 z-40 w-full bg-white">
                 <div className='flex items-center justify-between w-full'>
                     <div className="flex items-center justify-around w-3/5 p-3">
                         <input className="w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg mr-2 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" onChange={searchInput} type="text" placeholder="Voer postcode in..." />
