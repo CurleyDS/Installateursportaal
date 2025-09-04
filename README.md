@@ -44,8 +44,9 @@ Het installateursportaal wordt ontwikkeld als een centrale applicatie voor insta
 
 # Gebruikte Frameworks & Packages
 
-| **Technologie** | **Beschrijving** |
-| React | JavaScript library voor het bouwen van UI |
-| Tailwindcss | Utility-first CSS framework |
+| **Technologie**  | **Beschrijving**                                                     |
+|------------------|----------------------------------------------------------------------|
+| React            | JavaScript library voor het bouwen van UI                            |
+| Tailwindcss      | Utility-first CSS framework                                          |
 | React-router-dom | Library die navigatie en pagina-routing mogelijk maakt in React-apps |
-| MUI X Charts | Library die grafieken integreert in React-apps |
+| MUI X Charts     | Library die grafieken integreert in React-apps                       |
