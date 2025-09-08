@@ -2,30 +2,30 @@
 
 Het installateursportaal wordt ontwikkeld als een centrale applicatie voor installateurs, service engineers en leveranciers van warmtepompen in Nederland. Deze applicatie maakt warmtepompdata van verschillende merken uniform toegankelijk via een standaard 'datastekker'.
 
-# Features
+## Features
 
-## Fase 1 – Monitoring & Storingen
+### Fase 1 – Monitoring & Storingen
 
 - Real-time statusoverzicht van alle warmtepompen.
 - Storingsdetectie met foutcodes en beschrijvingen.
 - Dashboard met visuele statusindicatoren (groen/oranje/rood).
 - Detailpagina per installatie met live gegevens en storingshistorie.
 
-## Fase 2 – Voorspellend Onderhoud
+### Fase 2 – Voorspellend Onderhoud
 
 - Predictive analytics op basis van telemetrie.
 - Automatische meldingen voor opkomend onderhoud.
 - Grafieken van sensordata over tijd.
 - Onderhoudsoverzicht.
 
-## Fase 3 – Remote Control
+### Fase 3 – Remote Control
 
 - Op afstand instellingen wijzigen (temperatuur, modus, tijdschema’s).
 - Herstart/reset van systemen.
 - Rechtenbeheer en beveiliging (tweestapsverificatie).
 - Feedback op uitgevoerde wijzigingen.
 
-## Fase 4 – Automatische Optimalisatie
+### Fase 4 – Automatische Optimalisatie
 
 - Automatische aanpassing van instellingen op basis van:
   - Telemetrie
@@ -34,7 +34,7 @@ Het installateursportaal wordt ontwikkeld als een centrale applicatie voor insta
 - Profielkeuze per installatie.
 - Transparantie via actie-log en override-mogelijkheden.
 
-## Fase 5 – Smart Grid Integratie
+### Fase 5 – Smart Grid Integratie
 
 - Afstemming met lokale netbelasting en energiecapaciteit per wijk.
 - Coördinatie tussen installaties binnen een wijk.
@@ -42,7 +42,7 @@ Het installateursportaal wordt ontwikkeld als een centrale applicatie voor insta
 - Aggregatie van data op wijkniveau.
 - Feedback naar netbeheerders over beschikbare flexibiliteit.
 
-# Gebruikte Frameworks & Packages
+## Gebruikte Frameworks & Packages
 
 | **Technologie**  | **Beschrijving**                                                     |
 |------------------|----------------------------------------------------------------------|
@@ -50,3 +50,41 @@ Het installateursportaal wordt ontwikkeld als een centrale applicatie voor insta
 | Tailwindcss      | Utility-first CSS framework                                          |
 | React-router-dom | Library die navigatie en pagina-routing mogelijk maakt in React-apps |
 | MUI X Charts     | Library die grafieken integreert in React-apps                       |
+
+## Lokale Installatie
+
+### 1. Clone de repository
+
+Als u gebruik maakt van de terminal kunt u dit uittypen in de commands:
+```shell
+git clone https://github.com/<gebruikersnaam>/<projectnaam>.git
+cd <projectnaam>
+```
+
+Als u gebruik maakt van Github Desktop kunt u deze instructies uitvoeren:
+- Ga naar “File” > “Clone repository” (of klik op "Clone a repository from the internet" op het startscherm).
+- Selecteer de nieuwe repository onder het tabblad GitHub.com. 
+- Kies een lokale map waar u het project wilt opslaan.
+- Klik op "Clone". 
+
+### 2. Installeer de dependencies
+
+```shell
+npm install
+```
+
+### 3. Start de development server
+
+```shell
+npm run dev
+```
+
+of
+
+```shell
+npm start
+```
+
+### 4. Open in browser
+
+Ga naar http://localhost:[poortnummer] (Het poortnummer is afhankelijk van de setup).
