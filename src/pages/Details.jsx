@@ -20,24 +20,36 @@ function Details() {
             label: "Status (%)",
             accessor: (item) => (item.status === 200 ? 100 : 0),
             xAxisKey: "x-band",
+            min: 0,
+            max: 100,
+            maxInterval: 100,
         },
         temperatuur: {
             type: "line",
             label: "Temperatuur (°C)",
             accessor: (item) => item.temperatuur,
             xAxisKey: "x-point",
+            min: 0,
+            max: 30,
+            maxInterval: 1,
         },
         druk: {
             type: "line",
             label: "Druk (bar)",
             accessor: (item) => item.druk,
             xAxisKey: "x-point",
+            min: 0,
+            max: 2,
+            maxInterval: 0.1,
         },
         vermogen: {
             type: "line",
             label: "Vermogen (kW)",
             accessor: (item) => item.vermogen,
             xAxisKey: "x-point",
+            min: 0,
+            max: 6,
+            maxInterval: 0.1,
         },
     };
 
@@ -155,7 +167,14 @@ function Details() {
                             label: "Dag",
                         },
                     ]}
-                    yAxis={[{ id: "y-axis-id" }]}
+                    yAxis={[
+                        { 
+                            id: "y-axis-id",
+                            min: chartConfig[selectedFilter].min,
+                            max: chartConfig[selectedFilter].max,
+                            maxInterval: chartConfig[selectedFilter].maxInterval,
+                        }
+                    ]}
                     height={300}
                 >
                     {chartConfig[selectedFilter].type === "bar" && <BarPlot />}

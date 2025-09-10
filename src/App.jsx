@@ -3,6 +3,7 @@ import Main from './layouts/MainLayout';
 import District from './pages/District';
 import Home from './pages/Home';
 import Details from './pages/Details';
+import DetailsSettings from './pages/DetailsSettings';
 import './App.css'
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
                     <Route path="/wijken" element={<District />} />
                     <Route index element={<Home />} />
                     <Route path="/:id" element={<Details />} />
+                    <Route path="/:id/Instellingen" element={<DetailsSettings />} />
                 </Route>
             </Routes>
         </Router>
