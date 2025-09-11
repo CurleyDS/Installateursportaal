@@ -120,16 +120,12 @@ function Details() {
         return (
             <>
                 <div className='flex items-center justify-between w-full'>
-                    <div className='p-3'>
-                        <Link to={"/"}>
-                            <span className="rounded-lg ml-3">Terug</span>
-                        </Link>
-                    </div>
-                    <div className='p-3'>
-                        <span className="rounded-lg ml-3">Dag naar Maand knop</span>
-                    </div>
-                    <div className='relative p-3'>
-                        <span className="rounded-lg ml-3" onClick={() => toggleDropdown('dropdownChart')}>Chart</span>
+                    <Link to={"/"} className="p-3 rounded-lg">Terug</Link>
+
+                    <span className="p-3 rounded-lg">Dag naar Maand knop</span>
+                    
+                    <span className='relative cursor-pointer p-3 rounded-lg' onClick={() => toggleDropdown('dropdownChart')}>
+                        <span>Chart</span>
 
                         <div id="dropdownChart" className="absolute top-8 right-0 z-10 hidden bg-white divide-y divide-gray-100 rounded-lg w-44 dark:bg-gray-700">
                             <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
@@ -147,7 +143,7 @@ function Details() {
                                 </li>
                             </ul>
                         </div>
-                    </div>
+                    </span>
                 </div>
                 <ChartContainer
                     dataset={currentChartData}

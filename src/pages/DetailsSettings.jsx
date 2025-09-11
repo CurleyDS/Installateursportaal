@@ -1,10 +1,5 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom';
-import { ChartContainer } from '@mui/x-charts/ChartContainer';
-import { BarPlot } from '@mui/x-charts/BarChart';
-import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
-import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
-import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 
 function DetailsSettings() {
     const [loading, setLoading] = useState(false);
@@ -44,7 +39,83 @@ function DetailsSettings() {
     if (loading) {
         return (
             <>
-                {/* Instellingen */}
+                <div className='flex items-center justify-start w-full'>
+                    <Link to={"/" + pomp.id} className="p-3 rounded-lg">Terug</Link>
+                </div>
+                <div className='flex items-center justify-start w-full'>
+                    <div className='p-3'>
+                        <form>
+                            <div>
+                                <label class="inline-flex items-center cursor-pointer">
+                                    <span class="me-3">Automatisch optimaliseren inschakelen</span>
+                                    <input type="checkbox" value="" class="sr-only peer" />
+                                    <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+                                </label>
+                            </div>
+
+                            <div>
+                                <label for="steps-range" class="block mb-2">
+                                    <span class="mb-3">Profiel selecteren:</span>
+                                    <input id="steps-range" type="range" min="0" max="5" step="1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
+                                </label>
+                            </div>
+
+                            <div>
+                                <label class="inline-flex items-center cursor-pointer">
+                                    <span class="me-3">Deelname aan netoptimalisatie</span>
+                                    <input type="checkbox" value="" class="sr-only peer" />
+                                    <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+                                </label>
+                            </div>
+                            
+                            <div>
+                                <label for="steps-range" class="block mb-2">
+                                    <span class="mb-3">Sta power-capping toe tot __% tijdens netpieken:</span>
+                                    <input id="steps-range" type="range" min="0" max="5" step="1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
+                                </label>
+                            </div>
+                            
+                            <div>
+                                <label>
+                                    <span>Huidige temperatuur:</span>
+                                </label>
+                            </div>
+                            
+                            <div>
+                                <label class="inline-flex items-center cursor-pointer">
+                                    <span class="me-3">Tijdschema's instellen</span>
+                                    <input type="checkbox" value="" class="sr-only peer" />
+                                    <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+                                </label>
+
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Monday</th>
+                                            <th>Tuesday</th>
+                                            <th>Wednesday</th>
+                                            <th>Thursday</th>
+                                            <th>Friday</th>
+                                            <th>Saturday</th>
+                                            <th>Sunday</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>2</td>
+                                            <td>3</td>
+                                            <td>4</td>
+                                            <td>5</td>
+                                            <td>6</td>
+                                            <td>7</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </>
         )
     } else {
