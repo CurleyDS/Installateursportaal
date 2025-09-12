@@ -7,6 +7,12 @@ function DetailsSettings() {
     const { id } = useParams(); // is a string. if it needs to be a number, convert it using Number(id)
     const [pomp, setPomp] = useState({});
 
+    const [current, setCurrent] = useState(new Date(initialDate.getFullYear(), initialDate.getMonth(), 1));
+    const [selected, setSelected] = useState(null);
+
+    const year = current.getFullYear();
+    const month = current.getMonth();
+
     useEffect(() => {
         const fetchData = async () => {
             fetch('/dummy-data.json')
@@ -88,6 +94,38 @@ function DetailsSettings() {
                                     <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
                                 </label>
 
+                                <table className="w-full border-collapse">
+                                    <thead>
+                                        <tr className="text-gray-600 text-sm">
+                                            {['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map((day) => (
+                                                <th key={day} className="p-2 font-medium">{day}</th>
+                                            ))}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {Array.from({ length: cells.length / 7 }).map((_, week) => (
+                                            <tr key={week}>
+                                                {cells.slice(week * 7, week * 7 + 7).map((date, i) => {
+                                                    if (!date) return <td key={i} className="p-2" />;
+                                                    const key = ymd(date);
+                                                    const isToday = key === todayKey;
+                                                    const isSelected = selected === key;
+
+                                                    return (
+                                                        <td key={i} className="p-1 text-center">
+                                                            <button
+                                                                onClick={() => setSelected(key)}
+                                                                className={`w-10 h-10 rounded-full transition-colors duration-150 ${isSelected ? "bg-indigo-500 text-white" : (isToday ? "border border-indigo-500" : "hover:bg-gray-100")}`}
+                                                            >
+                                                                {date.getDate()}
+                                                            </button>
+                                                        </td>
+                                                    );
+                                                })}
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
                                 <table>
                                     <thead>
                                         <tr>
