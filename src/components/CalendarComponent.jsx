@@ -7,16 +7,6 @@ function Calendar({ initialDate = new Date() }) {
     const year = current.getFullYear();
     const month = current.getMonth();
 
-    const pad = (n) => {
-        String(n).padStart(2, "0");
-    }
-
-    const ymd = (d) => {
-        `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-    }
-
-    const todayKey = ymd(new Date());
-
     const startOffset = new Date(year, month, 1).getDay(); // 0 (Sun) - 6 (Sat)
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
@@ -35,6 +25,19 @@ function Calendar({ initialDate = new Date() }) {
         calendar.push(null);
     }
 
+    const pad = (n) => {
+        String(n).padStart(2, "0");
+    }
+
+    const ymd = (d) => {
+        `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+    }
+
+    const handleSelect = (event, date) => {
+        event.preventDefault();
+        setSelected(date);
+    }
+
     const go = (delta) => {
         setCurrent((c) => new Date(c.getFullYear(), c.getMonth() + delta, 1));
     }
@@ -42,27 +45,16 @@ function Calendar({ initialDate = new Date() }) {
     return (
         <div className="max-w-md mx-auto p-4 bg-white rounded-2xl shadow-lg">
             <div className="flex items-center justify-between mb-4">
+                <button type="button" onClick={() => go(-1)} className="px-3 py-1 rounded">Previous</button>
+                
                 <h2 className="text-lg font-semibold">{current.toLocaleString("default", { month: "long" }) /* month-name */} {year}</h2>
                 
-                <div className="flex gap-2">
-                    <button
-                        onClick={() => go(-1)}
-                        className="px-3 py-1 rounded bg-gray-100 hover:bg-gray-200"
-                    >
-                        Previous
-                    </button>
-                    <button
-                        onClick={() => go(1)}
-                        className="px-3 py-1 rounded bg-gray-100 hover:bg-gray-200"
-                    >
-                        Next
-                    </button>
-                </div>
+                <button type="button" onClick={() => go(1)} className="px-3 py-1 rounded">Next</button>
             </div>
 
-            <table className="w-full border-collapse">
+            <table>
                 <thead>
-                    <tr className="text-gray-600 text-sm">
+                    <tr>
                         {['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map((day) => (
                             <th key={day} className="p-2 font-medium">{day}</th>
                         ))}
@@ -78,8 +70,9 @@ function Calendar({ initialDate = new Date() }) {
                                     return (
                                         <td key={i} className="p-1 text-center">
                                             <button
-                                                onClick={() => setSelected(ymd(date))}
-                                                className={`w-10 h-10 rounded-full transition-colors duration-150 ${(selected === ymd(date)) ? "bg-indigo-500 text-white" : ((ymd(date) === todayKey) ? "border border-indigo-500" : "hover:bg-gray-100")}`}
+                                                type="button"
+                                                onClick={() => handleSelect(date)}
+                                                className={`w-10 h-10 rounded-full transition-colors duration-150 ${(selected === ymd(date)) ? "bg-indigo-500 text-white" : ((ymd(date) === ymd(new Date())) ? "border border-indigo-500" : "hover:bg-gray-100")}`}
                                             >
                                                 {date.getDate()}
                                             </button>
