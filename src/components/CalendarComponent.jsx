@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 
 function Calendar({ initialDate = new Date() }) {
     const [current, setCurrent] = useState(new Date(initialDate.getFullYear(), initialDate.getMonth(), 1));
@@ -25,70 +27,94 @@ function Calendar({ initialDate = new Date() }) {
         calendar.push(null);
     }
 
-    const pad = (n) => {
-        String(n).padStart(2, "0");
-    }
+    const pad = (n) => String(n).padStart(2, "0");
 
-    const ymd = (d) => {
-        `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-    }
+    const ymd = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 
     const handleSelect = (event, date) => {
         event.preventDefault();
-        setSelected(date);
+        setSelected(ymd(date));
+        // Open Modal
     }
 
-    const go = (delta) => {
+    const navigateMonth = (delta) => {
         setCurrent((c) => new Date(c.getFullYear(), c.getMonth() + delta, 1));
     }
 
     return (
-        <div className="max-w-md mx-auto p-4 bg-white rounded-2xl shadow-lg">
-            <div className="flex items-center justify-between mb-4">
-                <button type="button" onClick={() => go(-1)} className="px-3 py-1 rounded">Previous</button>
-                
-                <h2 className="text-lg font-semibold">{current.toLocaleString("default", { month: "long" }) /* month-name */} {year}</h2>
-                
-                <button type="button" onClick={() => go(1)} className="px-3 py-1 rounded">Next</button>
-            </div>
+        <>
+            <div className="max-w-md p-4 rounded-2xl shadow-lg">
+                <div className="flex items-center justify-between mb-4">
+                    <button type="button" onClick={() => navigateMonth(-1)} className="px-3 py-1 rounded"><FontAwesomeIcon icon={faAngleLeft} /></button>
+                    
+                    <h2 className="text-lg font-semibold">{current.toLocaleString("default", { month: "long" }) /* month-name */} {year}</h2>
+                    
+                    <button type="button" onClick={() => navigateMonth(1)} className="px-3 py-1 rounded"><FontAwesomeIcon icon={faAngleRight} /></button>
+                </div>
 
-            <table>
-                <thead>
-                    <tr>
-                        {['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map((day) => (
-                            <th key={day} className="p-2 font-medium">{day}</th>
-                        ))}
-                    </tr>
-                </thead>
-                <tbody>
-                    {Array.from({ length: calendar.length / 7 }).map((_, week) => (
-                        <tr key={week}>
-                            {calendar.slice(week * 7, week * 7 + 7).map((date, i) => {
-                                if (!date) {
-                                    return <td key={i} className="p-2" />;
-                                } else {
-                                    return (
-                                        <td key={i} className="p-1 text-center">
-                                            <button
-                                                type="button"
-                                                onClick={() => handleSelect(date)}
-                                                className={`w-10 h-10 rounded-full transition-colors duration-150 ${(selected === ymd(date)) ? "bg-indigo-500 text-white" : ((ymd(date) === ymd(new Date())) ? "border border-indigo-500" : "hover:bg-gray-100")}`}
-                                            >
-                                                {date.getDate()}
-                                            </button>
-                                        </td>
-                                    );
-                                }
-                            })}
+                <table>
+                    <thead>
+                        <tr>
+                            {['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map((day) => (
+                                <th key={day} className="p-2 font-medium">{day}</th>
+                            ))}
                         </tr>
-                    ))}
-                </tbody>
-            </table>
-
-            <div className="mt-4 text-sm text-gray-600">
-                Selected: {selected ?? "None"}
+                    </thead>
+                    <tbody>
+                        {Array.from({ length: calendar.length / 7 }).map((_, week) => (
+                            <tr key={week}>
+                                {calendar.slice(week * 7, week * 7 + 7).map((date, i) => {
+                                    if (!date) {
+                                        return <td key={i} className="p-2" />;
+                                    } else {
+                                        return (
+                                            <td key={i} className="p-1 text-center">
+                                                <button
+                                                    type="button"
+                                                    onClick={(e) => handleSelect(e, date)}
+                                                    className={`w-10 h-10 rounded-full transition-colors duration-150 ${(selected === ymd(date)) ? "bg-indigo-500 text-white" : ((ymd(date) === ymd(new Date())) ? "border border-indigo-500" : "hover:bg-gray-100")}`}
+                                                    >
+                                                    {date.getDate()}
+                                                </button>
+                                            </td>
+                                        );
+                                    }
+                                })}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             </div>
-        </div>
+            <div>
+                <span>Schakel modus op:</span>
+                <input type="date" name="date" id="date" /> om <input type="time" name="date" id="date" />
+
+                <span>Naar:</span>
+                <div id="dropdown">
+                    <ul>
+                        <li onClick={() => selectModus("status")}>
+                            <span>Status Modus</span>
+                        </li>
+                        <li onClick={() => selectModus("temperatuur")}>
+                            <span>Temperatuur Modus</span>
+                        </li>
+                        <li onClick={() => selectModus("druk")}>
+                            <span>Druk Modus</span>
+                        </li>
+                        <li onClick={() => selectModus("vermogen")}>
+                            <span>Vermogen Modus</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <span className="me-3">Herhalen</span>
+                <input type="checkbox" value="" className="sr-only peer" />
+                <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+
+                <span>Annuleren</span>
+                <span>Opslaan</span>
+            </div>
+        </>
     );
 }
 
