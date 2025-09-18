@@ -55,9 +55,9 @@ function DetailsSettings() {
                             </div>
 
                             <div>
-                                <label htmlFor="steps-range" className="block mb-2">
+                                <label htmlFor="profile-range" className="block mb-2">
                                     <span className="mb-3">Profiel selecteren:</span>
-                                    <input id="steps-range" type="range" min="0" max="5" step="1" className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
+                                    <input id="profile-range" type="range" min="0" max="5" step="1" className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
                                 </label>
                             </div>
 
@@ -70,15 +70,16 @@ function DetailsSettings() {
                             </div>
                             
                             <div>
-                                <label htmlFor="steps-range" className="block mb-2">
+                                <label htmlFor="cap-range" className="block mb-2">
                                     <span className="mb-3">Sta power-capping toe tot __% tijdens netpieken:</span>
-                                    <input id="steps-range" type="range" min="0" max="5" step="1" className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
+                                    <input id="cap-range" type="range" min="0" max="5" step="1" className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
                                 </label>
                             </div>
                             
                             <div>
                                 <label>
                                     <span>Huidige temperatuur:</span>
+                                    <input type="number" name="number" id="number" />
                                 </label>
                             </div>
                             
@@ -90,6 +91,22 @@ function DetailsSettings() {
                                 </label>
 
                                 <Calendar />
+                            </div>
+
+                            <div>
+                                <label htmlFor="save-submit" className="block mb-2">
+                                    <span className="mb-3">Instellingen opslaan:</span>
+                                    <input id="save-submit" type="submit" className="p-2 bg-gray-200 rounded-lg cursor-pointer" value="Opslaan" />
+                                </label>
+                            </div>
+                        </form>
+                        
+                        <form>
+                            <div>
+                                <label htmlFor="reset-submit" className="block mb-2">
+                                    <span className="mb-3">Reset warmtepomp:</span>
+                                    <input id="reset-submit" type="submit" className="p-2 bg-gray-200 rounded-lg cursor-pointer" value="Reset" />
+                                </label>
                             </div>
                         </form>
                     </div>

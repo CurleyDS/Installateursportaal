@@ -31,14 +31,27 @@ function Calendar({ initialDate = new Date() }) {
 
     const ymd = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 
+    const navigateMonth = (delta) => {
+        setCurrent((c) => new Date(c.getFullYear(), c.getMonth() + delta, 1));
+    }
+
     const handleSelect = (event, date) => {
         event.preventDefault();
         setSelected(ymd(date));
-        // Open Modal
     }
 
-    const navigateMonth = (delta) => {
-        setCurrent((c) => new Date(c.getFullYear(), c.getMonth() + delta, 1));
+    const openModal = () => {
+        document.getElementById("tijdschemaModal").classList.remove('hidden');
+    }
+
+    const closeModal = () => {
+        document.getElementById("tijdschemaModal").classList.add('hidden');
+    }
+
+    window.onclick = function(event) {
+        if (event.target == document.getElementById("tijdschemaModal")) {
+            document.getElementById("tijdschemaModal").classList.add('hidden');
+        }
     }
 
     return (
@@ -85,34 +98,71 @@ function Calendar({ initialDate = new Date() }) {
                     </tbody>
                 </table>
             </div>
-            <div>
-                <span>Schakel modus op:</span>
-                <input type="date" name="date" id="date" /> om <input type="time" name="date" id="date" />
 
-                <span>Naar:</span>
-                <div id="dropdown">
-                    <ul>
-                        <li onClick={() => selectModus("status")}>
-                            <span>Status Modus</span>
-                        </li>
-                        <li onClick={() => selectModus("temperatuur")}>
-                            <span>Temperatuur Modus</span>
-                        </li>
-                        <li onClick={() => selectModus("druk")}>
-                            <span>Druk Modus</span>
-                        </li>
-                        <li onClick={() => selectModus("vermogen")}>
-                            <span>Vermogen Modus</span>
-                        </li>
-                    </ul>
+            <div className="p-4">
+                <button type="button" onClick={() => openModal()} disabled={selected == null ?? true}>Tijdschema's toevoegen</button>
+            </div>
+
+            <div id="tijdschemaModal" className="fixed top-0 left-0 z-10 hidden w-full h-full overflow-auto bg-black/40">
+                <div className="bg-white mx-auto p-2 rounded w-1/2">
+                    <div>
+                        <label className="block mb-2">
+                            <span className="mb-3">Schakel modus op:</span>
+                            <input type="date" /> om <input type="time" />
+                        </label>
+                    </div>
+                    
+                    <div>
+                        <label htmlFor="modus-select" className="block mb-2">
+                            <span className="mb-3">Naar:</span>
+                            <select id="modus-select">
+                                <option value="Normaal">Normaal</option>
+                                <option value="Eco">Eco</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <div>
+                        <label className="inline-flex items-center cursor-pointer">
+                            <span className="me-3">Herhalen</span>
+                            <input type="checkbox" value="" className="sr-only peer" />
+                            <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+                        </label>
+                    </div>
+                    
+                    <div>
+                        <label>
+                            <span className="me-3">Elke dag herhalen</span>
+                            <input type="radio" name="repeat-radio" value="" />
+                        </label>
+                    </div>
+                    
+                    <div>
+                        <label>
+                            <span className="me-3">Elke week herhalen</span>
+                            <input type="radio" name="repeat-radio" value="" />
+                        </label>
+                    </div>
+                    
+                    <div>
+                        <label>
+                            <span className="me-3">Elke maand herhalen</span>
+                            <input type="radio" name="repeat-radio" value="" />
+                        </label>
+                    </div>
+                    
+                    <div>
+                        <label>
+                            <span className="me-3">Elk jaar herhalen</span>
+                            <input type="radio" name="repeat-radio" value="" />
+                        </label>
+                    </div>
                 </div>
 
-                <span className="me-3">Herhalen</span>
-                <input type="checkbox" value="" className="sr-only peer" />
-                <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
-
-                <span>Annuleren</span>
-                <span>Opslaan</span>
+                <div>
+                    <button type="button" onClick={() => closeModal()}>Annuleren</button>
+                    <button type="button" onClick={() => closeModal()}>Opslaan</button>
+                </div>
             </div>
         </>
     );
