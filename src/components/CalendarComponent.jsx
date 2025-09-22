@@ -9,7 +9,7 @@ function Calendar({ initialDate = new Date() }) {
     const year = current.getFullYear();
     const month = current.getMonth();
 
-    const startOffset = new Date(year, month, 1).getDay(); // 0 (Sun) - 6 (Sat)
+    const startOffset = new Date(year, month, 0).getDay(); // 0 (Mon) - 6 (Sun)
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
     const calendar = [];
@@ -56,20 +56,20 @@ function Calendar({ initialDate = new Date() }) {
 
     return (
         <>
-            <div className="max-w-md p-4 rounded-2xl shadow-lg">
+            <div className="p-4 rounded-lg shadow-lg mb-2">
                 <div className="flex items-center justify-between mb-4">
                     <button type="button" onClick={() => navigateMonth(-1)} className="px-3 py-1 rounded"><FontAwesomeIcon icon={faAngleLeft} /></button>
                     
-                    <h2 className="text-lg font-semibold">{current.toLocaleString("default", { month: "long" }) /* month-name */} {year}</h2>
+                    <h2 className="font-semibold">{current.toLocaleString("default", { month: "long" }) /* month-name */} {year}</h2>
                     
                     <button type="button" onClick={() => navigateMonth(1)} className="px-3 py-1 rounded"><FontAwesomeIcon icon={faAngleRight} /></button>
                 </div>
 
-                <table>
+                <table className="w-full">
                     <thead>
                         <tr>
-                            {['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map((day) => (
-                                <th key={day} className="p-2 font-medium">{day}</th>
+                            {['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map((day) => (
+                                <th key={day}>{day}</th>
                             ))}
                         </tr>
                     </thead>
@@ -85,8 +85,8 @@ function Calendar({ initialDate = new Date() }) {
                                                 <button
                                                     type="button"
                                                     onClick={(e) => handleSelect(e, date)}
-                                                    className={`w-10 h-10 rounded-full transition-colors duration-150 ${(selected === ymd(date)) ? "bg-indigo-500 text-white" : ((ymd(date) === ymd(new Date())) ? "border border-indigo-500" : "hover:bg-gray-100")}`}
-                                                    >
+                                                    className={`w-full rounded transition-colors duration-150 ${(selected === ymd(date)) ? "bg-indigo-500 text-white" : ((ymd(date) === ymd(new Date())) ? "border border-indigo-500" : "border border-transparent hover:bg-gray-100")}`}
+                                                >
                                                     {date.getDate()}
                                                 </button>
                                             </td>
@@ -99,8 +99,8 @@ function Calendar({ initialDate = new Date() }) {
                 </table>
             </div>
 
-            <div className="p-4">
-                <button type="button" onClick={() => openModal()} disabled={selected == null ?? true}>Tijdschema's toevoegen</button>
+            <div>
+                <button type="button" className="bg-gray-200 p-2 rounded-lg cursor-pointer" onClick={() => openModal()} disabled={selected == null}>Tijdschema's toevoegen</button>
             </div>
 
             <div id="tijdschemaModal" className="fixed top-0 left-0 z-10 hidden w-full h-full overflow-auto bg-black/40">
@@ -157,11 +157,11 @@ function Calendar({ initialDate = new Date() }) {
                             <input type="radio" name="repeat-radio" value="" />
                         </label>
                     </div>
-                </div>
 
-                <div>
-                    <button type="button" onClick={() => closeModal()}>Annuleren</button>
-                    <button type="button" onClick={() => closeModal()}>Opslaan</button>
+                    <div>
+                        <button type="button" onClick={() => closeModal()}>Annuleren</button>
+                        <button type="button" onClick={() => closeModal()}>Opslaan</button>
+                    </div>
                 </div>
             </div>
         </>

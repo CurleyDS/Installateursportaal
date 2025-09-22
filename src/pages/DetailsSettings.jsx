@@ -44,7 +44,7 @@ function DetailsSettings() {
                     <Link to={"/" + pomp.id} className="p-3 rounded-lg">Terug</Link>
                 </div>
                 <div className='flex items-center justify-start w-full'>
-                    <div className='p-3'>
+                    <div className='w-full p-3'>
                         <form>
                             <div>
                                 <label className="inline-flex items-center cursor-pointer">
@@ -77,10 +77,8 @@ function DetailsSettings() {
                             </div>
                             
                             <div>
-                                <label>
-                                    <span>Huidige temperatuur:</span>
-                                    <input type="number" name="number" id="number" />
-                                </label>
+                                <label>Huidige temperatuur:</label>
+                                <input type="number" name="number" id="number" />
                             </div>
                             
                             <div>
@@ -94,19 +92,15 @@ function DetailsSettings() {
                             </div>
 
                             <div>
-                                <label htmlFor="save-submit" className="block mb-2">
-                                    <span className="mb-3">Instellingen opslaan:</span>
-                                    <input id="save-submit" type="submit" className="p-2 bg-gray-200 rounded-lg cursor-pointer" value="Opslaan" />
-                                </label>
+                                <label htmlFor="save-submit" className="block mb-2">Instellingen opslaan:</label>
+                                <input id="save-submit" type="submit" className="p-2 bg-gray-200 rounded-lg cursor-pointer" value="Opslaan" />
                             </div>
                         </form>
                         
                         <form>
                             <div>
-                                <label htmlFor="reset-submit" className="block mb-2">
-                                    <span className="mb-3">Reset warmtepomp:</span>
-                                    <input id="reset-submit" type="submit" className="p-2 bg-gray-200 rounded-lg cursor-pointer" value="Reset" />
-                                </label>
+                                <label htmlFor="reset-submit" className="block mb-2">Reset warmtepomp:</label>
+                                <input id="reset-submit" type="submit" className="p-2 bg-gray-200 rounded-lg cursor-pointer" value="Reset" />
                             </div>
                         </form>
                     </div>
