@@ -55,14 +55,14 @@ function Calendar({ initialDate = new Date() }) {
     }
 
     return (
-        <>
-            <div className="p-4 rounded-lg shadow-lg mb-2">
-                <div className="flex items-center justify-between mb-4">
-                    <button type="button" onClick={() => navigateMonth(-1)} className="px-3 py-1 rounded"><FontAwesomeIcon icon={faAngleLeft} /></button>
+        <div className="mb-2">
+            <div className="p-2 bg-gray-100 rounded-lg mb-2">
+                <div className="flex items-center justify-between p-2">
+                    <button type="button" onClick={() => navigateMonth(-1)} className="rounded"><FontAwesomeIcon icon={faAngleLeft} /></button>
                     
-                    <h2 className="font-semibold">{current.toLocaleString("default", { month: "long" }) /* month-name */} {year}</h2>
+                    <h2 className="font-bold">{current.toLocaleString("default", { month: "long" }) /* month-name */} {year}</h2>
                     
-                    <button type="button" onClick={() => navigateMonth(1)} className="px-3 py-1 rounded"><FontAwesomeIcon icon={faAngleRight} /></button>
+                    <button type="button" onClick={() => navigateMonth(1)} className="rounded"><FontAwesomeIcon icon={faAngleRight} /></button>
                 </div>
 
                 <table className="w-full">
@@ -85,7 +85,7 @@ function Calendar({ initialDate = new Date() }) {
                                                 <button
                                                     type="button"
                                                     onClick={(e) => handleSelect(e, date)}
-                                                    className={`w-full rounded transition-colors duration-150 ${(selected === ymd(date)) ? "bg-indigo-500 text-white" : ((ymd(date) === ymd(new Date())) ? "border border-indigo-500" : "border border-transparent hover:bg-gray-100")}`}
+                                                    className={`w-full rounded transition-colors duration-150 ${(selected === ymd(date)) ? "bg-gray-500 text-white" : ((ymd(date) === ymd(new Date())) ? "bg-gray-200 border border-gray-500" : "bg-gray-200 border border-transparent hover:bg-gray-300")}`}
                                                 >
                                                     {date.getDate()}
                                                 </button>
@@ -100,7 +100,7 @@ function Calendar({ initialDate = new Date() }) {
             </div>
 
             <div>
-                <button type="button" className="bg-gray-200 p-2 rounded-lg cursor-pointer" onClick={() => openModal()} disabled={selected == null}>Tijdschema's toevoegen</button>
+                <button type="button" className="p-2 bg-gray-200 rounded-lg cursor-pointer" onClick={() => openModal()} disabled={selected == null}>Tijdschema's toevoegen</button>
             </div>
 
             <div id="tijdschemaModal" className="fixed top-0 left-0 z-10 hidden w-full h-full overflow-auto bg-black/40">
@@ -164,7 +164,7 @@ function Calendar({ initialDate = new Date() }) {
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 }
 

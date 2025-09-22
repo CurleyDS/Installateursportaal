@@ -15,6 +15,15 @@
             "gemiddeldeDruk": 1.2,
             "vermogen": 5.5,
             "laatsteDataUpdate": "19-03",
+            "settings": {
+                "autoOptimalisatie": false,
+                "profiel": 2,
+                "netOptimalisatie": false,
+                "power-capping": 100,
+                "temperatuur": 15,
+                "tijdschemaInstelling": false,
+                "tijdschemas": []
+            },
             "warmtepompData": [
                 {
                     "status": 200,
