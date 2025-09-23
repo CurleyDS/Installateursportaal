@@ -263,6 +263,15 @@
             "gemiddeldeDruk": 1.3,
             "vermogen": 5.7,
             "laatsteDataUpdate": "19-03",
+            "settings": {
+                "autoOptimalisatie": false,
+                "profiel": 2,
+                "netOptimalisatie": false,
+                "power-capping": 100,
+                "temperatuur": 15,
+                "tijdschemaInstelling": false,
+                "tijdschemas": []
+            },
             "warmtepompData": [
                 {
                     "status": 200,
@@ -299,6 +308,15 @@
             "gemiddeldeDruk": 1.1,
             "vermogen": 5.6,
             "laatsteDataUpdate": "2023",
+            "settings": {
+                "autoOptimalisatie": false,
+                "profiel": 2,
+                "netOptimalisatie": false,
+                "power-capping": 100,
+                "temperatuur": 15,
+                "tijdschemaInstelling": false,
+                "tijdschemas": []
+            },
             "warmtepompData": [
                 {
                     "status": 200,
@@ -335,6 +353,15 @@
             "gemiddeldeDruk": 1.0,
             "vermogen": 4.3,
             "laatsteDataUpdate": "19-03",
+            "settings": {
+                "autoOptimalisatie": false,
+                "profiel": 2,
+                "netOptimalisatie": false,
+                "powerCap": 100,
+                "temperatuur": 15,
+                "tijdschemaInstelling": false,
+                "tijdschemas": []
+            },
             "warmtepompData": [
                 {
                     "status": 200,

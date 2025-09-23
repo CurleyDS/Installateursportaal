@@ -7,6 +7,17 @@ function DetailsSettings() {
     const [error, setError] = useState(null);
     const { id } = useParams(); // is a string. if it needs to be a number, convert it using Number(id)
     const [pomp, setPomp] = useState({});
+    const [currentSettings, setCurrentSettings] = useState({});
+    
+    let settings = {
+        autoOptimalisatie: currentSettings.autoOptimalisatie,
+        profiel: currentSettings.profiel,
+        netOptimalisatie: currentSettings.netOptimalisatie,
+        powerCap: currentSettings.powerCap,
+        temperatuur: currentSettings.temperatuur,
+        tijdschemaInstelling: currentSettings.tijdschemaInstelling,
+        tijdschemas: currentSettings.tijdschemas
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -26,6 +37,7 @@ function DetailsSettings() {
             })
             .then((item) => {
                 setPomp(item);
+                setCurrentSettings(item.settings);
                 setLoading(true);
             })
             .catch((error) => {
@@ -45,7 +57,7 @@ function DetailsSettings() {
                 </div>
                 <div className='flex items-center justify-start w-full'>
                     <div className='w-full p-3'>
-                        <form>
+                        <form method='POST'>
                             <div className="mb-2">
                                 <label className="inline-flex items-center">
                                     <span className="me-3">Automatisch optimaliseren inschakelen</span>
