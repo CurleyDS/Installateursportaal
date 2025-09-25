@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 
-function Calendar({ initialDate = new Date(), data = [] }) {
+function Calendar({ data = [] }) {
     const [tijdschemas, setTijdschemas] = useState(data);
-    const [current, setCurrent] = useState(new Date(initialDate.getFullYear(), initialDate.getMonth(), 1));
+    const [current, setCurrent] = useState(new Date());
     const [selected, setSelected] = useState(null);
+    const [minTime, setMinTime] = useState(null);
 
     const year = current.getFullYear();
     const month = current.getMonth();
@@ -45,9 +46,27 @@ function Calendar({ initialDate = new Date(), data = [] }) {
         document.getElementById("tijdschemaModal").classList.remove('hidden');
     }
 
+    const defaultTime = () => {
+        const nextHour = current.getMinutes() > 0 ? current.getHours() + 1 : current.getHours();
+        return `${String(nextHour).padStart(2, "0")}:00`;
+        // if (selected <= ymd(current)) {
+        //     return  `${String(current.getHours()).padStart(2, "0")}:${String(current.getMinutes()).padStart(2, "0")}`;
+        // } else {
+        //     return "00:00";
+        // }
+    }
+
     const closeModal = () => {
         document.getElementById("tijdschemaModal").classList.add('hidden');
     }
+
+    useEffect(() => {
+        if (selected && selected < ymd(current)) {
+            setMinTime(`${String(current.getHours()).padStart(2, "0")}:${String(current.getMinutes()).padStart(2, "0")}`);
+        } else {
+            setMinTime("08:00");
+        }
+    }, [selected]);
 
     window.onclick = function(event) {
         if (event.target == document.getElementById("tijdschemaModal")) {
@@ -105,60 +124,62 @@ function Calendar({ initialDate = new Date(), data = [] }) {
             </div>
 
             <div id="tijdschemaModal" className="fixed top-0 left-0 z-10 hidden w-full h-full overflow-auto bg-black/40">
-                <div className="w-1/2 p-2 rounded mx-auto bg-white">
-                    <fieldset className="mb-2">
-                        <legend className='block mb-2'>Schakel modus op:</legend>
-                        <input type="date" defaultValue={selected} className="p-2 bg-gray-200 rounded-lg cursor-pointer" /> om <input type="time" className="p-2 bg-gray-200 rounded-lg cursor-pointer" />
-                    </fieldset>
-                    
-                    <fieldset className="mb-2">
-                        <label htmlFor="modus-select" className="block mb-2">Naar:</label>
-                        <select id="modus-select" className="w-full p-2 bg-gray-200 rounded-lg cursor-pointer">
-                            <option value="Normaal">Normaal</option>
-                            <option value="Eco">Eco</option>
-                        </select>
-                    </fieldset>
+                <div className="flex items-center justify-center w-full">
+                    <div className="bg-white w-1/2 p-2 rounded">
+                        <fieldset className="mb-2">
+                            <legend className='block mb-2'>Schakel modus op:</legend>
+                            <input type="date" defaultValue={selected} className="p-2 bg-gray-200 rounded-lg cursor-pointer" /> om <input type="time" defaultValue={defaultTime()} min={minTime} className="p-2 bg-gray-200 rounded-lg cursor-pointer" />
+                        </fieldset>
+                        
+                        <fieldset className="mb-2">
+                            <label htmlFor="modus-select" className="block mb-2">Naar:</label>
+                            <select id="modus-select" className="w-full p-2 bg-gray-200 rounded-lg cursor-pointer">
+                                <option value="Normaal">Normaal</option>
+                                <option value="Eco">Eco</option>
+                            </select>
+                        </fieldset>
 
-                    <fieldset className="mb-2">
-                        <label className="inline-flex items-center cursor-pointer">
-                            <span className="me-3">Herhalen</span>
-                            <input type="checkbox" value="" className="sr-only peer" />
-                            <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
-                        </label>
-                    </fieldset>
-                    
-                    <fieldset className="mb-2">
-                        <input type="radio" name="repeat-radio" value="" />
-                        <label htmlFor="day" className="mb-2">
-                            <span className="ms-1">Elke <input id="day" type="number" min="1" className="border-b" /> dag herhalen</span>
-                        </label>
-                    </fieldset>
-                    
-                    <fieldset className="mb-2">
-                        <input type="radio" name="repeat-radio" value="" />
-                        <label htmlFor="week" className="mb-2">
-                            <span className="ms-1">Elke <input id="week" type="number" min="1" className="border-b" /> week herhalen</span>
-                        </label>
-                    </fieldset>
-                    
-                    <fieldset className="mb-2">
-                        <input type="radio" name="repeat-radio" value="" />
-                        <label htmlFor="month" className="mb-2">
-                            <span className="ms-1">Elke <input id="month" type="number" min="1" className="border-b" /> maand herhalen</span>
-                        </label>
-                    </fieldset>
-                    
-                    <fieldset className="mb-2">
-                        <input type="radio" name="repeat-radio" value="" />
-                        <label htmlFor="year" className="mb-2">
-                            <span className="ms-1">Elk <input id="year" type="number" min="1" className="border-b" /> jaar herhalen</span>
-                        </label>
-                    </fieldset>
+                        <fieldset className="mb-2">
+                            <label className="inline-flex items-center cursor-pointer">
+                                <span className="me-3">Herhalen</span>
+                                <input type="checkbox" value="" className="sr-only peer" />
+                                <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+                            </label>
+                        </fieldset>
+                        
+                        <fieldset className="mb-2">
+                            <input type="radio" name="repeat-radio" value="" />
+                            <label htmlFor="day" className="mb-2">
+                                <span className="ms-1">Elke <input id="day" type="number" min="1" className="border-b" /> dag herhalen</span>
+                            </label>
+                        </fieldset>
+                        
+                        <fieldset className="mb-2">
+                            <input type="radio" name="repeat-radio" value="" />
+                            <label htmlFor="week" className="mb-2">
+                                <span className="ms-1">Elke <input id="week" type="number" min="1" className="border-b" /> week herhalen</span>
+                            </label>
+                        </fieldset>
+                        
+                        <fieldset className="mb-2">
+                            <input type="radio" name="repeat-radio" value="" />
+                            <label htmlFor="month" className="mb-2">
+                                <span className="ms-1">Elke <input id="month" type="number" min="1" className="border-b" /> maand herhalen</span>
+                            </label>
+                        </fieldset>
+                        
+                        <fieldset className="mb-2">
+                            <input type="radio" name="repeat-radio" value="" />
+                            <label htmlFor="year" className="mb-2">
+                                <span className="ms-1">Elk <input id="year" type="number" min="1" className="border-b" /> jaar herhalen</span>
+                            </label>
+                        </fieldset>
 
-                    <fieldset className="flex items-center justify-start w-full mb-2">
-                        <button type="button" onClick={() => closeModal()}>Annuleren</button>
-                        <button type="button" onClick={() => closeModal()}>Opslaan</button>
-                    </fieldset>
+                        <fieldset className="mb-2">
+                            <button type="button" onClick={() => closeModal()}>Annuleren</button>
+                            <button type="button" onClick={() => closeModal()}>Opslaan</button>
+                        </fieldset>
+                    </div>
                 </div>
             </div>
         </div>
