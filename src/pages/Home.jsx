@@ -19,21 +19,21 @@ function Home() {
 
     useEffect(() => {
         const fetchData = async () => {
-            fetch('/dummy-data.json')
-            .then((response) => {
+            try {
+                const response = await fetch('/dummy-data.json');
+
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                return response.json();
-            })
-            .then((data) => {
+
+                const data = await response.json()
+
                 setData(data.heatpumps);
-                setLoading(true);
-            })
-            .catch((error) => {
+            } catch (error) {
                 setError(error);
+            } finally {
                 setLoading(true);
-            });
+            }
         }
 
         fetchData();

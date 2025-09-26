@@ -55,33 +55,31 @@ function Details() {
 
     useEffect(() => {
         const fetchData = async () => {
-            fetch('/dummy-data.json')
-            .then((response) => {
+            try {
+                const response = await fetch('/dummy-data.json');
+                
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                return response.json();
-            })
-            .then((data) => {
+                
+                const data = await response.json();
                 const item = data.heatpumps.find((item) => item.id === Number(id));
+
                 if (!item) {
                     throw new Error('Item not found');
                 }
-                return item;
-            })
-            .then((item) => {
+                
                 setPomp(item);
                 setCurrentChartData(item.warmtepompData);
-                setLoading(true);
-            })
-            .catch((error) => {
+            } catch (error) {
                 setError(error);
+            } finally {
                 setLoading(true);
-            });
+            }
         }
 
         fetchData();
-    }, []);
+    }, [id]);
 
     const toggleDropdown = (dropdownId) => {
         let dropdownFilter = document.getElementById(dropdownId);

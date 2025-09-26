@@ -8,46 +8,34 @@ function DetailsSettings() {
     const { id } = useParams(); // is a string. if it needs to be a number, convert it using Number(id)
     const [pomp, setPomp] = useState({});
     const [currentSettings, setCurrentSettings] = useState({});
-    
-    let settings = {
-        autoOptimalisatie: currentSettings.autoOptimalisatie,
-        profiel: currentSettings.profiel,
-        netOptimalisatie: currentSettings.netOptimalisatie,
-        powerCap: currentSettings.powerCap,
-        temperatuur: currentSettings.temperatuur,
-        tijdschemaInstelling: currentSettings.tijdschemaInstelling,
-        tijdschemas: currentSettings.tijdschemas
-    };
 
     useEffect(() => {
         const fetchData = async () => {
-            fetch('/dummy-data.json')
-            .then((response) => {
+            try {
+                const response = await fetch('/dummy-data.json');
+                
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                return response.json();
-            })
-            .then((data) => {
+                
+                const data = await response.json();
                 const item = data.heatpumps.find((item) => item.id === Number(id));
+                
                 if (!item) {
                     throw new Error('Item not found');
                 }
-                return item;
-            })
-            .then((item) => {
+                
                 setPomp(item);
                 setCurrentSettings(item.settings);
-                setLoading(true);
-            })
-            .catch((error) => {
+            } catch (error) {
                 setError(error);
+            } finally {
                 setLoading(true);
-            });
+            }
         }
 
         fetchData();
-    }, []);
+    }, [id]);
 
     if (loading) {
         return (

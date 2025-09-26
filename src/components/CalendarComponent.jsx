@@ -7,6 +7,7 @@ function Calendar({ data = [] }) {
     const [current, setCurrent] = useState(new Date());
     const [selected, setSelected] = useState(null);
     const [minTime, setMinTime] = useState(null);
+    const [newSchema, setNewSchema] = useState({});
 
     const year = current.getFullYear();
     const month = current.getMonth();
@@ -46,26 +47,31 @@ function Calendar({ data = [] }) {
         document.getElementById("tijdschemaModal").classList.remove('hidden');
     }
 
-    const defaultTime = () => {
-        const nextHour = current.getMinutes() > 0 ? current.getHours() + 1 : current.getHours();
-        return `${String(nextHour).padStart(2, "0")}:00`;
-        // if (selected <= ymd(current)) {
-        //     return  `${String(current.getHours()).padStart(2, "0")}:${String(current.getMinutes()).padStart(2, "0")}`;
-        // } else {
-        //     return "00:00";
-        // }
-    }
-
     const closeModal = () => {
         document.getElementById("tijdschemaModal").classList.add('hidden');
     }
 
     useEffect(() => {
-        if (selected && selected < ymd(current)) {
-            setMinTime(`${String(current.getHours()).padStart(2, "0")}:${String(current.getMinutes()).padStart(2, "0")}`);
-        } else {
-            setMinTime("08:00");
+        let calculatedMinTime = "00:00";
+        let calculatedDefaultTime = "08:00";
+
+        if (selected && selected <= ymd(current)) {
+            calculatedMinTime = `${String(current.getHours()).padStart(2, "0")}:${String(current.getMinutes()).padStart(2, "0")}`;
+            calculatedDefaultTime = `${String(current.getHours() + 1).padStart(2, "0")}:00`;
         }
+
+        setMinTime(calculatedMinTime);
+
+        setNewSchema({
+            date: selected,
+            time: calculatedDefaultTime,
+            modus: "normaal",
+            onRepeat: false,
+            repeat: {
+                timePeriod: "day",
+                quantity: 1
+            }
+        });
     }, [selected]);
 
     window.onclick = function(event) {
@@ -128,7 +134,7 @@ function Calendar({ data = [] }) {
                     <div className="bg-white w-1/2 p-2 rounded">
                         <fieldset className="mb-2">
                             <legend className='block mb-2'>Schakel modus op:</legend>
-                            <input type="date" defaultValue={selected} className="p-2 bg-gray-200 rounded-lg cursor-pointer" /> om <input type="time" defaultValue={defaultTime()} min={minTime} className="p-2 bg-gray-200 rounded-lg cursor-pointer" />
+                            <input type="date" defaultValue={newSchema.date} className="p-2 bg-gray-200 rounded-lg cursor-pointer" /> om <input type="time" defaultValue={newSchema.time} min={minTime} className="p-2 bg-gray-200 rounded-lg cursor-pointer" />
                         </fieldset>
                         
                         <fieldset className="mb-2">
@@ -142,34 +148,34 @@ function Calendar({ data = [] }) {
                         <fieldset className="mb-2">
                             <label className="inline-flex items-center cursor-pointer">
                                 <span className="me-3">Herhalen</span>
-                                <input type="checkbox" value="" className="sr-only peer" />
+                                <input type="checkbox" defaultChecked={newSchema.onRepeat} className="sr-only peer" />
                                 <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
                             </label>
                         </fieldset>
                         
                         <fieldset className="mb-2">
-                            <input type="radio" name="repeat-radio" value="" />
+                            <input type="radio" name="repeat-radio" />
                             <label htmlFor="day" className="mb-2">
                                 <span className="ms-1">Elke <input id="day" type="number" min="1" className="border-b" /> dag herhalen</span>
                             </label>
                         </fieldset>
                         
                         <fieldset className="mb-2">
-                            <input type="radio" name="repeat-radio" value="" />
+                            <input type="radio" name="repeat-radio" />
                             <label htmlFor="week" className="mb-2">
                                 <span className="ms-1">Elke <input id="week" type="number" min="1" className="border-b" /> week herhalen</span>
                             </label>
                         </fieldset>
                         
                         <fieldset className="mb-2">
-                            <input type="radio" name="repeat-radio" value="" />
+                            <input type="radio" name="repeat-radio" />
                             <label htmlFor="month" className="mb-2">
                                 <span className="ms-1">Elke <input id="month" type="number" min="1" className="border-b" /> maand herhalen</span>
                             </label>
                         </fieldset>
                         
                         <fieldset className="mb-2">
-                            <input type="radio" name="repeat-radio" value="" />
+                            <input type="radio" name="repeat-radio" />
                             <label htmlFor="year" className="mb-2">
                                 <span className="ms-1">Elk <input id="year" type="number" min="1" className="border-b" /> jaar herhalen</span>
                             </label>
