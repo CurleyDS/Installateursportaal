@@ -226,7 +226,7 @@ function Home() {
                                             <div className="flex items-center">
                                                 <FontAwesomeIcon icon={faLocationDot} />
                                                 <p className="flex-1 ml-4 font-normal text-gray-900">
-                                                    [{pomp.postcode}]
+                                                    {pomp.postcode}
                                                 </p>
                                             </div>
                                         </li>
