@@ -81,53 +81,62 @@ function Calendar({ data = [] }) {
     }
 
     return (
-        <div className="p-2">
-            <div className="flex flex-col items-center bg-gray-100 p-2 rounded-lg mb-2">
-                <div className="flex items-center justify-between p-2 w-full">
-                    <button type="button" onClick={() => navigateMonth(-1)} className="rounded"><FontAwesomeIcon icon={faAngleLeft} /></button>
-                    
-                    <h2 className="font-bold">{current.toLocaleString("default", { month: "long" }) /* month-name */} {year}</h2>
-                    
-                    <button type="button" onClick={() => navigateMonth(1)} className="rounded"><FontAwesomeIcon icon={faAngleRight} /></button>
+        <>
+            <fieldset className="p-2">
+                <div className="flex flex-col items-center bg-gray-100 p-2 rounded-lg mb-2">
+                    <div className="flex items-center justify-between w-full">
+                        <button type="button" onClick={() => navigateMonth(-1)} className="rounded"><FontAwesomeIcon icon={faAngleLeft} /></button>
+                        
+                        <span className="font-bold">{current.toLocaleString("default", { month: "long" }) /* month-name */} {year}</span>
+                        
+                        <button type="button" onClick={() => navigateMonth(1)} className="rounded"><FontAwesomeIcon icon={faAngleRight} /></button>
+                    </div>
+
+                    <table className="bg-gray-100 p-2 w-full">
+                        <thead>
+                            <tr>
+                                {['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map((day) => (
+                                    <th key={day}>{day}</th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {Array.from({ length: calendar.length / 7 }).map((_, week) => (
+                                <tr key={week}>
+                                    {calendar.slice(week * 7, week * 7 + 7).map((date, i) => {
+                                        if (!date) {
+                                            return <td key={i} className="p-2" />;
+                                        } else {
+                                            return (
+                                                <td key={i} className="p-1 text-center">
+                                                    <button
+                                                        type="button"
+                                                        onClick={(e) => handleSelect(e, date)}
+                                                        className={`w-full rounded transition-colors duration-150 ${(selected === ymd(date)) ? "bg-gray-500 text-white" : ((ymd(date) === ymd(new Date())) ? "bg-gray-200 border border-gray-500" : "bg-gray-200 border border-transparent hover:bg-gray-300")}`}
+                                                    >
+                                                        {date.getDate()}
+                                                    </button>
+                                                </td>
+                                            );
+                                        }
+                                    })}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
 
-                <table className="w-full">
-                    <thead>
-                        <tr>
-                            {['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map((day) => (
-                                <th key={day}>{day}</th>
-                            ))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {Array.from({ length: calendar.length / 7 }).map((_, week) => (
-                            <tr key={week}>
-                                {calendar.slice(week * 7, week * 7 + 7).map((date, i) => {
-                                    if (!date) {
-                                        return <td key={i} className="p-2" />;
-                                    } else {
-                                        return (
-                                            <td key={i} className="p-1 text-center">
-                                                <button
-                                                    type="button"
-                                                    onClick={(e) => handleSelect(e, date)}
-                                                    className={`w-full rounded transition-colors duration-150 ${(selected === ymd(date)) ? "bg-gray-500 text-white" : ((ymd(date) === ymd(new Date())) ? "bg-gray-200 border border-gray-500" : "bg-gray-200 border border-transparent hover:bg-gray-300")}`}
-                                                >
-                                                    {date.getDate()}
-                                                </button>
-                                            </td>
-                                        );
-                                    }
-                                })}
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-
-            <div>
-                <button type="button" className="p-2 bg-gray-200 rounded-lg" onClick={() => openModal()} disabled={selected == null}>Tijdschema's toevoegen</button>
-            </div>
+                <div>
+                    <button type="button" className="p-2 bg-gray-200 rounded-lg" onClick={() => openModal()} disabled={selected == null}>Tijdschema's toevoegen</button>
+                </div>
+            </fieldset>
+            
+            <fieldset className="p-2">
+                <label htmlFor="save-submit" className='block mb-2'>
+                    <span className="block mb-2">Instellingen opslaan:</span>
+                    <button type="button" className="p-2 bg-gray-200 rounded-lg" onClick={() => openModal()}>Opslaan</button>
+                </label>
+            </fieldset>
 
             <div id="tijdschemaModal" className="fixed top-0 left-0 z-10 hidden w-full h-full overflow-auto bg-black/40">
                 <div className="flex items-center justify-center w-full">
@@ -188,7 +197,7 @@ function Calendar({ data = [] }) {
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
 

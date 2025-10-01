@@ -107,6 +107,7 @@ function DetailsSettings() {
                         </fieldset>
                     </form>
                 </div>
+                {/* Modal */}
             </>
         )
     } else {
