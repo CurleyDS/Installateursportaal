@@ -117,27 +117,27 @@ function Details() {
     if (loading) {
         return (
             <>
-                <div className='flex items-center justify-between w-full'>
-                    <Link to={"/"} className="p-3 rounded-lg">Terug</Link>
+                <div className='flex items-center justify-between'>
+                    <Link to={"/"} className="p-2 bg-gray-200 rounded-lg">Terug</Link>
 
-                    <span className="p-3 rounded-lg">Dag naar Maand knop</span>
+                    <span className="p-2 bg-gray-200 rounded-lg">Naar dagweergave</span> {/* Nog niet functioneel */}
                     
-                    <span className='relative cursor-pointer p-3 rounded-lg' onClick={() => toggleDropdown('dropdownChart')}>
-                        <span>Chart</span>
+                    <span className='relative cursor-pointer' onClick={() => toggleDropdown('dropdownChart')}>
+                        <span className='p-2 bg-gray-200 rounded-lg'>{selectedFilter.charAt(0).toUpperCase() + selectedFilter.slice(1)}</span>
 
-                        <div id="dropdownChart" className="absolute top-8 right-0 z-10 hidden bg-white divide-y divide-gray-100 rounded-lg w-44 dark:bg-gray-700">
-                            <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
+                        <div id="dropdownChart" className="absolute top-8 right-0 z-10 hidden bg-white divide-y divide-gray-100 w-44 p-2 rounded-lg">
+                            <ul className="py-2">
                                 <li onClick={() => selectFilter("status")}>
-                                    <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Status Filter</span>
+                                    <span className="block px-4 py-2 hover:bg-gray-100">Status Filter</span>
                                 </li>
                                 <li onClick={() => selectFilter("temperatuur")}>
-                                    <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Temperatuur Filter</span>
+                                    <span className="block px-4 py-2 hover:bg-gray-100">Temperatuur Filter</span>
                                 </li>
                                 <li onClick={() => selectFilter("druk")}>
-                                    <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Druk Filter</span>
+                                    <span className="block px-4 py-2 hover:bg-gray-100">Druk Filter</span>
                                 </li>
                                 <li onClick={() => selectFilter("vermogen")}>
-                                    <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Vermogen Filter</span>
+                                    <span className="block px-4 py-2 hover:bg-gray-100">Vermogen Filter</span>
                                 </li>
                             </ul>
                         </div>
@@ -177,8 +177,8 @@ function Details() {
                     <ChartsYAxis label={chartConfig[selectedFilter].label} axisId="y-axis-id" />
                     <ChartsXAxis label="Dag" axisId="x-band" />
                 </ChartContainer>
-                <div className='flex flex-row justify-between items-start w-full gap-4'>
-                    <div className='w-3/5 border border-gray-200 rounded-lg'>
+                <div className='flex flex-row justify-between items-start gap-4'>
+                    <div className='w-2/3 border border-gray-200 rounded-lg'>
                         <div className="p-5">
                             <ul>
                                 <li>
@@ -263,26 +263,22 @@ function Details() {
                             </ul>
                         </div>
                     </div>
-                    <div className='w-2/5 border border-gray-200 rounded-lg'>
+                    <div className='w-1/3 border border-gray-200 rounded-lg'>
                         <div className={'p-5 rounded-t-lg ' + pompStatus(pomp.huidigeStatus).style}>
-                            <p>
-                                <span className='font-semibold'>{pompStatus(pomp.huidigeStatus).text}</span>
-                            </p>
+                            <span className='font-semibold'>{pompStatus(pomp.huidigeStatus).text}</span>
                         </div>
                         <hr />
                         <div className="p-5">
                             <ul>
                                 {pomp.logs && pomp.logs.map((log, index) => (
                                     <li key={index}>
-                                        <div className='flex items-center py-3'>
-                                            <span>
-                                                <p><span className='font-semibold'>{log.datum}: </span></p>
-                                                <ul className='list-disc'>
-                                                    {log.acties && log.acties.map((actie, actieIndex) => (
-                                                        <li key={actieIndex}>{actie.title}. {actie.beschrijving}</li>
-                                                    ))}
-                                                </ul>
-                                            </span>
+                                        <div className='p-3'>
+                                            <span className='font-semibold'>{log.datum}: </span>
+                                            <ul className='list-disc'>
+                                                {log.acties && log.acties.map((actie, actieIndex) => (
+                                                    <li key={actieIndex}>{actie.title}. {actie.beschrijving}</li>
+                                                ))}
+                                            </ul>
                                         </div>
                                         <hr />
                                     </li>
@@ -295,7 +291,7 @@ function Details() {
         )
     } else {
         return (
-            <div className="flex justify-between items-start w-full">
+            <div className="flex justify-between items-start">
                 <p className="text-gray-500">Loading...</p>
             </div>
         )

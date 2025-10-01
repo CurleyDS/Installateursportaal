@@ -7,7 +7,7 @@ function Main() {
     return (
         <>
             <Sidebar />
-            <main className="ml-64 w-full p-4">
+            <main className="flex-1 p-4 ml-64">
                 <Outlet />
             </main>
         </>

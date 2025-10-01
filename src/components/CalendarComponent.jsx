@@ -81,9 +81,9 @@ function Calendar({ data = [] }) {
     }
 
     return (
-        <div className="mb-2">
-            <div className="p-2 bg-gray-100 rounded-lg mb-2">
-                <div className="flex items-center justify-between p-2">
+        <div className="p-2">
+            <div className="flex flex-col items-center bg-gray-100 p-2 rounded-lg mb-2">
+                <div className="flex items-center justify-between p-2 w-full">
                     <button type="button" onClick={() => navigateMonth(-1)} className="rounded"><FontAwesomeIcon icon={faAngleLeft} /></button>
                     
                     <h2 className="font-bold">{current.toLocaleString("default", { month: "long" }) /* month-name */} {year}</h2>
@@ -126,12 +126,12 @@ function Calendar({ data = [] }) {
             </div>
 
             <div>
-                <button type="button" className="p-2 bg-gray-200 rounded-lg cursor-pointer" onClick={() => openModal()} disabled={selected == null}>Tijdschema's toevoegen</button>
+                <button type="button" className="p-2 bg-gray-200 rounded-lg" onClick={() => openModal()} disabled={selected == null}>Tijdschema's toevoegen</button>
             </div>
 
             <div id="tijdschemaModal" className="fixed top-0 left-0 z-10 hidden w-full h-full overflow-auto bg-black/40">
                 <div className="flex items-center justify-center w-full">
-                    <div className="bg-white w-1/2 p-2 rounded">
+                    <div className="bg-white p-2 rounded">
                         <fieldset className="mb-2">
                             <legend className='block mb-2'>Schakel modus op:</legend>
                             <input type="date" defaultValue={newSchema.date} className="p-2 bg-gray-200 rounded-lg cursor-pointer" /> om <input type="time" defaultValue={newSchema.time} min={minTime} className="p-2 bg-gray-200 rounded-lg cursor-pointer" />
