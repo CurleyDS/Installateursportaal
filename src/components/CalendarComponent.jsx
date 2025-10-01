@@ -83,16 +83,16 @@ function Calendar({ data = [] }) {
     return (
         <>
             <fieldset className="p-2">
-                <div className="flex flex-col items-center bg-gray-100 p-2 rounded-lg mb-2">
-                    <div className="flex items-center justify-between w-full">
-                        <button type="button" onClick={() => navigateMonth(-1)} className="rounded"><FontAwesomeIcon icon={faAngleLeft} /></button>
+                <div className="flex flex-col items-center p-2 bg-gray-100 rounded-lg mb-2">
+                    <div className="flex items-center justify-between p-2 w-full">
+                        <button type="button" onClick={() => navigateMonth(-1)}><FontAwesomeIcon icon={faAngleLeft} /></button>
                         
                         <span className="font-bold">{current.toLocaleString("default", { month: "long" }) /* month-name */} {year}</span>
                         
-                        <button type="button" onClick={() => navigateMonth(1)} className="rounded"><FontAwesomeIcon icon={faAngleRight} /></button>
+                        <button type="button" onClick={() => navigateMonth(1)}><FontAwesomeIcon icon={faAngleRight} /></button>
                     </div>
 
-                    <table className="bg-gray-100 p-2 w-full">
+                    <table className="p-2 bg-gray-100 w-full">
                         <thead>
                             <tr>
                                 {['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map((day) => (
@@ -112,7 +112,7 @@ function Calendar({ data = [] }) {
                                                     <button
                                                         type="button"
                                                         onClick={(e) => handleSelect(e, date)}
-                                                        className={`w-full rounded transition-colors duration-150 ${(selected === ymd(date)) ? "bg-gray-500 text-white" : ((ymd(date) === ymd(new Date())) ? "bg-gray-200 border border-gray-500" : "bg-gray-200 border border-transparent hover:bg-gray-300")}`}
+                                                        className={`${(selected === ymd(date)) ? "bg-gray-500 text-white" : ((ymd(date) === ymd(new Date())) ? "bg-gray-200 border border-gray-500" : "bg-gray-200 border border-transparent hover:bg-gray-300")} w-full rounded transition-colors duration-150`}
                                                     >
                                                         {date.getDate()}
                                                     </button>
@@ -130,35 +130,27 @@ function Calendar({ data = [] }) {
                     <button type="button" className="p-2 bg-gray-200 rounded-lg" onClick={() => openModal()} disabled={selected == null}>Tijdschema's toevoegen</button>
                 </div>
             </fieldset>
-            
-            <fieldset className="p-2">
-                <label htmlFor="save-submit" className='block mb-2'>
-                    <span className="block mb-2">Instellingen opslaan:</span>
-                    <button type="button" className="p-2 bg-gray-200 rounded-lg" onClick={() => openModal()}>Opslaan</button>
-                </label>
-            </fieldset>
 
-            <div id="tijdschemaModal" className="fixed top-0 left-0 z-10 hidden w-full h-full overflow-auto bg-black/40">
-                <div className="flex items-center justify-center w-full">
-                    <div className="bg-white p-2 rounded">
+            <div id="tijdschemaModal" className="fixed top-0 left-64 right-0 z-10 hidden bg-black/40 w-full h-full overflow-auto">
+                <div className="flex flex-col items-start p-2 bg-white w-full rounded">
                         <fieldset className="mb-2">
                             <legend className='block mb-2'>Schakel modus op:</legend>
-                            <input type="date" defaultValue={newSchema.date} className="p-2 bg-gray-200 rounded-lg cursor-pointer" /> om <input type="time" defaultValue={newSchema.time} min={minTime} className="p-2 bg-gray-200 rounded-lg cursor-pointer" />
+                            <input type="date" defaultValue={newSchema.date} className="p-2 bg-gray-200 rounded-lg" /> om <input type="time" defaultValue={newSchema.time} min={minTime} className="p-2 bg-gray-200 rounded-lg" />
                         </fieldset>
                         
                         <fieldset className="mb-2">
                             <label htmlFor="modus-select" className="block mb-2">Naar:</label>
-                            <select id="modus-select" className="w-full p-2 bg-gray-200 rounded-lg cursor-pointer">
+                            <select id="modus-select" className="p-2 bg-gray-200 w-full rounded-lg">
                                 <option value="Normaal">Normaal</option>
                                 <option value="Eco">Eco</option>
                             </select>
                         </fieldset>
 
                         <fieldset className="mb-2">
-                            <label className="inline-flex items-center cursor-pointer">
+                            <label className="inline-flex items-center">
                                 <span className="me-3">Herhalen</span>
                                 <input type="checkbox" defaultChecked={newSchema.onRepeat} className="sr-only peer" />
-                                <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+                                <div className="relative bg-gray-200 w-11 h-6 rounded-full peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                             </label>
                         </fieldset>
                         
@@ -194,7 +186,6 @@ function Calendar({ data = [] }) {
                             <button type="button" onClick={() => closeModal()}>Annuleren</button>
                             <button type="button" onClick={() => closeModal()}>Opslaan</button>
                         </fieldset>
-                    </div>
                 </div>
             </div>
         </>

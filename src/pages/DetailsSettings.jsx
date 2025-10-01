@@ -9,6 +9,14 @@ function DetailsSettings() {
     const [pomp, setPomp] = useState({});
     const [currentSettings, setCurrentSettings] = useState({});
 
+    const openModal = () => {
+        document.getElementById("confirmModal").classList.remove('hidden');
+    }
+
+    const closeModal = () => {
+        document.getElementById("confirmModal").classList.add('hidden');
+    }
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -37,6 +45,12 @@ function DetailsSettings() {
         fetchData();
     }, [id]);
 
+    window.onclick = function(event) {
+        if (event.target == document.getElementById("confirmModal")) {
+            document.getElementById("confirmModal").classList.add('hidden');
+        }
+    }
+
     if (loading) {
         return (
             <>
@@ -49,14 +63,14 @@ function DetailsSettings() {
                             <label className="inline-flex items-center">
                                 <span className="me-3">Automatisch optimaliseren inschakelen</span>
                                 <input type="checkbox" defaultChecked={currentSettings.autoOptimalisatie} className="sr-only peer" />
-                                <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+                                <div className="relative bg-gray-200 w-11 h-6 rounded-full peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                             </label>
                         </fieldset>
 
                         <fieldset className="p-2">
                             <label htmlFor="profile-range">
                                 <span className="mb-3">Profiel selecteren:</span>
-                                <input id="profile-range" type="range" defaultValue={currentSettings.profiel} min="0" max="5" step="1" className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
+                                <input id="profile-range" type="range" defaultValue={currentSettings.profiel} min="0" max="5" step="1" className="bg-gray-200 w-full h-2 appearance-none rounded-lg" />
                             </label>
                         </fieldset>
 
@@ -64,27 +78,27 @@ function DetailsSettings() {
                             <label className="inline-flex items-center">
                                 <span className="me-3">Deelname aan netoptimalisatie</span>
                                 <input type="checkbox" defaultChecked={currentSettings.netOptimalisatie} className="sr-only peer" />
-                                <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+                                <div className="relative bg-gray-200 w-11 h-6 rounded-full peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                             </label>
                         </fieldset>
                         
                         <fieldset className="p-2">
                             <label htmlFor="cap-range">
                                 <span className="mb-3">Sta power-capping toe tot {currentSettings.powerCap}% tijdens netpieken:</span>
-                                <input id="cap-range" type="range" defaultValue={currentSettings.powerCap} min="0" max="100" step="25" className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
+                                <input id="cap-range" type="range" defaultValue={currentSettings.powerCap} min="0" max="100" step="25" className="bg-gray-200 w-full h-2 appearance-none rounded-lg" />
                             </label>
                         </fieldset>
                         
                         <fieldset className="p-2">
                             <label htmlFor="number" className='block mb-2'>Huidige temperatuur:</label>
-                            <input id="number" type="number" defaultValue={currentSettings.temperatuur} min="0" className="p-2 bg-gray-200 rounded-lg cursor-pointer" />
+                            <input id="number" type="number" defaultValue={currentSettings.temperatuur} min="0" className="p-2 bg-gray-200 rounded-lg" />
                         </fieldset>
                         
                         <fieldset className="p-2">
                             <label className="inline-flex items-center">
                                 <span className="me-3">Tijdschema's instellen</span>
                                 <input type="checkbox" defaultValue={currentSettings.tijdschemaInstelling} className="sr-only peer" />
-                                <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+                                <div className="relative bg-gray-200 w-11 h-6 rounded-full peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                             </label>
                         </fieldset>
 
@@ -107,7 +121,18 @@ function DetailsSettings() {
                         </fieldset>
                     </form>
                 </div>
-                {/* Modal */}
+                <div id="confirmModal" className="fixed top-0 left-0 z-10 hidden bg-black/40 w-full h-full overflow-auto">
+                    <div className="flex items-center justify-center w-full">
+                        <div className="p-2 bg-white rounded">
+                            Modal content
+
+                            <fieldset className="mb-2">
+                                <button type="button" onClick={() => closeModal()}>Annuleren</button>
+                                <button type="button" onClick={() => closeModal()}>Opslaan</button>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
             </>
         )
     } else {
