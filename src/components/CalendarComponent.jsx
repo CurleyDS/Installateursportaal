@@ -140,7 +140,7 @@ function Calendar({ data = [] }) {
                         
                         <fieldset className="mb-2">
                             <label htmlFor="modus-select" className="block mb-2">Naar:</label>
-                            <select id="modus-select" className="p-2 bg-gray-200 w-full rounded-lg">
+                            <select id="modus-select" className="p-2 bg-gray-200 rounded-lg">
                                 <option value="Normaal">Normaal</option>
                                 <option value="Eco">Eco</option>
                             </select>
@@ -155,28 +155,28 @@ function Calendar({ data = [] }) {
                         </fieldset>
                         
                         <fieldset className="mb-2">
-                            <input type="radio" name="repeat-radio" />
+                            <input type="radio" name="repeat-radio" disabled={!newSchema.onRepeat} />
                             <label htmlFor="day" className="mb-2">
                                 <span className="ms-1">Elke <input id="day" type="number" min="1" className="border-b" /> dag herhalen</span>
                             </label>
                         </fieldset>
                         
                         <fieldset className="mb-2">
-                            <input type="radio" name="repeat-radio" />
+                            <input type="radio" name="repeat-radio" disabled={!newSchema.onRepeat} />
                             <label htmlFor="week" className="mb-2">
                                 <span className="ms-1">Elke <input id="week" type="number" min="1" className="border-b" /> week herhalen</span>
                             </label>
                         </fieldset>
                         
                         <fieldset className="mb-2">
-                            <input type="radio" name="repeat-radio" />
+                            <input type="radio" name="repeat-radio" disabled={!newSchema.onRepeat} />
                             <label htmlFor="month" className="mb-2">
                                 <span className="ms-1">Elke <input id="month" type="number" min="1" className="border-b" /> maand herhalen</span>
                             </label>
                         </fieldset>
                         
                         <fieldset className="mb-2">
-                            <input type="radio" name="repeat-radio" />
+                            <input type="radio" name="repeat-radio" disabled={!newSchema.onRepeat} />
                             <label htmlFor="year" className="mb-2">
                                 <span className="ms-1">Elk <input id="year" type="number" min="1" className="border-b" /> jaar herhalen</span>
                             </label>
