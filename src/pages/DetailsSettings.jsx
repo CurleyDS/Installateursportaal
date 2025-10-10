@@ -117,7 +117,7 @@ function DetailsSettings() {
                         <fieldset className="p-2">
                             <label htmlFor="save-submit" className='block mb-2'>
                                 <span className="block mb-2">Instellingen opslaan:</span>
-                                <button type="button" className="p-2 bg-gray-200 rounded-lg" onClick={() => openModal()}>Opslaan</button>
+                                <button type="button" className="p-2 bg-gray-200 rounded-lg" onClick={() => {console.log(settings); openModal()}}>Opslaan</button>
                             </label>
                         </fieldset>
                     </form>
