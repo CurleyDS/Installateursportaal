@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom';
 import { Calendar } from '../components/CalendarComponent';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 
 function DetailsSettings() {
     const [loading, setLoading] = useState(false);
@@ -9,6 +11,8 @@ function DetailsSettings() {
     const [pomp, setPomp] = useState({});
     const [currentSettings, setCurrentSettings] = useState({});
     const [settings, setSettings] = useState({});
+    const [modal, setModal] = useState(0);
+    const [submitModal, setSubmitModal] = useState(false);
 
     const handleChange = (e) => {
         const {name, value, type, checked} = e.target;
@@ -18,8 +22,10 @@ function DetailsSettings() {
             [name]: type === 'checkbox' ? checked : value
         }));
     }
-    const openModal = () => {
+    const openModal = (saveOrReset) => {
         document.getElementById("confirmModal").classList.remove('hidden');
+
+        setModal(saveOrReset);
     }
 
     const closeModal = () => {
@@ -117,7 +123,7 @@ function DetailsSettings() {
                         <fieldset className="p-2">
                             <label htmlFor="save-submit" className='block mb-2'>
                                 <span className="block mb-2">Instellingen opslaan:</span>
-                                <button type="button" className="p-2 bg-gray-200 rounded-lg" onClick={() => {console.log(settings); openModal()}}>Opslaan</button>
+                                <button type="button" className="p-2 bg-gray-200 rounded-lg" onClick={() => {console.log(settings); openModal(0)}}>Opslaan</button>
                             </label>
                         </fieldset>
                     </form>
@@ -126,20 +132,30 @@ function DetailsSettings() {
                         <fieldset className="p-2">
                             <label htmlFor="reset-submit" className='block mb-2'>
                                 <span className="block mb-2">Reset warmtepomp:</span>
-                                <button type="button" className="p-2 bg-gray-200 rounded-lg" onClick={() => openModal()}>Reset</button>
+                                <button type="button" className="p-2 bg-gray-200 rounded-lg" onClick={() => openModal(1)}>Reset</button>
                             </label>
                         </fieldset>
                     </form>
                 </div>
                 <div id="confirmModal" className="fixed top-0 left-0 z-10 hidden bg-black/40 w-full h-full overflow-auto">
                     <div className="flex items-center justify-center w-full">
-                        <div className="p-2 bg-white rounded">
-                            Modal content
+                        <div className="flex flex-col items-center justify-center bg-white p-2 w-1/2">
+                            {submitModal ? (
+                                <>
+                                    <span className="self-center text-xl font-semibold">{modal == 0 ? "Wilt u uw instellingen opslaan?" : "Weet u zeker dat u de warmtepomp wilt resetten?"}</span>
 
-                            <fieldset className="mb-2">
-                                <button type="button" onClick={() => closeModal()}>Annuleren</button>
-                                <button type="button" onClick={() => closeModal()}>Opslaan</button>
-                            </fieldset>
+                                    <fieldset className="flex items-center justify-between p-2 w-full">
+                                        <button type="button" className="p-2 bg-gray-200 rounded-lg" onClick={() => closeModal()}>Annuleren</button>
+                                        <button type="button" className="p-2 bg-gray-200 rounded-lg" onClick={() => setSubmitModal(true)}>{modal == 0 ? "Opslaan" : "Reset"}</button>
+                                    </fieldset>
+                                </>
+                            ) : (
+                                <>
+                                    <span className="self-center text-xl font-semibold">{modal == 0 ? "Instellingen opgeslagen!" : "Warmtepomp reset!"}</span>
+
+                                    <button type="submit" className="p-2"><FontAwesomeIcon icon={faCircleCheck} className="text-9xl p-2" /></button>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>
