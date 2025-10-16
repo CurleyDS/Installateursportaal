@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 
-function Calendar({ data = [] }) {
+function Calendar({ data = [], onUpdate }) {
     const [tijdschemas, setTijdschemas] = useState(data);
     const [current, setCurrent] = useState(new Date());
     const [selected, setSelected] = useState(null);
@@ -43,8 +43,33 @@ function Calendar({ data = [] }) {
         setSelected(ymd(date));
     }
 
+    const handleChange = (e) => {
+        const {tagName, name, value, type, checked} = e.target;
+
+        if (tagName === "SELECT") {
+            console.log(`Selected option for "${name}": ${value}`);
+        }
+
+        if (type === "radio") {
+            console.log(`Radio "${name}" selected value: ${value}`);
+        }
+
+        setNewSchema((oldSchema) => ({
+            ...oldSchema,
+            [name]: type === 'checkbox' ? checked : value
+        }));
+    }
+
     const openModal = () => {
         document.getElementById("tijdschemaModal").classList.remove('hidden');
+    }
+    
+    const submitCalendar = () => {
+        console.log(newSchema);
+        // onUpdate((oldTijdSchemas) => ([
+        //     ...oldTijdSchemas,
+        //     newSchema
+        // ]));
     }
 
     const closeModal = () => {
@@ -67,10 +92,8 @@ function Calendar({ data = [] }) {
             time: calculatedDefaultTime,
             modus: "normaal",
             onRepeat: false,
-            repeat: {
-                timePeriod: "day",
-                quantity: 1
-            }
+            repeatInterval: "day",
+            repeat: 1
         });
     }, [selected]);
 
@@ -135,56 +158,56 @@ function Calendar({ data = [] }) {
                 <div className="flex flex-col items-start p-2 bg-white w-full rounded">
                         <fieldset className="mb-2">
                             <legend className='block mb-2'>Schakel modus op:</legend>
-                            <input type="date" defaultValue={newSchema.date} className="p-2 bg-gray-200 rounded-lg" /> om <input type="time" defaultValue={newSchema.time} min={minTime} className="p-2 bg-gray-200 rounded-lg" />
+                            <input type="date" name="date" defaultValue={newSchema.date} onChange={handleChange} className="p-2 bg-gray-200 rounded-lg" /> om <input type="time" name="time" defaultValue={newSchema.time} min={minTime} onChange={handleChange} className="p-2 bg-gray-200 rounded-lg" />
                         </fieldset>
                         
                         <fieldset className="mb-2">
                             <label htmlFor="modus-select" className="block mb-2">Naar:</label>
-                            <select id="modus-select" className="p-2 bg-gray-200 rounded-lg">
-                                <option value="Normaal">Normaal</option>
-                                <option value="Eco">Eco</option>
+                            <select id="modus-select" name="modus" value={newSchema.modus} onChange={handleChange} className="p-2 bg-gray-200 rounded-lg">
+                                <option value="normaal">Normaal</option>
+                                <option value="eco">Eco</option>
                             </select>
                         </fieldset>
 
                         <fieldset className="mb-2">
                             <label className="inline-flex items-center">
                                 <span className="me-3">Herhalen</span>
-                                <input type="checkbox" defaultChecked={newSchema.onRepeat} className="sr-only peer" />
+                                <input type="checkbox" name="onRepeat" defaultChecked={newSchema.onRepeat} onChange={handleChange} className="sr-only peer" />
                                 <div className="relative bg-gray-200 w-11 h-6 rounded-full peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                             </label>
                         </fieldset>
                         
                         <fieldset className="mb-2">
-                            <input type="radio" name="repeat-radio" disabled={!newSchema.onRepeat} />
+                            <input type="radio" name="repeatInterval" onChange={handleChange} disabled={!newSchema.onRepeat} />
                             <label htmlFor="day" className="mb-2">
-                                <span className="ms-1">Elke <input id="day" type="number" min="1" className="border-b" /> dag herhalen</span>
+                                <span className="ms-1">Elke <input id="day" type="number" name="repeat" min="1" onChange={handleChange} className="border-b" disabled={!newSchema.onRepeat && newSchema.repeatInterval == "day"} /> dag herhalen</span>
                             </label>
                         </fieldset>
                         
                         <fieldset className="mb-2">
-                            <input type="radio" name="repeat-radio" disabled={!newSchema.onRepeat} />
+                            <input type="radio" name="repeatInterval" onChange={handleChange} disabled={!newSchema.onRepeat} />
                             <label htmlFor="week" className="mb-2">
-                                <span className="ms-1">Elke <input id="week" type="number" min="1" className="border-b" /> week herhalen</span>
+                                <span className="ms-1">Elke <input id="week" type="number" name="repeat" min="1" onChange={handleChange} className="border-b" disabled={!newSchema.onRepeat && newSchema.repeatInterval == "week"} /> week herhalen</span>
                             </label>
                         </fieldset>
                         
                         <fieldset className="mb-2">
-                            <input type="radio" name="repeat-radio" disabled={!newSchema.onRepeat} />
+                            <input type="radio" name="repeatInterval" onChange={handleChange} disabled={!newSchema.onRepeat} />
                             <label htmlFor="month" className="mb-2">
-                                <span className="ms-1">Elke <input id="month" type="number" min="1" className="border-b" /> maand herhalen</span>
+                                <span className="ms-1">Elke <input id="month" type="number" name="repeat" min="1" onChange={handleChange} className="border-b" disabled={!newSchema.onRepeat && newSchema.repeatInterval == "month"} /> maand herhalen</span>
                             </label>
                         </fieldset>
                         
                         <fieldset className="mb-2">
-                            <input type="radio" name="repeat-radio" disabled={!newSchema.onRepeat} />
+                            <input type="radio" name="repeatInterval" onChange={handleChange} disabled={!newSchema.onRepeat} />
                             <label htmlFor="year" className="mb-2">
-                                <span className="ms-1">Elk <input id="year" type="number" min="1" className="border-b" /> jaar herhalen</span>
+                                <span className="ms-1">Elk <input id="year" type="number" name="repeat" min="1" onChange={handleChange} className="border-b" disabled={!newSchema.onRepeat && newSchema.repeatInterval == "year"} /> jaar herhalen</span>
                             </label>
                         </fieldset>
 
                         <fieldset className="mb-2">
                             <button type="button" onClick={() => closeModal()}>Annuleren</button>
-                            <button type="button" onClick={() => closeModal()}>Opslaan</button>
+                            <button type="button" onClick={() => submitCalendar()}>Opslaan</button>
                         </fieldset>
                 </div>
             </div>

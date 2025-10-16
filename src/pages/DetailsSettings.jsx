@@ -22,6 +22,16 @@ function DetailsSettings() {
             [name]: type === 'checkbox' ? checked : value
         }));
     }
+
+    const handleCalendarUpdate = (newTijdschemas) => {
+        setSettings((oldSettings) => ({
+            ...oldSettings,
+            tijdschemas: newTijdschemas
+        }));
+
+        console.log(settings);
+    };
+
     const openModal = (saveOrReset) => {
         document.getElementById("confirmModal").classList.remove('hidden');
 
@@ -124,7 +134,7 @@ function DetailsSettings() {
                             </label>
                         </fieldset>
 
-                        <Calendar data={currentSettings.tijdschemas} />
+                        <Calendar data={currentSettings.tijdschemas} onUpdate={handleCalendarUpdate} />
 
                         <fieldset className="p-2">
                             <label htmlFor="save-submit" className='block mb-2'>
