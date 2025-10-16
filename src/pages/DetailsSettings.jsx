@@ -27,6 +27,12 @@ function DetailsSettings() {
 
         setModal(saveOrReset);
     }
+    
+    const submitSettings = () => {
+        console.log(settings);
+        setSubmitModal(true);
+
+    }
 
     const closeModal = () => {
         document.getElementById("confirmModal").classList.add('hidden');
@@ -123,7 +129,7 @@ function DetailsSettings() {
                         <fieldset className="p-2">
                             <label htmlFor="save-submit" className='block mb-2'>
                                 <span className="block mb-2">Instellingen opslaan:</span>
-                                <button type="button" className="p-2 bg-gray-200 rounded-lg" onClick={() => {console.log(settings); openModal(0)}}>Opslaan</button>
+                                <button type="button" className="p-2 bg-gray-200 rounded-lg" onClick={() => {openModal(0)}}>Opslaan</button>
                             </label>
                         </fieldset>
                     </form>
@@ -140,20 +146,20 @@ function DetailsSettings() {
                 <div id="confirmModal" className="fixed top-0 left-0 z-10 hidden bg-black/40 w-full h-full overflow-auto">
                     <div className="flex items-center justify-center w-full">
                         <div className="flex flex-col items-center justify-center bg-white p-2 w-1/2">
-                            {submitModal ? (
+                            {!submitModal ? (
                                 <>
                                     <span className="self-center text-xl font-semibold">{modal == 0 ? "Wilt u uw instellingen opslaan?" : "Weet u zeker dat u de warmtepomp wilt resetten?"}</span>
 
                                     <fieldset className="flex items-center justify-between p-2 w-full">
                                         <button type="button" className="p-2 bg-gray-200 rounded-lg" onClick={() => closeModal()}>Annuleren</button>
-                                        <button type="button" className="p-2 bg-gray-200 rounded-lg" onClick={() => setSubmitModal(true)}>{modal == 0 ? "Opslaan" : "Reset"}</button>
+                                        <button type="button" className="p-2 bg-gray-200 rounded-lg" onClick={() => submitSettings()}>{modal == 0 ? "Opslaan" : "Reset"}</button>
                                     </fieldset>
                                 </>
                             ) : (
                                 <>
                                     <span className="self-center text-xl font-semibold">{modal == 0 ? "Instellingen opgeslagen!" : "Warmtepomp reset!"}</span>
 
-                                    <button type="submit" className="p-2"><FontAwesomeIcon icon={faCircleCheck} className="text-9xl p-2" /></button>
+                                    <button type="submit" className="p-2" onClick={() => {setSubmitModal(false); closeModal()}}><FontAwesomeIcon icon={faCircleCheck} className="p-2 text-9xl" /></button>
                                 </>
                             )}
                         </div>
