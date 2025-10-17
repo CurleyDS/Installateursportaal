@@ -43,15 +43,23 @@ function Calendar({ data = [], onUpdate }) {
         setSelected(ymd(date));
     }
 
+    const intervalTypes = ["day", "week", "month", "year"];
+
+    const intervalLabels = {
+        day: "dag",
+        week: "week",
+        month: "maand",
+        year: "jaar",
+    };
+
     const handleChange = (e) => {
-        const {tagName, name, value, type, checked} = e.target;
+        const {name, value, type, checked} = e.target;
 
-        if (tagName === "SELECT") {
-            console.log(`Selected option for "${name}": ${value}`);
-        }
-
-        if (type === "radio") {
-            console.log(`Radio "${name}" selected value: ${value}`);
+        if (name === "repeatInterval") {
+            setNewSchema((oldSchema) => ({
+                ...oldSchema,
+                repeat: 1
+            }));
         }
 
         setNewSchema((oldSchema) => ({
@@ -177,33 +185,62 @@ function Calendar({ data = [], onUpdate }) {
                             </label>
                         </fieldset>
                         
-                        <fieldset className="mb-2">
-                            <input type="radio" name="repeatInterval" onChange={handleChange} disabled={!newSchema.onRepeat} />
+                        {intervalTypes.map((intervalType, index) => (
+                            <fieldset className="mb-2" key={index}>
+                                <input
+                                    type="radio"
+                                    name="repeatInterval"
+                                    defaultValue={intervalType}
+                                    onChange={handleChange}
+                                    disabled={!newSchema.onRepeat}
+                                />
+                                <label htmlFor="day" className="mb-2">
+                                    <span className="ms-1">
+                                        Elke{" "}
+                                        <input
+                                            key={`${intervalType}-${newSchema.repeatInterval}`}
+                                            id="day"
+                                            type="number"
+                                            name="repeat"
+                                            defaultValue={(!newSchema.onRepeat || newSchema.repeatInterval !== intervalType) ? "" : 1}
+                                            min="1"
+                                            onChange={handleChange}
+                                            className="border-b"
+                                            disabled={!newSchema.onRepeat || newSchema.repeatInterval !== intervalType}
+                                        />{" "}
+                                        {intervalLabels[intervalType]} herhalen
+                                    </span>
+                                </label>
+                            </fieldset>
+                        ))}
+                        
+                        {/* <fieldset className="mb-2">
+                            <input type="radio" name="repeatInterval" defaultValue={"day"} onChange={handleChange} disabled={!newSchema.onRepeat} />
                             <label htmlFor="day" className="mb-2">
-                                <span className="ms-1">Elke <input id="day" type="number" name="repeat" min="1" onChange={handleChange} className="border-b" disabled={!newSchema.onRepeat && newSchema.repeatInterval == "day"} /> dag herhalen</span>
+                                <span className="ms-1">Elke <input id="day" type="number" name="repeat" defaultValue={(!newSchema.onRepeat || newSchema.repeatInterval !== "day") ? "" : newSchema.repeat} min="1" onChange={handleChange} className="border-b" disabled={!newSchema.onRepeat || newSchema.repeatInterval !== "day"} /> dag herhalen</span>
                             </label>
                         </fieldset>
                         
                         <fieldset className="mb-2">
-                            <input type="radio" name="repeatInterval" onChange={handleChange} disabled={!newSchema.onRepeat} />
+                            <input type="radio" name="repeatInterval" defaultValue={"week"} onChange={handleChange} disabled={!newSchema.onRepeat} />
                             <label htmlFor="week" className="mb-2">
-                                <span className="ms-1">Elke <input id="week" type="number" name="repeat" min="1" onChange={handleChange} className="border-b" disabled={!newSchema.onRepeat && newSchema.repeatInterval == "week"} /> week herhalen</span>
+                                <span className="ms-1">Elke <input id="week" type="number" name="repeat" defaultValue={(!newSchema.onRepeat || newSchema.repeatInterval !== "week") ? "" : newSchema.repeat} min="1" onChange={handleChange} className="border-b" disabled={!newSchema.onRepeat || newSchema.repeatInterval !== "week"} /> week herhalen</span>
                             </label>
                         </fieldset>
                         
                         <fieldset className="mb-2">
-                            <input type="radio" name="repeatInterval" onChange={handleChange} disabled={!newSchema.onRepeat} />
+                            <input type="radio" name="repeatInterval" defaultValue={"month"} onChange={handleChange} disabled={!newSchema.onRepeat} />
                             <label htmlFor="month" className="mb-2">
-                                <span className="ms-1">Elke <input id="month" type="number" name="repeat" min="1" onChange={handleChange} className="border-b" disabled={!newSchema.onRepeat && newSchema.repeatInterval == "month"} /> maand herhalen</span>
+                                <span className="ms-1">Elke <input id="month" type="number" name="repeat" defaultValue={(!newSchema.onRepeat || newSchema.repeatInterval !== "month") ? "" : newSchema.repeat} min="1" onChange={handleChange} className="border-b" disabled={!newSchema.onRepeat || newSchema.repeatInterval !== "month"} /> maand herhalen</span>
                             </label>
                         </fieldset>
                         
                         <fieldset className="mb-2">
-                            <input type="radio" name="repeatInterval" onChange={handleChange} disabled={!newSchema.onRepeat} />
+                            <input type="radio" name="repeatInterval" defaultValue={"year"} onChange={handleChange} disabled={!newSchema.onRepeat} />
                             <label htmlFor="year" className="mb-2">
-                                <span className="ms-1">Elk <input id="year" type="number" name="repeat" min="1" onChange={handleChange} className="border-b" disabled={!newSchema.onRepeat && newSchema.repeatInterval == "year"} /> jaar herhalen</span>
+                                <span className="ms-1">Elk <input id="year" type="number" name="repeat" defaultValue={(!newSchema.onRepeat || newSchema.repeatInterval !== "year") ? "" : newSchema.repeat} min="1" onChange={handleChange} className="border-b" disabled={!newSchema.onRepeat || newSchema.repeatInterval !== "year"} /> jaar herhalen</span>
                             </label>
-                        </fieldset>
+                        </fieldset> */}
 
                         <fieldset className="mb-2">
                             <button type="button" onClick={() => closeModal()}>Annuleren</button>
