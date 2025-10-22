@@ -28,8 +28,6 @@ function DetailsSettings() {
             ...oldSettings,
             tijdschemas: newTijdschemas
         }));
-
-        console.log(settings);
     };
 
     const openModal = (saveOrReset) => {

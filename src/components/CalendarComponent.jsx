@@ -73,16 +73,16 @@ function Calendar({ data = [], onUpdate }) {
     }
     
     const submitCalendar = () => {
-        console.log(newSchema);
-        // onUpdate((oldTijdSchemas) => ([
-        //     ...oldTijdSchemas,
-        //     newSchema
-        // ]));
+        setTijdschemas((oldTijdSchemas) => [...oldTijdSchemas, newSchema]);
     }
 
     const closeModal = () => {
         document.getElementById("tijdschemaModal").classList.add('hidden');
     }
+
+    useEffect(() => {
+        onUpdate(tijdschemas);
+    }, [tijdschemas]);
 
     useEffect(() => {
         let calculatedMinTime = "00:00";
@@ -244,7 +244,7 @@ function Calendar({ data = [], onUpdate }) {
 
                         <fieldset className="mb-2">
                             <button type="button" onClick={() => closeModal()}>Annuleren</button>
-                            <button type="button" onClick={() => submitCalendar()}>Opslaan</button>
+                            <button type="button" onClick={() => {submitCalendar(); closeModal()}}>Opslaan</button>
                         </fieldset>
                 </div>
             </div>
