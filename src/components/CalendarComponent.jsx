@@ -8,6 +8,8 @@ function Calendar({ data = [], onUpdate }) {
     const [selected, setSelected] = useState(null);
     const [minTime, setMinTime] = useState(null);
     const [newSchema, setNewSchema] = useState({});
+    const [hasRepInterval, setRepInterval] = useState(null);
+    const [hasRepType, setRepType] = useState(null);
 
     const year = current.getFullYear();
     const month = current.getMonth();
@@ -52,6 +54,62 @@ function Calendar({ data = [], onUpdate }) {
         year: "jaar",
     };
 
+    const hasEventOnDate = (checkDate) => {
+        return tijdschemas.some((schema) => {
+            const schemaDate = new Date(schema.date);
+
+            // 1️⃣ Non-repeating event
+            if (!schema.onRepeat) {
+                return ymd(schemaDate) === ymd(checkDate);
+            }
+
+            // 2️⃣ Repeating event
+            let occurrenceDate = new Date(schemaDate);
+            let occurrenceIndex = 0;
+
+            while (true) {
+                // stop if we've reached duration (for numeric durations)
+                if (typeof schema.repeatDuration === "number" && occurrenceIndex >= schema.repeatDuration) break;
+
+                // ✅ match found
+                if (ymd(occurrenceDate) === ymd(checkDate)) return true;
+
+                // ⏩ increment date according to interval
+                switch (schema.repeatInterval) {
+                    case "day":
+                        occurrenceDate.setDate(occurrenceDate.getDate() + schema.repeat);
+                        break;
+                    case "week":
+                        occurrenceDate.setDate(occurrenceDate.getDate() + 7 * schema.repeat);
+                        break;
+                    case "month":
+                        occurrenceDate.setMonth(occurrenceDate.getMonth() + schema.repeat);
+                        break;
+                    case "year":
+                        occurrenceDate.setFullYear(occurrenceDate.getFullYear() + schema.repeat);
+                        break;
+                    default:
+                        break;
+                }
+
+                occurrenceIndex++;
+
+                // 🛑 safety break (in case of "forever" to avoid infinite loops)
+                if (schema.repeatDuration === "forever" && occurrenceIndex > 1000) break;
+            }
+
+            return false;
+        });
+    };
+
+    const repeatTypes = ["forever", "until", "count"];
+
+    const repeatLabels = {
+        forever: "Altijd",
+        until: "Tot",
+        count: "Specifiek",
+    };
+
     const handleChange = (e) => {
         const {name, value, type, checked} = e.target;
 
@@ -60,6 +118,9 @@ function Calendar({ data = [], onUpdate }) {
                 ...oldSchema,
                 repeat: 1
             }));
+
+            setRepInterval(true);
+            setRepType(value);
         }
 
         setNewSchema((oldSchema) => ({
@@ -100,9 +161,13 @@ function Calendar({ data = [], onUpdate }) {
             time: calculatedDefaultTime,
             modus: "normaal",
             onRepeat: false,
+            repeat: 1,
             repeatInterval: "day",
-            repeat: 1
+            repeatDuration: 1
         });
+
+        setRepInterval(false);
+        setRepType("forever");
     }, [selected]);
 
     window.onclick = function(event) {
@@ -147,7 +212,7 @@ function Calendar({ data = [], onUpdate }) {
                                                     >
                                                         {date.getDate()}
                                                     </button>
-                                                    {tijdschemas.find(schema => schema.date === ymd(date)) && (
+                                                    {hasEventOnDate(date) && (
                                                         <FontAwesomeIcon icon={faCircle} className="absolute top-2 right-2 text-[8px]" />
                                                     )}
                                                 </td>
@@ -197,12 +262,12 @@ function Calendar({ data = [], onUpdate }) {
                                     onChange={handleChange}
                                     disabled={!newSchema.onRepeat}
                                 />
-                                <label htmlFor="day" className="mb-2">
+                                <label htmlFor={intervalLabels[intervalType]} className="mb-2">
                                     <span className="ms-1">
                                         Elke{" "}
                                         <input
                                             key={`${intervalType}-${newSchema.repeatInterval}`}
-                                            id="day"
+                                            id={intervalLabels[intervalType]}
                                             type="number"
                                             name="repeat"
                                             defaultValue={(!newSchema.onRepeat || newSchema.repeatInterval !== intervalType) ? "" : 1}
@@ -213,6 +278,56 @@ function Calendar({ data = [], onUpdate }) {
                                         />{" "}
                                         {intervalLabels[intervalType]} herhalen
                                     </span>
+                                </label>
+                            </fieldset>
+                        ))}
+
+                        <fieldset className="mb-2">
+                            <label className="inline-flex items-center">
+                                <span className="me-3">Voor welke duratie</span>
+                            </label>
+                        </fieldset>
+                        
+                        {repeatTypes.map((repeatType, index) => (
+                            <fieldset className="mb-2" key={index}>
+                                <input
+                                    type="radio"
+                                    name="repeatType"
+                                    defaultValue={repeatType}
+                                    onChange={handleChange}
+                                    disabled={!newSchema.onRepeat || !hasRepInterval}
+                                />
+                                <label htmlFor={repeatLabels[repeatType]} className="mb-2">
+                                    {repeatLabels[repeatType] === "forever" ? (
+                                        <span className="ms-1">
+                                            {repeatLabels[repeatType] + " "}
+                                            <input
+                                                key={`${repeatType}-${hasRepType}`}
+                                                id={repeatLabels[repeatType]}
+                                                type="hidden"
+                                                name="repeatDuration"
+                                                defaultValue={(!newSchema.onRepeat || hasRepType !== repeatType) ? "" : "forever"}
+                                                onChange={handleChange}
+                                                className="border-b"
+                                                disabled={!newSchema.onRepeat || hasRepType !== repeatType}
+                                            />
+                                        </span>
+                                    ):(
+                                        <span className="ms-1">
+                                            {repeatLabels[repeatType] + " "}
+                                            <input
+                                                key={`${repeatType}-${hasRepType}`}
+                                                id={repeatLabels[repeatType]}
+                                                type="number"
+                                                name="repeatDuration"
+                                                defaultValue={(!newSchema.onRepeat || hasRepType !== repeatType) ? "" : 1}
+                                                min="1"
+                                                onChange={handleChange}
+                                                className="border-b"
+                                                disabled={!newSchema.onRepeat || hasRepType !== repeatType}
+                                            /> herhalen
+                                        </span>
+                                    )}
                                 </label>
                             </fieldset>
                         ))}
