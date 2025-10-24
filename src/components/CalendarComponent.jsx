@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
+import { faAngleLeft, faAngleRight, faCircle } from '@fortawesome/free-solid-svg-icons';
 
 function Calendar({ data = [], onUpdate }) {
     const [tijdschemas, setTijdschemas] = useState(data);
@@ -139,7 +139,7 @@ function Calendar({ data = [], onUpdate }) {
                                             return <td key={i} className="p-2" />;
                                         } else {
                                             return (
-                                                <td key={i} className="p-1 text-center">
+                                                <td key={i} className="relative p-1 text-center">
                                                     <button
                                                         type="button"
                                                         onClick={(e) => handleSelect(e, date)}
@@ -147,6 +147,9 @@ function Calendar({ data = [], onUpdate }) {
                                                     >
                                                         {date.getDate()}
                                                     </button>
+                                                    {tijdschemas.find(schema => schema.date === ymd(date)) && (
+                                                        <FontAwesomeIcon icon={faCircle} className="absolute top-2 right-2 text-[8px]" />
+                                                    )}
                                                 </td>
                                             );
                                         }
