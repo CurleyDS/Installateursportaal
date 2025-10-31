@@ -5,6 +5,8 @@ import District from './pages/District';
 import Home from './pages/Home';
 import Details from './pages/Details';
 import DetailsSettings from './pages/DetailsSettings';
+import Maintenance from './pages/Maintenance';
+import Malfunction from './pages/Malfunction';
 import './App.css'
 
 function App() {
@@ -18,6 +20,8 @@ function App() {
                     <Route index element={<Home />} />
                     <Route path="/:id" element={<Details />} />
                     <Route path="/:id/Instellingen" element={<DetailsSettings />} />
+                    <Route path="/Onderhoud" element={<Maintenance />} />
+                    <Route path="/Storingen" element={<Malfunction />} />
                 </Route>
             </Routes>
         </Router>

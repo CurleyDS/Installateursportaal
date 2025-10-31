@@ -188,8 +188,6 @@ function Calendar({ data = [], onUpdate }) {
             newSchema.duration = calcDuration(newSchema.date, newSchema.duration);
         }
 
-        console.log("Submitting:", newSchema);
-
         setTijdschemas((oldSchemas) => [...oldSchemas, newSchema]);
     };
 
