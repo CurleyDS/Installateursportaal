@@ -208,33 +208,19 @@ function Malfunction() {
                                     <hr />
                                     <li className="py-3">
                                         <div className="flex items-center">
-                                            <FontAwesomeIcon icon={faTemperatureHalf} />
-                                            <p className="flex-1 ml-4 font-normal text-gray-900">
-                                                {pomp.huidigeTemperatuur}°C
+                                            <p className="flex-1 font-normal text-gray-900">
+                                                <bold>Opgetreden sinds:</bold><br />
+                                                {/* {pomp.storing.datum} */}31-03-2025.
                                             </p>
                                         </div>
                                     </li>
                                     <li className="py-3">
                                         <div className="flex items-center">
-                                            <FontAwesomeIcon icon={faGauge} />
-                                            <p className="flex-1 ml-4 font-normal text-gray-900">
-                                                {pomp.gemiddeldeDruk}
-                                            </p>
-                                        </div>
-                                    </li>
-                                    <li className="py-3">
-                                        <div className="flex items-center">
-                                            <FontAwesomeIcon icon={faBolt} />
-                                            <p className="flex-1 ml-4 font-normal text-gray-900">
-                                                {pomp.vermogen}kW
-                                            </p>
-                                        </div>
-                                    </li>
-                                    <li className="py-3">
-                                        <div className="flex items-center">
-                                            <FontAwesomeIcon icon={faFilePen} />
-                                            <p className="flex-1 ml-4 font-normal text-gray-900">
-                                                {pomp.laatsteDataUpdate}
+                                            <p className="flex-1 font-normal text-gray-900">
+                                                <bold>Storing:</bold><br />
+                                                {/* {pomp.storing} */}Onverwachte situatie is opgetreden. Er is geen specifiekere melding geschikt.<br />
+                                                <br />
+                                                Neem contact op met [contactpersoon]{/* {pomp.storing.contactpersoon}. */}.
                                             </p>
                                         </div>
                                     </li>

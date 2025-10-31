@@ -208,33 +208,25 @@ function Maintenance() {
                                     <hr />
                                     <li className="py-3">
                                         <div className="flex items-center">
-                                            <FontAwesomeIcon icon={faTemperatureHalf} />
-                                            <p className="flex-1 ml-4 font-normal text-gray-900">
-                                                {pomp.huidigeTemperatuur}°C
+                                            <p className="flex-1 font-normal text-gray-900">
+                                                <bold>Systeem:</bold><br />
+                                                {/* {pomp.systeem} */}Lucht/water warmtepomp.
                                             </p>
                                         </div>
                                     </li>
                                     <li className="py-3">
                                         <div className="flex items-center">
-                                            <FontAwesomeIcon icon={faGauge} />
-                                            <p className="flex-1 ml-4 font-normal text-gray-900">
-                                                {pomp.gemiddeldeDruk}
+                                            <p className="flex-1 font-normal text-gray-900">
+                                                <bold>Geadviseerde actie:</bold><br />
+                                                {/* {pomp.advies} */}Onderhoud.
                                             </p>
                                         </div>
                                     </li>
                                     <li className="py-3">
                                         <div className="flex items-center">
-                                            <FontAwesomeIcon icon={faBolt} />
-                                            <p className="flex-1 ml-4 font-normal text-gray-900">
-                                                {pomp.vermogen}kW
-                                            </p>
-                                        </div>
-                                    </li>
-                                    <li className="py-3">
-                                        <div className="flex items-center">
-                                            <FontAwesomeIcon icon={faFilePen} />
-                                            <p className="flex-1 ml-4 font-normal text-gray-900">
-                                                {pomp.laatsteDataUpdate}
+                                            <p className="flex-1 font-normal text-gray-900">
+                                                <bold>Aanbevolen termijn:</bold><br />
+                                                {/* {pomp.termijn} */}Binnen 7 dagen.
                                             </p>
                                         </div>
                                     </li>
