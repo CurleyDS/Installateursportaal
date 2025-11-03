@@ -19,7 +19,7 @@
                 "autoOptimalisatie": false,
                 "profiel": 2,
                 "netOptimalisatie": false,
-                "power-capping": 100,
+                "powerCap": 100,
                 "temperatuur": 15,
                 "tijdschemaInstelling": false,
                 "tijdschemas": []
