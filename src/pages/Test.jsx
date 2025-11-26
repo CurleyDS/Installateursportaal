@@ -11,7 +11,7 @@ function Test() {
                 const response = await fetch('https://hupie.northeurope.cloudapp.azure.com/hupie/query/', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': '',
+                        'Content-Type': 'application/sparql-query',
                         'User-Agent': 'Insomnia/2023.5.6'
                     },
                     body: JSON.stringify({
