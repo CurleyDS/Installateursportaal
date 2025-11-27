@@ -8,26 +8,38 @@ function Test() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('https://hupie.northeurope.cloudapp.azure.com/hupie/query/', {
+                const response = await fetch('https://hupie.northeurope.cloudapp.azure.com/hupie/query/?token=21129FCC24', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/sparql-query',
-                        'User-Agent': 'Insomnia/2023.5.6'
+                        'Accept': 'application/json'
                     },
                     body: JSON.stringify({
-                        "token" : `21129FCC24`,
                         "query" : `# query asking for room temperature of heatpumps in the network
-                            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-                            PREFIX om: <http://www.ontology-of-units-of-measure.org/resource/om-2/>
-                            PREFIX hco: <https://www.tno.nl/building/ontology/heatpump-common-ontology#>
-                            PREFIX saref: <https://saref.etsi.org/core/>
-                            SELECT * WHERE {
-                                ?heatpump rdf:type hco:Heatpump .
-                                ?measurement rdf:type saref:Measurement .
-                                ?measurement saref:measurementMadeBy ?heatpump .
-                                ?measurement saref:relatesToProperty hco:roomTemperature .
-                                ?measurement saref:isMeasuredIn om:degreeCelsius .
-                                ?measurement saref:hasValue ?roomTemperature .
+                            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+                            PREFIX om: <http://www.ontology-of-units-of-measure.org/resource/om-2/> 
+                            PREFIX hco: <https://www.tno.nl/building/ontology/heatpump-common-ontology#> 
+                            PREFIX saref: <https://saref.etsi.org/core/> 
+                            PREFIX saref4bldg: <https://saref.etsi.org/saref4bldg/> 
+                            SELECT ?heatpump ?id ?building ?heatPump ?room ?currentTemperature ?observation ?result ?value ?unit 
+                            WHERE { 
+                                ?heatPump rdf:type hco:HeatPump ; 
+                                    saref:hasIdentifier ?id . 
+                                ?building rdf:type saref4bldg:Building ; 
+                                    saref4bldg:contains ?heatPump ; 
+                                    saref4bldg:hasSpace ?room . 
+                                ?room rdf:type saref4bldg:BuildingSpace, saref:FeatureOfInterest; 
+                                    saref:hasPropertyOfInterest ?currentTemperature . 
+                                ?currentTemperature rdf:type saref:PropertyOfInterest ; 
+                                    saref:hasPropertyKind hco:CurrentTemperature . 
+                                ?heatPump saref:madeExecution ?observation . 
+                                ?observation rdf:type hco:LatestObservation ; 
+                                    saref:observes ?room, ?currentTemperature ; 
+                                    saref:hasResult ?result . 
+                                ?result rdf:type saref:PropertyValue ; 
+                                    saref:isValueOfProperty ?currentTemperature ; 
+                                    saref:hasValue ?value ; 
+                                    saref:isMeasuredIn ?unit . 
                             }
                         `
                     })
