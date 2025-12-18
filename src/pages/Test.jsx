@@ -3,7 +3,11 @@ import { useState, useEffect } from 'react'
 function Test() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [data, setData] = useState([]);
+    const [ currentRoomTemp, setCurrentRoomTemp ] = useState(null);
+    const [ roomTempSetpoint, setRoomTempSetpoint ] = useState(null);
+    const [ currentOutsideTemp, setCurrentOutsideTemp ] = useState(null);
+    const [ currentState, setCurrentState ] = useState(null);
+    const [data, setData] = useState({});
 
     useEffect(() => {
         const fetchCurrentRoomTemp = async () => {
@@ -23,7 +27,7 @@ function Test() {
 
                 const data = await response.json();
 
-                console.log(data);
+                setCurrentRoomTemp(data);
             } catch (error) {
                 setError(error);
             } finally {
@@ -78,7 +82,7 @@ function Test() {
 
                 const data = await response.json();
 
-                console.log(data);
+                setRoomTempSetpoint(data);
             } catch (error) {
                 setError(error);
             } finally {
@@ -131,7 +135,7 @@ function Test() {
 
                 const data = await response.json();
 
-                console.log(data);
+                setCurrentOutsideTemp(data);
             } catch (error) {
                 setError(error);
             } finally {
@@ -156,7 +160,7 @@ function Test() {
 
                 const data = await response.json();
 
-                console.log(data);
+                setCurrentState(data);
             } catch (error) {
                 setError(error);
             } finally {
@@ -170,13 +174,33 @@ function Test() {
         fetchCurrentState();
     }, []);
 
+    useEffect(() => {
+        console.log(`Current Room Temperature: ${JSON.stringify(currentRoomTemp)}`);
+        console.log(`Room Temperature Setpoint: ${JSON.stringify(roomTempSetpoint)}`);
+        console.log(`Current Outside Temperature: ${JSON.stringify(currentOutsideTemp)}`);
+        console.log(`Current State: ${JSON.stringify(currentState)}`);
+
+        setData({
+            "huidigeStatus": currentState,
+            "huidigeTemperatuur": currentRoomTemp,
+        });
+    }, [currentRoomTemp, roomTempSetpoint, currentOutsideTemp, currentState]);
+
     return (
         <>
             <div className="flex items-center justify-center">
                 <span>Test page</span>
+                
                 <br />
+                
                 <div>
-                    <p></p>
+                    <p>{data.currentState}</p>
+                </div>
+
+                <br />
+                
+                <div>
+                    <p>{data.currentRoomTemp}</p>
                 </div>
             </div>
         </>
