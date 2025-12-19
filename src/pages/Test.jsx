@@ -3,10 +3,10 @@ import { useState, useEffect } from 'react'
 function Test() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [ currentRoomTemp, setCurrentRoomTemp ] = useState(null);
-    const [ roomTempSetpoint, setRoomTempSetpoint ] = useState(null);
-    const [ currentOutsideTemp, setCurrentOutsideTemp ] = useState(null);
-    const [ currentState, setCurrentState ] = useState(null);
+    const [currentRoomTemp, setCurrentRoomTemp] = useState(null);
+    const [roomTempSetpoint, setRoomTempSetpoint] = useState(null);
+    const [currentOutsideTemp, setCurrentOutsideTemp] = useState(null);
+    const [currentState, setCurrentState] = useState(null);
     const [data, setData] = useState({});
 
     useEffect(() => {
@@ -27,7 +27,7 @@ function Test() {
 
                 const data = await response.json();
 
-                setCurrentRoomTemp(data);
+                setCurrentRoomTemp(data.results);
             } catch (error) {
                 setError(error);
             } finally {
@@ -82,7 +82,7 @@ function Test() {
 
                 const data = await response.json();
 
-                setRoomTempSetpoint(data);
+                setRoomTempSetpoint(data.results);
             } catch (error) {
                 setError(error);
             } finally {
@@ -135,7 +135,7 @@ function Test() {
 
                 const data = await response.json();
 
-                setCurrentOutsideTemp(data);
+                setCurrentOutsideTemp(data.results);
             } catch (error) {
                 setError(error);
             } finally {
@@ -160,7 +160,7 @@ function Test() {
 
                 const data = await response.json();
 
-                setCurrentState(data);
+                setCurrentState(data.results);
             } catch (error) {
                 setError(error);
             } finally {
@@ -175,11 +175,26 @@ function Test() {
     }, []);
 
     useEffect(() => {
-        console.log(`Current Room Temperature: ${JSON.stringify(currentRoomTemp)}`);
-        console.log(`Room Temperature Setpoint: ${JSON.stringify(roomTempSetpoint)}`);
-        console.log(`Current Outside Temperature: ${JSON.stringify(currentOutsideTemp)}`);
-        console.log(`Current State: ${JSON.stringify(currentState)}`);
-
+        if (currentRoomTemp != null) {
+            console.log('currentRoomTemp:');
+            console.log(currentRoomTemp);
+        }
+        
+        if (roomTempSetpoint != null) {
+            console.log('roomTempSetpoint:');
+            console.log(roomTempSetpoint);
+        }
+        
+        if (currentOutsideTemp != null) {
+            console.log('currentOutsideTemp:');
+            console.log(currentOutsideTemp);
+        }
+        
+        if (currentState != null) {
+            console.log('currentState:');
+            console.log(currentState);
+        }
+        
         setData({
             "huidigeStatus": currentState,
             "huidigeTemperatuur": currentRoomTemp,
