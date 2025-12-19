@@ -1,13 +1,16 @@
 {
-    "_comment": "What the data should look like according to HUPIE data",
+    "_commentEN": "What the data should look like according to HUPIE data (Not completely accurate since this data is mostly backend data)",
+    "_commentNL": "Hoe de data eruit hoort te zien volgens HUPIE data (Niet helemaal accuraat aangezien deze data voornamelijk backend data is)",
     "heatpumps": [
         {
             "id": "1234567890",
             "temperatures": {
-                "_comment": "This is only one way to set up the data for temperatures. Another way would be to have all properties (roomTemperatures, roomTemperatureSetpoints, outsideTemperature) directly under heatpump.",
+                "_commentEN": "This is only one way to set up the data for temperatures. Another way would be to have all properties (roomTemperatures, roomTemperatureSetpoints, outsideTemperature) directly under heatpump.",
+                "_commentNL": "Dit is één manier om de data op te zetten voor temperaturen. Een andere manier zou zijn om alle properties (roomTemperatures, roomTemperatureSetpoints, outsideTemperature) direct onder heatpump te hebben.",
                 "roomTemperatures": [
                     {
-                        "_comment": "Data of room temperatures measured by the heat pump",
+                        "_commentEN": "Data of room temperatures measured by the heat pump",
+                        "_commentNL": "Data van kamertemperaturen gemeten door de warmtepomp",
                         "currentTemperature": {
                             "type": "uri",
                             "value": "https://www.tno.nl/building/data/tdi500/heatPump-3a95b1bee9da4c129b28fcc4658ae523#current_room_temperature",
@@ -57,7 +60,8 @@
                 ],
                 "roomTemperatureSetpoints": [
                     {
-                        "_comment": "Data of room temperature setpoints configured in the heat pump",
+                        "_commentEN": "Data of room temperature setpoints configured in the heat pump",
+                        "_commentNL": "Data van kamertemperaturen setpoints geconfigureerd in de warmtepomp",
                         "id": {
                             "type": "literal",
                             "value": "some_id",
@@ -77,7 +81,8 @@
                 ],
                 "outsideTemperatures": [
                     {
-                        "_comment": "Data of outside temperatures measured by the heat pump",
+                        "_commentEN": "Data of outside temperatures measured by the heat pump",
+                        "_commentNL": "Data van buiten temperaturen gemeten door de warmtepomp",
                         "value": {
                             "type": "literal",
                             "value": "None",
@@ -98,12 +103,14 @@
             },
             "waterPressure": [
                 {
-                    "_comment": "Data of water pressure measured by the heat pump (No data available yet)"
+                    "_commentEN": "Data of water pressure measured by the heat pump (No data available yet)",
+                    "_commentNL": "Data van waterdruk gemeten door de warmtepomp (Nog geen data beschikbaar)"
                 }
             ],
             "currentState": [
                 {
-                    "_comment": "Data of state of the heat pump",
+                    "_commentEN": "Data of state of the heat pump",
+                    "_commentNL": "Data van status van de warmtepomp",
                     "state": {
                         "type": "literal",
                         "value": "BurningDhw",
@@ -133,31 +140,38 @@
             ],
             "COP": [
                 {
-                    "_comment": "Data of Coefficient of Performance (COP) of the heat pump (No data available yet)"
+                    "_commentEN": "Data of Coefficient of Performance (COP) of the heat pump (No data available yet)",
+                    "_commentNL": "Data van Coefficient of Performance (COP) van de warmtepomp (Nog geen data beschikbaar)"
                 }
             ],
             "energyUse": [
                 {
-                    "_comment": "Data of energy use of the heat pump (No data available yet)"
+                    "_commentEN": "Data of energy use of the heat pump (No data available yet)",
+                    "_commentNL": "Data van energiegebruik van de warmtepomp (Nog geen data beschikbaar)"
                 }
             ],
             "heatingCurve": [
                 {
-                    "_comment": "Data of heating curve configured in the heat pump (No data available yet)"
+                    "_commentEN": "Data of heating curve configured in the heat pump (No data available yet)",
+                    "_commentNL": "Data van verwarmingscurve geconfigureerd in de warmtepomp (Nog geen data beschikbaar)"
                 }
             ],
             "internetConnections": {
-                "_comment": "This is only one way to set up data for internet connections. Another way would be to have all properties (internetConnectionHeatPump, internetConnectionServer) directly under heatpump.",
+                "_commentEN": "This is only one way to set up data for internet connections. Another way would be to have all properties (internetConnectionHeatPump, internetConnectionServer) directly under heatpump.",
+                "_commentNL": "Dit is één manier om de data op te zetten voor internet connecties. Een andere manier zou zijn om alle properties (internetConnectionHeatPump, internetConnectionServer) direct onder heatpump te hebben.",
                 "heatPump": {
-                    "_comment": "Data of internet connection of the heat pump (No data available yet)"
+                    "_commentEN": "Data of internet connection of the heat pump (No data available yet)",
+                    "_commentNL": "Data van internetverbinding van de warmtepomp (Nog geen data beschikbaar)"
                 },
                 "server": {
-                    "_comment": "Data of internet connection of the server (No data available yet)"
+                    "_commentEN": "Data of internet connection of the server (No data available yet)",
+                    "_commentNL": "Data van internetverbinding van de server (Nog geen data beschikbaar)"
                 }
             },
             "Error code": [
                 {
-                    "_comment": ["Data of error code of the heat pump (No data available yet)", "Should this also have a history of error codes?"]
+                    "_commentEN": ["Data of error code of the heat pump (No data available yet)", "Should this also have a history-array of error codes?"],
+                    "_commentNL": ["Data van error code van de warmtepomp (Nog geen data beschikbaar)", "Moet dit ook een geschiedenis-array van error codes hebben?"]
                 }
             ]
         }

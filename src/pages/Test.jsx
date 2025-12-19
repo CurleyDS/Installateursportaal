@@ -10,6 +10,28 @@ function Test() {
     const [data, setData] = useState({});
 
     useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch('/test-data.json');
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json()
+
+                console.log(data);
+            } catch (error) {
+                setError(error);
+            } finally {
+                setLoading(true);
+            }
+        }
+
+        fetchData();
+    }, []);
+
+    useEffect(() => {
         const fetchCurrentRoomTemp = async () => {
             try {
                 const response = await fetch('https://hupie.northeurope.cloudapp.azure.com/hupie/query/?token=21129FCC24', {
@@ -175,6 +197,10 @@ function Test() {
     }, []);
 
     useEffect(() => {
+        if (currentRoomTemp != null || roomTempSetpoint != null || currentOutsideTemp != null || currentState != null) {
+            console.log("Test data incoming...");
+        }
+
         if (currentRoomTemp != null) {
             console.log('currentRoomTemp:');
             console.log(currentRoomTemp);
@@ -206,17 +232,18 @@ function Test() {
             <div className="flex items-center justify-center">
                 <span>Test page</span>
                 
-                <br />
-                
-                <div>
-                    <p>{data.currentState}</p>
-                </div>
+            </div>
 
-                <br />
-                
-                <div>
-                    <p>{data.currentRoomTemp}</p>
-                </div>
+            <br />
+            
+            <div>
+                <p>We cannot show the actual data yet. To see a structure of what should be displayed, press "Ctrl+Shift+I" then select the "Console" tab to see the test-data.</p>
+            </div>
+
+            <br />
+            
+            <div>
+                <p>We kunnen de echte data not niet tonen. Om een structuur van wat getoond moet worden te zien, druk op "Ctrl+Shift+I" en selecteer vervolgens het tabblad "Console" om de test-data te zien.</p>
             </div>
         </>
     )
