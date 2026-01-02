@@ -168,7 +168,7 @@
                     "_commentNL": "Data van internetverbinding van de server (Nog geen data beschikbaar)"
                 }
             },
-            "Error code": [
+            "errorCode": [
                 {
                     "_commentEN": ["Data of error code of the heat pump (No data available yet)", "Should this also have a history-array of error codes?"],
                     "_commentNL": ["Data van error code van de warmtepomp (Nog geen data beschikbaar)", "Moet dit ook een geschiedenis-array van error codes hebben?"]
