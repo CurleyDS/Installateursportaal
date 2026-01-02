@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 function Test() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [heatpump, setHeatpump] = useState(null);
     const [currentRoomTemp, setCurrentRoomTemp] = useState(null);
     const [roomTempSetpoint, setRoomTempSetpoint] = useState(null);
     const [currentOutsideTemp, setCurrentOutsideTemp] = useState(null);
@@ -32,6 +33,55 @@ function Test() {
     }, []);
 
     useEffect(() => {
+        const fetchHeatpump = async () => {
+            try {
+                const response = await fetch('https://hupie.northeurope.cloudapp.azure.com/hupie/query/?token=21129FCC24', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/sparql-query',
+                        'Accept': 'application/json'
+                    },
+                    body: `PREFIX hco: https://www.tno.nl/building/ontology/heatpump-common-ontology#
+                    PREFIX om: http://www.ontology-of-units-of-measure.org/resource/om-2/
+                    PREFIX rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns#
+                    PREFIX rdfs: http://www.w3.org/2000/01/rdf-schema#
+                    PREFIX saref: https://saref.etsi.org/core/
+                    PREFIX saref4bldg: https://saref.etsi.org/saref4bldg/
+                    
+                    SELECT ?heatPump ?id ?serialNumber ?yearOfManufacture ?exchangeKind
+                            ?heatPumpKind ?manufacturer ?model
+                    #        ?subdevice ?subdeviceId ?subdeviceType
+                    WHERE {
+                        ?heatPump rdf:type hco:HeatPump ;
+                                    saref:hasIdentifier ?id ;
+                                    hco:hasSerialNumber ?serialNumber ;
+                                    hco:hasYearOfManufacture ?yearOfManufacture ;
+                                    hco:hasExchangeKind ?exchangeKind ;
+                                    saref:hasDeviceKind ?heatPumpKind .
+                    #               saref:consistsOf ?subdevice .
+                        ?heatPumpKind rdf:type saref:DeviceKind ;
+                                    saref:hasManufacturer ?manufacturer ;
+                                    saref:hasModel ?model .
+                    #     ?subdevice rdf:type saref:Device ;
+                    #             saref:hasIdentifier ?subdeviceId ;
+                    #             rdf:type ?subdeviceType
+                    }`
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+
+                setHeatpump(data.results);
+            } catch (error) {
+                setError(error);
+            } finally {
+                setLoading(true);
+            }
+        }
+        
         const fetchCurrentRoomTemp = async () => {
             try {
                 const response = await fetch('https://hupie.northeurope.cloudapp.azure.com/hupie/query/?token=21129FCC24', {
@@ -190,6 +240,7 @@ function Test() {
             }
         }
 
+        fetchHeatpump();
         fetchCurrentRoomTemp();
         fetchRoomTempSetpoint();
         fetchCurrentOutsideTemp();
