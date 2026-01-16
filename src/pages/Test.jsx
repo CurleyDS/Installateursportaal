@@ -41,31 +41,32 @@ function Test() {
                         'Content-Type': 'application/sparql-query',
                         'Accept': 'application/json'
                     },
-                    body: `PREFIX hco: https://www.tno.nl/building/ontology/heatpump-common-ontology#
-                    PREFIX om: http://www.ontology-of-units-of-measure.org/resource/om-2/
-                    PREFIX rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns#
-                    PREFIX rdfs: http://www.w3.org/2000/01/rdf-schema#
-                    PREFIX saref: https://saref.etsi.org/core/
-                    PREFIX saref4bldg: https://saref.etsi.org/saref4bldg/
-                    
-                    SELECT ?heatPump ?id ?serialNumber ?yearOfManufacture ?exchangeKind
-                            ?heatPumpKind ?manufacturer ?model
-                    #        ?subdevice ?subdeviceId ?subdeviceType
-                    WHERE {
-                        ?heatPump rdf:type hco:HeatPump ;
-                                    saref:hasIdentifier ?id ;
-                                    hco:hasSerialNumber ?serialNumber ;
-                                    hco:hasYearOfManufacture ?yearOfManufacture ;
-                                    hco:hasExchangeKind ?exchangeKind ;
-                                    saref:hasDeviceKind ?heatPumpKind .
-                    #               saref:consistsOf ?subdevice .
-                        ?heatPumpKind rdf:type saref:DeviceKind ;
-                                    saref:hasManufacturer ?manufacturer ;
-                                    saref:hasModel ?model .
-                    #     ?subdevice rdf:type saref:Device ;
-                    #             saref:hasIdentifier ?subdeviceId ;
-                    #             rdf:type ?subdeviceType
-                    }`
+                    body: `
+                        PREFIX hco: <https://www.tno.nl/building/ontology/heatpump-common-ontology#>
+                        PREFIX om: <http://www.ontology-of-units-of-measure.org/resource/om-2/>
+                        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                        PREFIX saref: <https://saref.etsi.org/core/>
+                        PREFIX saref4bldg: <https://saref.etsi.org/saref4bldg/>
+                        
+                        SELECT ?heatPump ?id ?serialNumber ?yearOfManufacture ?exchangeKind
+                                ?heatPumpKind ?manufacturer ?model
+                        #        ?subdevice ?subdeviceId ?subdeviceType
+                        WHERE {
+                            ?heatPump rdf:type hco:HeatPump ;
+                                        saref:hasIdentifier ?id ;
+                                        hco:hasSerialNumber ?serialNumber ;
+                                        hco:hasYearOfManufacture ?yearOfManufacture ;
+                                        hco:hasExchangeKind ?exchangeKind ;
+                                        saref:hasDeviceKind ?heatPumpKind .
+                        #               saref:consistsOf ?subdevice .
+                            ?heatPumpKind rdf:type saref:DeviceKind ;
+                                        saref:hasManufacturer ?manufacturer ;
+                                        saref:hasModel ?model .
+                        #     ?subdevice rdf:type saref:Device ;
+                        #             saref:hasIdentifier ?subdeviceId ;
+                        #             rdf:type ?subdeviceType
+                        }`
                 });
 
                 if (!response.ok) {
@@ -248,36 +249,41 @@ function Test() {
     }, []);
 
     useEffect(() => {
-        if (currentRoomTemp != null || roomTempSetpoint != null || currentOutsideTemp != null || currentState != null) {
+        if (heatpump != null || currentRoomTemp != null || roomTempSetpoint != null || currentOutsideTemp != null || currentState != null) {
             console.log("Test data incoming...");
         }
 
-        if (currentRoomTemp != null) {
-            console.log('currentRoomTemp:');
-            console.log(currentRoomTemp);
+        if (heatpump != null) {
+            console.log('heatpump:');
+            console.log(heatpump);
         }
+
+        // if (currentRoomTemp != null) {
+        //     console.log('currentRoomTemp:');
+        //     console.log(currentRoomTemp);
+        // }
         
-        if (roomTempSetpoint != null) {
-            console.log('roomTempSetpoint:');
-            console.log(roomTempSetpoint);
-        }
+        // if (roomTempSetpoint != null) {
+        //     console.log('roomTempSetpoint:');
+        //     console.log(roomTempSetpoint);
+        // }
         
-        if (currentOutsideTemp != null) {
-            console.log('currentOutsideTemp:');
-            console.log(currentOutsideTemp);
-        }
+        // if (currentOutsideTemp != null) {
+        //     console.log('currentOutsideTemp:');
+        //     console.log(currentOutsideTemp);
+        // }
         
-        if (currentState != null) {
-            console.log('currentState:');
-            console.log(currentState);
-        }
+        // if (currentState != null) {
+        //     console.log('currentState:');
+        //     console.log(currentState);
+        // }
         
         setData({
+            "warmtepomp": heatpump,
             "huidigeStatus": currentState,
             "huidigeTemperatuur": currentRoomTemp,
         });
-    }, [currentRoomTemp, roomTempSetpoint, currentOutsideTemp, currentState]);
-
+    }, [heatpump, currentRoomTemp, roomTempSetpoint, currentOutsideTemp, currentState]);
     return (
         <>
             <div className="flex items-center justify-center">
@@ -288,13 +294,13 @@ function Test() {
             <br />
             
             <div>
-                <p>We cannot show the actual data yet. To see a structure of what should be displayed, press "Ctrl+Shift+I" then select the "Console" tab to see the test-data.</p>
+                <p>We cannot show the test-data here yet. To see a structure of what should be displayed, press "Ctrl+Shift+I" then select the "Console" tab to see the test-data.</p>
             </div>
 
             <br />
             
             <div>
-                <p>We kunnen de echte data not niet tonen. Om een structuur van wat getoond moet worden te zien, druk op "Ctrl+Shift+I" en selecteer vervolgens het tabblad "Console" om de test-data te zien.</p>
+                <p>We kunnen de test-data not niet hier tonen. Om een structuur van wat getoond moet worden te zien, druk op "Ctrl+Shift+I" en selecteer vervolgens het tabblad "Console" om de test-data te zien.</p>
             </div>
         </>
     )
