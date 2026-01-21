@@ -105,6 +105,14 @@ function Home() {
         setFilters(newFilters);
     }
 
+    const isSelected = (key, fltrSubject) => {
+        if (filters[key] && filters[key].includes(fltrSubject)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     const resetFilter = () => {
         setFilters({
             fabrikant: null,
@@ -161,10 +169,10 @@ function Home() {
                             <li>
                                 <span className="rounded-lg ml-3" onClick={() => toggleDropdown('dropdownFabrikantFilter')}>Fabrikant</span>
 
-                                <div id="dropdownFabrikantFilter" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg w-44 dark:bg-gray-700">
-                                    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
+                                <div id="dropdownFabrikantFilter" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg w-44">
+                                    <ul className="text-sm text-gray-700 border rounded-lg my-2">
                                         <li onClick={() => selectFilter({ fabrikant: 'Fabrikant'})}>
-                                            <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Fabrikant Filter</span>
+                                            <span className="block px-4 py-2 rounded-lg hover:bg-gray-100">Fabrikant Filter</span>
                                         </li>
                                     </ul>
                                 </div>
@@ -172,19 +180,19 @@ function Home() {
                             <li>
                                 <span className="rounded-lg ml-3" onClick={() => toggleDropdown('dropdownBedrijfFilter')}>Bedrijf</span>
 
-                                <div id="dropdownBedrijfFilter" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg w-44 dark:bg-gray-700">
-                                    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
+                                <div id="dropdownBedrijfFilter" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg w-44">
+                                    <ul className="text-sm text-gray-700 border rounded-lg my-2">
                                         <li onClick={() => selectFilter({ bedrijf: 'Intergas'})}>
-                                            <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Intergas</span>
+                                            <span className="block px-4 py-2 rounded-lg hover:bg-gray-100">Intergas</span>
                                         </li>
                                         <li onClick={() => selectFilter({ bedrijf: 'Remeha'})}>
-                                            <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Remeha</span>
+                                            <span className="block px-4 py-2 rounded-lg hover:bg-gray-100">Remeha</span>
                                         </li>
                                         <li onClick={() => selectFilter({ bedrijf: 'Bosch'})}>
-                                            <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Bosch</span>
+                                            <span className="block px-4 py-2 rounded-lg hover:bg-gray-100">Bosch</span>
                                         </li>
                                         <li onClick={() => selectFilter({ bedrijf: 'Vaillant'})}>
-                                            <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Vaillant</span>
+                                            <span className="block px-4 py-2 rounded-lg hover:bg-gray-100">Vaillant</span>
                                         </li>
                                     </ul>
                                 </div>
@@ -192,10 +200,10 @@ function Home() {
                             <li>
                                 <span className="rounded-lg ml-3" onClick={() => toggleDropdown('dropdownMerkFilter')}>Merk/Type</span>
 
-                                <div id="dropdownMerkFilter" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg w-44 dark:bg-gray-700">
-                                    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
+                                <div id="dropdownMerkFilter" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg w-44">
+                                    <ul className="text-sm text-gray-700 border rounded-lg my-2">
                                         <li onClick={() => selectFilter({ merk: 'Merk'})}>
-                                            <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Merk</span>
+                                            <span className="block px-4 py-2 rounded-lg hover:bg-gray-100">Merk</span>
                                         </li>
                                     </ul>
                                 </div>
