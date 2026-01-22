@@ -1,0 +1,110 @@
+import { supabase } from '../supabaseClient';
+
+/**
+ * Service to handle interactions with the Supabase database.
+ * This abstracts the database logic from the React components.
+ */
+export const heatPumpService = {
+    /**
+     * Fetch all heatpumps for the dashboard.
+     */
+    async getAllHeatPumps() {
+        if (!supabase) throw new Error("Supabase is not configured. Please check your .env.local file.");
+        const { data, error } = await supabase
+            .from('heatpumps')
+            .select('*')
+            .order('id', { ascending: true });
+
+        if (error) throw error;
+        return data;
+    },
+
+    /**
+     * Fetch a single heatpump by ID, including its recent measurements.
+     * @param {string|number} id 
+     */
+    async getHeatPumpById(id) {
+        if (!supabase) throw new Error("Supabase is not configured. Please check your .env.local file.");
+        
+        const { data: heatpump, error: heatpumpError } = await supabase
+            .from('heatpumps')
+            .select('*')
+            .eq('id', id)
+            .single();
+
+        if (heatpumpError) throw heatpumpError;
+
+        // Fetch measurements (graphs)
+        const { data: measurements, error: measurementsError } = await supabase
+            .from('measurements')
+            .select('status, temperatuur, druk, vermogen, created_at')
+            .eq('pump_id', id)
+            .order('created_at', { ascending: true })
+            .limit(50);
+
+        if (measurementsError) throw measurementsError;
+
+        // Fetch fault history (logs)
+        const { data: faults, error: faultsError } = await supabase
+            .from('fault_history')
+            .select('*')
+            .eq('pump_id', id)
+            .order('date', { ascending: false });
+
+        if (faultsError) {
+            console.warn("Could not fetch fault history:", faultsError);
+        }
+        
+        return {
+            ...heatpump,
+            logs: faults || [], // Attach to the object as 'logs'
+            warmtepompData: measurements.map(m => ({
+                ...m,
+                datum: new Date(m.created_at).toLocaleDateString('nl-NL', { day: '2-digit', month: '2-digit' }),
+                original_timestamp: m.created_at
+            }))
+        };
+    },
+
+    /**
+     * Update settings for a heatpump.
+     * This updates the 'settings' JSONB column.
+     * @param {string|number} id 
+     * @param {object} newSettings 
+     */
+    async updateSettings(id, newSettings) {
+        if (!supabase) throw new Error("Supabase is not configured. Please check your .env.local file.");
+        const { data, error } = await supabase
+            .from('heatpumps')
+            .update({ settings: newSettings })
+            .eq('id', id)
+            .select();
+
+        if (error) throw error;
+        return data;
+    },
+
+    /**
+     * Subscribe to real-time updates for the heatpumps table.
+     * @param {function} onUpdate - Callback function when an update occurs
+     */
+    subscribeToHeatPumps(onUpdate) {
+        if (!supabase) return null;
+
+        return supabase
+            .channel('heatpumps-dashboard')
+            .on(
+                'postgres_changes',
+                { event: '*', schema: 'public', table: 'heatpumps' },
+                (payload) => {
+                    onUpdate(payload);
+                }
+            )
+            .subscribe();
+    },
+
+    unsubscribe(channel) {
+        if (!supabase) return;
+        supabase.removeChannel(channel);
+    }
+};

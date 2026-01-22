@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom';
+import { heatPumpService } from '../services/heatPumpService';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { format } from 'date-fns';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
@@ -9,10 +11,23 @@ import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 function Details() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const { id } = useParams(); // is a string. if it needs to be a number, convert it using Number(id)
+    const { id } = useParams();
     const [selectedFilter, setSelectedFilter] = useState("status");
     const [pomp, setPomp] = useState({});
     const [currentChartData, setCurrentChartData] = useState([]);
+
+    const formatDate = (dateString, fmt = 'dd-MM-yyyy') => {
+        if (!dateString) return '-';
+        try {
+            return format(new Date(dateString), fmt);
+        } catch (e) {
+            return dateString;
+        }
+    };
+
+    const formatValue = (value, unit = '') => {
+        return (value !== null && value !== undefined) ? `${value}${unit}` : '-';
+    };
 
     const chartConfig = {
         status: {
@@ -27,7 +42,7 @@ function Details() {
         temperatuur: {
             type: "line",
             label: "Temperatuur (°C)",
-            accessor: (item) => item.temperatuur,
+            accessor: (item) => item.temperatuur ?? null,
             xAxisKey: "x-point",
             min: 0,
             max: 30,
@@ -36,7 +51,7 @@ function Details() {
         druk: {
             type: "line",
             label: "Druk (bar)",
-            accessor: (item) => item.druk,
+            accessor: (item) => item.druk ?? null,
             xAxisKey: "x-point",
             min: 0,
             max: 2,
@@ -45,7 +60,7 @@ function Details() {
         vermogen: {
             type: "line",
             label: "Vermogen (kW)",
-            accessor: (item) => item.vermogen,
+            accessor: (item) => item.vermogen ?? null,
             xAxisKey: "x-point",
             min: 0,
             max: 6,
@@ -56,21 +71,10 @@ function Details() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('/dummy-data.json');
-                
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                
-                const data = await response.json();
-                const item = data.heatpumps.find((item) => item.id === Number(id));
-
-                if (!item) {
-                    throw new Error('Item not found');
-                }
+                const item = await heatPumpService.getHeatPumpById(id);
                 
                 setPomp(item);
-                setCurrentChartData(item.warmtepompData);
+                setCurrentChartData(item.warmtepompData || []);
             } catch (error) {
                 setError(error);
             } finally {
@@ -155,10 +159,10 @@ function Details() {
                     ]}
                     xAxis={[
                         {
-                            id: "x-band",
-                            data: Array.from({ length: 30 }, (_, i) => i + 1), // dagen
+                            id: chartConfig[selectedFilter].xAxisKey,
+                            data: currentChartData.length > 0 ? currentChartData.map(d => d.datum) : ["Geen data"], 
                             scaleType: chartConfig[selectedFilter].type === "bar" ? "band" : "point",
-                            label: "Dag",
+                            label: "Tijdstip",
                         },
                     ]}
                     yAxis={[
@@ -175,7 +179,7 @@ function Details() {
                     {chartConfig[selectedFilter].type === "line" && <LinePlot />}
                     {chartConfig[selectedFilter].type === "line" && <MarkPlot />}
                     <ChartsYAxis label={chartConfig[selectedFilter].label} axisId="y-axis-id" />
-                    <ChartsXAxis label="Dag" axisId="x-band" />
+                    <ChartsXAxis label="Tijdstip" axisId={chartConfig[selectedFilter].xAxisKey} />
                 </ChartContainer>
                 <div className='flex flex-row justify-between items-start gap-4'>
                     <div className='w-2/3 border border-gray-200 rounded-lg'>
@@ -188,12 +192,12 @@ function Details() {
                                 </li>
                                 <li>
                                     <div className='flex items-center py-3'>
-                                        <p><span className='font-semibold'>Fabrikant: </span>{pomp.fabrikant}</p>
+                                        <p><span className='font-semibold'>Fabrikant: </span>{formatValue(pomp.fabrikant)}</p>
                                     </div>
                                 </li>
                                 <li>
                                     <div className='flex items-center py-3'>
-                                        <p><span className='font-semibold'>Postcode: </span>{pomp.postcode}</p>
+                                        <p><span className='font-semibold'>Postcode: </span>{formatValue(pomp.postcode)}</p>
                                     </div>
                                 </li>
                                 <hr />
@@ -205,7 +209,7 @@ function Details() {
                                                     <div className='flex items-center py-3'>
                                                         <p>
                                                             <span className='font-semibold'>Huidige temperatuur: </span>
-                                                            {pomp.huidigeTemperatuur}
+                                                            {formatValue(pomp.huidigeTemperatuur, '°C')}
                                                         </p>
                                                     </div>
                                                 </td>
@@ -213,7 +217,7 @@ function Details() {
                                                     <div className='flex items-center py-3'>
                                                         <p>
                                                             <span className='font-semibold'>Druk: </span>
-                                                            {pomp.gemiddeldeDruk}
+                                                            {formatValue(pomp.gemiddeldeDruk, ' bar')}
                                                         </p>
                                                     </div>
                                                 </td>
@@ -223,7 +227,7 @@ function Details() {
                                                     <div className='flex items-center py-3'>
                                                         <p>
                                                             <span className='font-semibold'>Vermogen: </span>
-                                                            {pomp.vermogen}
+                                                            {formatValue(pomp.vermogen, ' kW')}
                                                         </p>
                                                     </div>
                                                 </td>
@@ -231,7 +235,7 @@ function Details() {
                                                     <div className='flex items-center py-3'>
                                                         <p>
                                                             <span className='font-semibold'>Laatste data-update: </span>
-                                                            {pomp.laatsteDataUpdate}
+                                                            {formatDate(pomp.laatsteDataUpdate, 'dd-MM-yyyy HH:mm')}
                                                         </p>
                                                     </div>
                                                 </td>
@@ -242,22 +246,22 @@ function Details() {
                                 <hr />
                                 <li>
                                     <div className='flex items-center py-3'>
-                                        <p><span className='font-semibold'>Merk: </span>{pomp.merk}</p>
+                                        <p><span className='font-semibold'>Merk: </span>{formatValue(pomp.merk)}</p>
                                     </div>
                                 </li>
                                 <li>
                                     <div className='flex items-center py-3'>
-                                        <p><span className='font-semibold'>Serienummer: </span>{pomp.serienummer}</p>
+                                        <p><span className='font-semibold'>Serienummer: </span>{formatValue(pomp.serienummer)}</p>
                                     </div>
                                 </li>
                                 <li>
                                     <div className='flex items-center py-3'>
-                                        <p><span className='font-semibold'>Onderhoudsdatum: </span>{pomp.onderhoudsdatum}</p>
+                                        <p><span className='font-semibold'>Onderhoudsdatum: </span>{formatDate(pomp.onderhoudsdatum)}</p>
                                     </div>
                                 </li>
                                 <li>
                                     <div className='flex items-center py-3'>
-                                        <p><span className='font-semibold'>Datum van installatie: </span>{pomp.installatieDatum}</p>
+                                        <p><span className='font-semibold'>Datum van installatie: </span>{formatDate(pomp.installatieDatum)}</p>
                                     </div>
                                 </li>
                             </ul>
@@ -270,19 +274,26 @@ function Details() {
                         <hr />
                         <div className="p-5">
                             <ul>
-                                {pomp.logs && pomp.logs.map((log, index) => (
-                                    <li key={index}>
-                                        <div className='p-3'>
-                                            <span className='font-semibold'>{log.datum}: </span>
-                                            <ul className='list-disc'>
-                                                {log.acties && log.acties.map((actie, actieIndex) => (
-                                                    <li key={actieIndex}>{actie.title}. {actie.beschrijving}</li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                        <hr />
-                                    </li>
-                                ))}
+                                {pomp.logs && pomp.logs.length > 0 ? (
+                                    pomp.logs.map((log, index) => (
+                                        <li key={index}>
+                                            <div className='p-3'>
+                                                <div className="flex justify-between">
+                                                    <span className='font-semibold'>{formatDate(log.date)}</span>
+                                                    <span className={`text-xs px-2 py-1 rounded ${log.status === 'Active' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}>
+                                                        {log.status}
+                                                    </span>
+                                                </div>
+                                                <p className="mt-1 text-sm text-gray-700">
+                                                    <span className="font-bold">{log.code}:</span> {log.message}
+                                                </p>
+                                            </div>
+                                            <hr />
+                                        </li>
+                                    ))
+                                ) : (
+                                    <li className="p-3 text-gray-500 italic">Geen storingen gevonden.</li>
+                                )}
                             </ul>
                         </div>
                     </div>

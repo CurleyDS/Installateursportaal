@@ -88,3 +88,4 @@ npm start
 ### 4. Open in browser
 
 Ga naar http://localhost:[poortnummer] (Het poortnummer is afhankelijk van de setup).
+
