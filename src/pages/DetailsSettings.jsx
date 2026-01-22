@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom';
+import { heatPumpService } from '../services/heatPumpService';
 import { Calendar } from '../components/CalendarComponent';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
@@ -7,7 +8,7 @@ import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 function DetailsSettings() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const { id } = useParams(); // is a string. if it needs to be a number, convert it using Number(id)
+    const { id } = useParams();
     const [pomp, setPomp] = useState({});
     const [currentSettings, setCurrentSettings] = useState({});
     const [settings, setSettings] = useState({});
@@ -36,31 +37,23 @@ function DetailsSettings() {
         setModal(saveOrReset);
     }
     
-    const submitSettings = () => {
-        console.log(settings);
-        setSubmitModal(true);
-
+    const submitSettings = async () => {
+        try {
+            await heatPumpService.updateSettings(id, settings);
+            setSubmitModal(true);
+        } catch (err) {
+            console.error(err);
+            // Optionally set error state here
+        }
     }
 
     const closeModal = () => {
         document.getElementById("confirmModal").classList.add('hidden');
     }
-
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('/dummy-data.json');
-                
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                
-                const data = await response.json();
-                const item = data.heatpumps.find((item) => item.id === Number(id));
-                
-                if (!item) {
-                    throw new Error('Item not found');
-                }
+                const item = await heatPumpService.getHeatPumpById(id);
                 
                 setPomp(item);
                 setCurrentSettings(item.settings);
