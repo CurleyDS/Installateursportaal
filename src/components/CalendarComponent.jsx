@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleLeft, faAngleRight, faCircle } from '@fortawesome/free-solid-svg-icons';
 
-function Calendar({ data = [], onUpdate }) {
-    const [tijdschemas, setTijdschemas] = useState(data);
+function Calendar({ tijdschemaInstelling = false, tijdschemas = [], onUpdate }) {
+    const [schemas, setSchemas] = useState(tijdschemas);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -45,11 +45,13 @@ function Calendar({ data = [], onUpdate }) {
 
     const handleSelect = (event, date) => {
         event.preventDefault();
-        setSelected(ymd(date));
+        if (tijdschemaInstelling) {
+            setSelected(ymd(date));
+        }
     }
 
     const hasEventOnDate = (checkDate) => {
-        return tijdschemas.some((schema) => {
+        return schemas.some((schema) => {
             const schemaDate = new Date(schema.date);
 
             // Non-repeating event
@@ -102,8 +104,8 @@ function Calendar({ data = [], onUpdate }) {
     };
 
     useEffect(() => {
-        onUpdate(tijdschemas);
-    }, [tijdschemas]);
+        onUpdate(schemas);
+    }, [schemas]);
     
     // Modal Setup
     const intervalTypes = ["day", "week", "month", "year"];
@@ -188,7 +190,7 @@ function Calendar({ data = [], onUpdate }) {
             newSchema.duration = calcDuration(newSchema.date, newSchema.duration);
         }
 
-        setTijdschemas((oldSchemas) => [...oldSchemas, newSchema]);
+        setSchemas((oldSchemas) => [...oldSchemas, newSchema]);
     };
 
     const closeModal = () => {
@@ -241,11 +243,11 @@ function Calendar({ data = [], onUpdate }) {
         return (
             <>
                 <fieldset className="p-2">
-                    <div className="flex flex-col items-center p-2 bg-gray-100 rounded-lg mb-2">
+                    <div className={"flex flex-col items-center p-2 bg-gray-100 rounded-lg mb-2" + (tijdschemaInstelling ? " text-black" : " text-gray-400")}>
                         <div className="flex items-center justify-between p-2 w-full">
                             <button type="button" onClick={() => navigateMonth(-1)}><FontAwesomeIcon icon={faAngleLeft} /></button>
                             
-                            <span className="font-bold">{current.toLocaleString("default", { month: "long" }) /* month-name */} {year}</span>
+                            <span className={"font-bold"}>{current.toLocaleString("default", { month: "long" }) /* month-name */} {year}</span>
                             
                             <button type="button" onClick={() => navigateMonth(1)}><FontAwesomeIcon icon={faAngleRight} /></button>
                         </div>
@@ -270,7 +272,7 @@ function Calendar({ data = [], onUpdate }) {
                                                         <button
                                                             type="button"
                                                             onClick={(e) => handleSelect(e, date)}
-                                                            className={`${(selected === ymd(date)) ? "bg-gray-500 text-white" : ((ymd(date) === ymd(new Date())) ? "bg-gray-200 border border-gray-500" : "bg-gray-200 border border-transparent hover:bg-gray-300")} w-full rounded transition-colors duration-150`}
+                                                            className={`${selected === ymd(date) ? "bg-gray-500 text-white" : (ymd(date) === ymd(new Date()) ? "bg-gray-200 border border-gray-500" : ("bg-gray-200 border border-transparent" + (tijdschemaInstelling ? " hover:bg-gray-300" : "")))} w-full rounded transition-colors duration-150`}
                                                         >
                                                             {date.getDate()}
                                                         </button>
