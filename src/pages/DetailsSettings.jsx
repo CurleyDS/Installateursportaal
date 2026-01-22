@@ -125,7 +125,7 @@ function DetailsSettings() {
                             </label>
                         </fieldset>
 
-                        <Calendar data={currentSettings.tijdschemas} onUpdate={handleCalendarUpdate} />
+                        <Calendar tijdschemaInstelling={settings.tijdschemaInstelling} tijdschemas={currentSettings.tijdschemas} onUpdate={handleCalendarUpdate} />
 
                         <fieldset className="p-2">
                             <label htmlFor="save-submit" className='block mb-2'>

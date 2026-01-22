@@ -139,6 +139,14 @@ function Home() {
         setFilters(newFilters);
     }
 
+    const isSelected = (key, fltrSubject) => {
+        if (filters[key] && filters[key].includes(fltrSubject)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     const resetFilter = () => {
         setFilters({
             fabrikant: null,
@@ -208,45 +216,42 @@ function Home() {
                             <li>
                                 <span className="rounded-lg ml-3 cursor-pointer select-none" onClick={() => toggleDropdown('dropdownFabrikantFilter')}>Fabrikant</span>
 
-                                <div id="dropdownFabrikantFilter" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg w-44 dark:bg-gray-700">
-                                    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
-                                        {getUniqueValues('fabrikant').length > 0 ? getUniqueValues('fabrikant').map((val, idx) => (
-                                            <li key={idx} onClick={() => selectFilter({ fabrikant: val })}>
-                                                <span className={`block px-4 py-2 hover:bg-gray-100 cursor-pointer ${filters.fabrikant === val ? 'font-bold bg-gray-50' : ''}`}>{val}</span>
-                                            </li>
-                                        )) : (
-                                            <li className="px-4 py-2 text-gray-400 italic">Geen opties</li>
-                                        )}
+                                <div id="dropdownFabrikantFilter" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg w-44">
+                                    <ul className="text-sm text-gray-700 border rounded-lg my-2">
+                                        <li onClick={() => selectFilter({ fabrikant: 'Fabrikant'})}>
+                                            <span className="block px-4 py-2 rounded-lg hover:bg-gray-100">Fabrikant Filter</span>
+                                        </li>
                                     </ul>
                                 </div>
                             </li>
                             <li>
                                 <span className="rounded-lg ml-3 cursor-pointer select-none" onClick={() => toggleDropdown('dropdownBedrijfFilter')}>Bedrijf</span>
 
-                                <div id="dropdownBedrijfFilter" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg w-44 dark:bg-gray-700">
-                                    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
-                                        {getUniqueValues('bedrijf').length > 0 ? getUniqueValues('bedrijf').map((val, idx) => (
-                                            <li key={idx} onClick={() => selectFilter({ bedrijf: val })}>
-                                                <span className={`block px-4 py-2 hover:bg-gray-100 cursor-pointer ${filters.bedrijf === val ? 'font-bold bg-gray-50' : ''}`}>{val}</span>
-                                            </li>
-                                        )) : (
-                                            <li className="px-4 py-2 text-gray-400 italic">Geen opties</li>
-                                        )}
+                                <div id="dropdownBedrijfFilter" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg w-44">
+                                    <ul className="text-sm text-gray-700 border rounded-lg my-2">
+                                        <li onClick={() => selectFilter({ bedrijf: 'Intergas'})}>
+                                            <span className="block px-4 py-2 rounded-lg hover:bg-gray-100">Intergas</span>
+                                        </li>
+                                        <li onClick={() => selectFilter({ bedrijf: 'Remeha'})}>
+                                            <span className="block px-4 py-2 rounded-lg hover:bg-gray-100">Remeha</span>
+                                        </li>
+                                        <li onClick={() => selectFilter({ bedrijf: 'Bosch'})}>
+                                            <span className="block px-4 py-2 rounded-lg hover:bg-gray-100">Bosch</span>
+                                        </li>
+                                        <li onClick={() => selectFilter({ bedrijf: 'Vaillant'})}>
+                                            <span className="block px-4 py-2 rounded-lg hover:bg-gray-100">Vaillant</span>
+                                        </li>
                                     </ul>
                                 </div>
                             </li>
                             <li>
                                 <span className="rounded-lg ml-3 cursor-pointer select-none" onClick={() => toggleDropdown('dropdownMerkFilter')}>Merk/Type</span>
 
-                                <div id="dropdownMerkFilter" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg w-44 dark:bg-gray-700">
-                                    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
-                                        {getUniqueValues('merk').length > 0 ? getUniqueValues('merk').map((val, idx) => (
-                                            <li key={idx} onClick={() => selectFilter({ merk: val })}>
-                                                <span className={`block px-4 py-2 hover:bg-gray-100 cursor-pointer ${filters.merk === val ? 'font-bold bg-gray-50' : ''}`}>{val}</span>
-                                            </li>
-                                        )) : (
-                                            <li className="px-4 py-2 text-gray-400 italic">Geen opties</li>
-                                        )}
+                                <div id="dropdownMerkFilter" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg w-44">
+                                    <ul className="text-sm text-gray-700 border rounded-lg my-2">
+                                        <li onClick={() => selectFilter({ merk: 'Merk'})}>
+                                            <span className="block px-4 py-2 rounded-lg hover:bg-gray-100">Merk</span>
+                                        </li>
                                     </ul>
                                 </div>
                             </li>
