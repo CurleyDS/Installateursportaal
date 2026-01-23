@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useOutletContext, Link } from 'react-router-dom';
 import { heatPumpService } from '../services/heatPumpService';
+import { filterHeatPumps } from '../utils/heatPumpLogic';
 import pumpLogo from '../assets/logo-placeholder.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck, faTriangleExclamation, faCircleQuestion, faLocationDot, faTemperatureHalf, faGauge, faBolt, faFilePen } from '@fortawesome/free-solid-svg-icons';
@@ -70,26 +71,6 @@ function Home() {
             }
         };
     }, []);
-
-    const filterHeatPumps = (allData, activeFilters, searchTerm) => {
-        if (!allData || !Array.isArray(allData)) return [];
-        return allData.filter(pomp => {
-            // Search (Postcode)
-            if (searchTerm) {
-                const postcode = pomp.postcode || "";
-                if (!postcode.toLowerCase().includes(searchTerm.toLowerCase())) return false;
-            }
-            // Filter Mapping
-            const filterMappings = { bedrijf: 'fabrikant', merk: 'merk' };
-            for (const [filterKey, filterValue] of Object.entries(activeFilters)) {
-                if (!filterValue) continue;
-                const dataKey = filterMappings[filterKey] || filterKey;
-                const dataValue = pomp[dataKey];
-                if (!dataValue || String(dataValue).toLowerCase() !== String(filterValue).toLowerCase()) return false;
-            }
-            return true;
-        });
-    };
 
     useEffect(() => {
         setPompen(filterHeatPumps(data, filters, search));
