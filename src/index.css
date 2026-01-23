@@ -13,6 +13,12 @@
     }
 }
 
+@media (min-width: 7000px) {
+    html {
+        font-size: 48px; /* 3.0x zoom */
+    }
+}
+
 :root {
     font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
     line-height: 1.5;
