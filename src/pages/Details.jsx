@@ -6,10 +6,12 @@ import { format } from 'date-fns';
 
 function Details() {
     const [loading, setLoading] = useState(false);
+    const [chartLoading, setChartLoading] = useState(false);
     const [error, setError] = useState(null);
     const { id } = useParams();
     const [pomp, setPomp] = useState({});
     const [currentChartData, setCurrentChartData] = useState([]);
+    const [timeRange, setTimeRange] = useState('24h');
 
     const formatDate = (dateString, fmt = 'dd-MM-yyyy') => {
         if (!dateString) return '-';
@@ -24,18 +26,35 @@ function Details() {
         return (value !== null && value !== undefined) ? `${value}${unit}` : '-';
     };
 
+    // Fetch initial Pump Details
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchPumpDetails = async () => {
             try {
                 const item = await heatPumpService.getHeatPumpById(id);
-                
                 setPomp(item);
+            } catch (error) {
+                setError(error);
+            } finally {
+                setLoading(true);
+            }
+        }
+        fetchPumpDetails();
+    }, [id]);
+
+    // Fetch Chart Data when timeRange changes
+    useEffect(() => {
+        const fetchChartData = async () => {
+            setChartLoading(true);
+            try {
+                const history = await heatPumpService.getHeatPumpHistory(id, timeRange);
                 
-                // Process chart data: format time for X-axis
-                const processedData = (item.warmtepompData || []).map(d => ({
+                // Format X-Axis based on range
+                const dateFormat = timeRange === '24h' ? 'HH:mm' : 'dd-MM HH:mm';
+                
+                const processedData = history.map(d => ({
                     ...d,
                     tijd: d.original_timestamp 
-                        ? format(new Date(d.original_timestamp), 'HH:mm') // Format as 14:30
+                        ? format(new Date(d.original_timestamp), dateFormat)
                         : d.datum,
                     temperatuur: d.temperatuur ?? null,
                     druk: d.druk ?? null
@@ -43,14 +62,14 @@ function Details() {
 
                 setCurrentChartData(processedData);
             } catch (error) {
-                setError(error);
+                console.error("Chart fetch error:", error);
             } finally {
-                setLoading(true);
+                setChartLoading(false);
             }
         }
 
-        fetchData();
-    }, [id]);
+        if (id) fetchChartData();
+    }, [id, timeRange]);
 
     const pompStatus = (status) => {
         if (status == 300) {
@@ -79,14 +98,38 @@ function Details() {
                 </div>
 
                 <div className="w-full bg-white p-4 rounded-lg border border-gray-200 mb-6 shadow-sm">
-                    <h3 className="text-lg font-semibold mb-2 text-gray-800">Prestaties (Laatste 24 uur)</h3>
-                    <div className="w-full" style={{ height: 400 }}>
+                    <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
+                        <h3 className="text-lg font-semibold text-gray-800">Prestaties</h3>
+                        <div className="flex gap-2 bg-gray-100 p-1 rounded-lg">
+                            {['24h', '7d', '30d'].map((range) => (
+                                <button
+                                    key={range}
+                                    onClick={() => setTimeRange(range)}
+                                    className={`px-3 py-1 text-sm rounded-md transition-all ${
+                                        timeRange === range 
+                                            ? 'bg-white shadow text-blue-600 font-medium' 
+                                            : 'text-gray-500 hover:text-gray-700'
+                                    }`}
+                                >
+                                    {range.toUpperCase()}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                    
+                    <div className="w-full relative" style={{ height: 400 }}>
+                        {chartLoading && (
+                            <div className="absolute inset-0 bg-white/80 z-10 flex items-center justify-center">
+                                <span className="text-gray-500">Laden...</span>
+                            </div>
+                        )}
                         <LineChart
                             dataset={currentChartData}
                             xAxis={[{ 
                                 scaleType: 'point', 
                                 dataKey: 'tijd', 
-                                label: 'Tijdstip' 
+                                label: 'Tijdstip',
+                                tickLabelStyle: { fontSize: 12 }
                             }]}
                             series={[
                                 { 
@@ -108,15 +151,15 @@ function Details() {
                                 { 
                                     id: 'tempAxis', 
                                     label: 'Temperatuur (°C)',
-                                    min: 0,
-                                    max: 80 
+                                    min: 0, 
+                                    max: 80
                                 },
                                 { 
                                     id: 'pressureAxis', 
                                     label: 'Druk (Bar)', 
                                     position: 'right',
                                     min: 0,
-                                    max: 3  
+                                    max: 4.0 
                                 }
                             ]}
                             grid={{ vertical: true, horizontal: true }}
