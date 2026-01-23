@@ -144,7 +144,7 @@ function Main() {
                                 </div>
                             </li>
                         </ul>
-                    </div>0 md:ml-
+                    </div>
                     <hr />
                     <div className="p-3 mt-2">
                         <button className='w-full p-2 text-red-500 border border-red-200 rounded hover:bg-red-50' onClick={resetFilter}>Filters Wissen</button>
