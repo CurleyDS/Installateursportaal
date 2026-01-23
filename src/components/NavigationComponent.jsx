@@ -54,6 +54,7 @@ function Sidebar({ isOpen, onClose }) {
                 </ul>
             </div>
         </aside>
+    </>
     )
 }
 
