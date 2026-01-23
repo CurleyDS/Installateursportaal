@@ -117,7 +117,7 @@ function Details() {
                         </div>
                     </div>
                     
-                    <div className="w-full relative" style={{ height: 400 }}>
+                    <div className="w-full relative h-[350px] md:h-[450px]">
                         {chartLoading && (
                             <div className="absolute inset-0 bg-white/80 z-10 flex items-center justify-center">
                                 <span className="text-gray-500">Laden...</span>
@@ -135,27 +135,27 @@ function Details() {
                                 { 
                                     dataKey: 'temperatuur', 
                                     label: 'Temperatuur (°C)', 
-                                    yAxisKey: 'tempAxis', 
+                                    yAxisKey: 'leftAxis', 
                                     color: '#ef4444', 
                                     showMark: false 
                                 },
                                 { 
                                     dataKey: 'druk', 
                                     label: 'Waterdruk (Bar)', 
-                                    yAxisKey: 'pressureAxis', 
+                                    yAxisKey: 'rightAxis', 
                                     color: '#3b82f6', 
                                     showMark: false 
                                 }
                             ]}
                             yAxis={[
                                 { 
-                                    id: 'tempAxis', 
+                                    id: 'leftAxis', 
                                     label: 'Temperatuur (°C)',
                                     min: 0, 
                                     max: 80
                                 },
                                 { 
-                                    id: 'pressureAxis', 
+                                    id: 'rightAxis', 
                                     label: 'Druk (Bar)', 
                                     position: 'right',
                                     min: 0,
