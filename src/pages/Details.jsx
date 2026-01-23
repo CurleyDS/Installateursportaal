@@ -121,7 +121,7 @@ function Details() {
     if (loading) {
         return (
             <>
-                <div className='flex items-center justify-between'>
+                <div className='flex flex-wrap items-center justify-between gap-y-3 gap-x-2'>
                     <Link to={"/"} className="p-2 bg-gray-200 rounded-lg">Terug</Link>
 
                     <span className="p-2 bg-gray-200 rounded-lg">Naar dagweergave</span> {/* Nog niet functioneel */}
@@ -181,13 +181,13 @@ function Details() {
                     <ChartsYAxis label={chartConfig[selectedFilter].label} axisId="y-axis-id" />
                     <ChartsXAxis label="Tijdstip" axisId={chartConfig[selectedFilter].xAxisKey} />
                 </ChartContainer>
-                <div className='flex flex-row justify-between items-start gap-4'>
-                    <div className='w-2/3 border border-gray-200 rounded-lg'>
+                <div className='flex flex-col md:flex-row justify-between items-start gap-4'>
+                    <div className='w-full md:w-2/3 border border-gray-200 rounded-lg'>
                         <div className="p-5">
                             <ul>
                                 <li>
                                     <div className='flex items-center py-3'>
-                                        <p><span className='font-semibold'>ID: </span>{pomp.id}</p>
+                                        <p className="break-all"><span className='font-semibold'>ID: </span>{pomp.id}</p>
                                     </div>
                                 </li>
                                 <li>
@@ -267,7 +267,7 @@ function Details() {
                             </ul>
                         </div>
                     </div>
-                    <div className='w-1/3 border border-gray-200 rounded-lg'>
+                    <div className='w-full md:w-1/3 border border-gray-200 rounded-lg'>
                         <div className={'p-5 rounded-t-lg ' + pompStatus(pomp.huidigeStatus).style}>
                             <span className='font-semibold'>{pompStatus(pomp.huidigeStatus).text}</span>
                         </div>

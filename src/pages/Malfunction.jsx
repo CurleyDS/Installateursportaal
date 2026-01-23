@@ -1,35 +1,38 @@
 import { useState, useEffect } from 'react'
+import { useOutletContext, Link } from 'react-router-dom';
+import { heatPumpService } from '../services/heatPumpService';
+import { filterHeatPumps } from '../utils/heatPumpLogic';
 import pumpLogo from '../assets/logo-placeholder.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faXmark, faCircleCheck, faTriangleExclamation, faCircleQuestion, faLocationDot, faTemperatureHalf, faGauge, faBolt, faFilePen } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
+import { faTriangleExclamation, faLocationDot } from '@fortawesome/free-solid-svg-icons';
+import { format } from 'date-fns';
 
 function Malfunction() {
+    // Global filter state from MainLayout
+    const { search, filters } = useOutletContext();
+
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [data, setData] = useState([]);
-
-    const [search, setSearch] = useState(null);
-    const [filters, setFilters] = useState({
-        fabrikant: null,
-        bedrijf: null,
-        merk: null
-    });
     const [pompen, setPompen] = useState([]);
+
+    const formatDate = (dateString) => {
+        if (!dateString) return '-';
+        try {
+            return format(new Date(dateString), 'dd-MM-yyyy HH:mm');
+        } catch (e) {
+            return dateString;
+        }
+    };
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('/dummy-data.json');
-
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
-                const data = await response.json()
-
-                setData(data.heatpumps.filter((pomp) => pomp.huidigeStatus === 500));
+                // Fetch real data from Supabase
+                const result = await heatPumpService.getAllHeatPumps();
+                setData(result || []);
             } catch (error) {
+                console.error("Fetch error:", error);
                 setError(error);
             } finally {
                 setLoading(true);
@@ -40,197 +43,68 @@ function Malfunction() {
     }, []);
 
     useEffect(() => {
-        const filterPompen = () => {
-            let filteredPompen = [...data];
-            Object.keys(filters).forEach(key => {
-                if (filters[key] !== null) {
-                    filteredPompen = filteredPompen.filter(pomp => pomp[key] === filters[key]);
-                }
-            });
-            if (search !== null) {
-                filteredPompen = filteredPompen.filter(pomp => pomp.postcode.toLowerCase().includes(search));
-            }
-            setPompen(filteredPompen);
-        }
-
-        filterPompen();
+        // 1. Apply standard filters (Search + Sidebar)
+        let filtered = filterHeatPumps(data, filters, search);
+        
+        // 2. Apply Malfunction-specific filter (Status 500 = Error)
+        filtered = filtered.filter(pomp => pomp.huidigeStatus == 500);
+        
+        setPompen(filtered);
     }, [search, filters, data]);
 
-    const searchInput = () => {
-        const searchValue = document.querySelector('input[type="text"]').value.toLowerCase();
-        if (searchValue === '') {
-            setSearch(null);
-        } else {
-            setSearch(searchValue);
-        }
-    }
-
-    const resetSearch = () => {
-        document.querySelector('input[type="text"]').value = '';
-        setSearch(null);
-    }
-
-    const toggleFilter = () => {
-        let sidebarFilter = document.getElementById('sidebarFilter');
-        if (sidebarFilter.classList.contains('hidden')) {
-            sidebarFilter.classList.remove('hidden');
-        } else {
-            sidebarFilter.classList.add('hidden');
-        }
-    }
-
-    const toggleDropdown = (dropdownId) => {
-        let dropdownFilter = document.getElementById(dropdownId);
-        if (dropdownFilter.classList.contains('hidden')) {
-            dropdownFilter.classList.remove('hidden');
-        } else {
-            dropdownFilter.classList.add('hidden');
-        }
-    }
-
-    const selectFilter = (filter) => {
-        const key = Object.keys(filter)[0];
-        const newFilters = { ...filters };
-
-        if (filters[key] !== null) {
-            if (filters[key] === filter[key]) {
-                newFilters[key] = null;
-            } else {
-                newFilters[key] = filter[key];
-            }
-        } else {
-            newFilters[key] = filter[key];
-        }
-
-        setFilters(newFilters);
-    }
-
-    const resetFilter = () => {
-        setFilters({
-            fabrikant: null,
-            bedrijf: null,
-            merk: null
-        });
-    }
-
     return (
-        <>
-            <nav className="fixed top-0 left-64 right-0 z-40 bg-white">
-                <div className='flex items-center justify-between w-full p-3'>
-                    <div className="flex items-center justify-around w-full">
-                        <input className="w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg mr-2 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" onChange={searchInput} type="text" placeholder="Voer postcode in..." />
-                        {search != null && <FontAwesomeIcon onClick={resetSearch} icon={faXmark} />}
-                    </div>
-                    <div>
-                        <span className='p-2' onClick={toggleFilter}>Filter</span>
-                    </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 min-[2500px]:grid-cols-5 gap-6">
+            {loading && !error && pompen.length === 0 && (
+                <div className="col-span-full p-4 text-center text-gray-500 bg-red-50 border border-red-200 rounded-lg w-full">
+                    <h3 className="text-lg font-medium text-red-800">Geen storingen</h3>
+                    <p className="text-red-700">Er zijn geen warmtepompen gevonden met status 'Storing'.</p>
                 </div>
-            </nav>
-            <aside id='sidebarFilter' className="fixed top-0 right-0 z-50 w-64 h-screen bg-white border-r border-gray-200 hidden">
-                <div className="h-full overflow-y-auto">
-                    <div className="p-3 mt-2">
-                        <span className='p-2' onClick={toggleFilter}>Sluiten</span>
-                    </div>
-                    <hr />
-                    <div className="p-3">
-                        <ul className="p-2">
-                            <li>
-                                <span className="rounded-lg ml-3" onClick={() => toggleDropdown('dropdownFabrikantFilter')}>Fabrikant</span>
+            )}
 
-                                <div id="dropdownFabrikantFilter" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg w-44 dark:bg-gray-700">
-                                    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
-                                        <li onClick={() => selectFilter({ fabrikant: 'Fabrikant'})}>
-                                            <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Fabrikant Filter</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li>
-                                <span className="rounded-lg ml-3" onClick={() => toggleDropdown('dropdownBedrijfFilter')}>Bedrijf</span>
-
-                                <div id="dropdownBedrijfFilter" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg w-44 dark:bg-gray-700">
-                                    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
-                                        <li onClick={() => selectFilter({ bedrijf: 'Intergas'})}>
-                                            <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Intergas</span>
-                                        </li>
-                                        <li onClick={() => selectFilter({ bedrijf: 'Remeha'})}>
-                                            <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Remeha</span>
-                                        </li>
-                                        <li onClick={() => selectFilter({ bedrijf: 'Bosch'})}>
-                                            <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Bosch</span>
-                                        </li>
-                                        <li onClick={() => selectFilter({ bedrijf: 'Vaillant'})}>
-                                            <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Vaillant</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li>
-                                <span className="rounded-lg ml-3" onClick={() => toggleDropdown('dropdownMerkFilter')}>Merk/Type</span>
-
-                                <div id="dropdownMerkFilter" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg w-44 dark:bg-gray-700">
-                                    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
-                                        <li onClick={() => selectFilter({ merk: 'Merk'})}>
-                                            <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Merk</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <hr />
-                    <div className="p-3 mt-2">
-                        <span className='p-2' onClick={resetFilter}>Wissen</span>
-                    </div>
-                </div>
-            </aside>
-            <div className="grid grid-cols-4 gap-4">
-                {pompen.map((pomp, index) => (
-                    <Link to={"/" + pomp.id} key={index}>
-                        <div className="max-w-sm bg-red-100 border border-red-500 rounded-lg">
-                            <div className="flex items-center justify-between p-5">
-                                <p className="mb-3 font-normal text-gray-700">ID: {pomp.id}</p>
-                                <FontAwesomeIcon className="text-red-500" icon={faTriangleExclamation} />
-                            </div>
-                            <div className='p-5'>
-                                <img src={pumpLogo} alt="" />
-                            </div>
-                            <div className="p-5">
-                                <ul>
-                                    <li className="py-3">
-                                        <div className="flex items-center">
-                                            <FontAwesomeIcon icon={faLocationDot} />
-                                            <p className="flex-1 ml-4 font-normal text-gray-900">
-                                                {pomp.postcode}
-                                            </p>
-                                        </div>
-                                    </li>
-                                    <hr />
-                                    <li className="py-3">
-                                        <div className="flex items-center">
-                                            <p className="flex-1 font-normal text-gray-900">
-                                                <bold>Opgetreden sinds:</bold><br />
-                                                {/* {pomp.storing.datum} */}31-03-2025.
-                                            </p>
-                                        </div>
-                                    </li>
-                                    <li className="py-3">
-                                        <div className="flex items-center">
-                                            <p className="flex-1 font-normal text-gray-900">
-                                                <bold>Storing:</bold><br />
-                                                {/* {pomp.storing} */}Onverwachte situatie is opgetreden. Er is geen specifiekere melding geschikt.<br />
-                                                <br />
-                                                Neem contact op met [contactpersoon]{/* {pomp.storing.contactpersoon}. */}.
-                                            </p>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
+            {pompen.map((pomp, index) => (
+                <Link to={"/" + pomp.id} key={index} className="block w-full min-w-0">
+                    <div className="w-full bg-red-50 border border-red-400 rounded-lg hover:shadow-lg transition-shadow h-full overflow-hidden">
+                        <div className="flex items-center justify-between p-6">
+                            <p className="mb-3 font-normal text-gray-700 truncate" title={pomp.id}>ID: {pomp.id}</p>
+                            <FontAwesomeIcon className="text-red-600 text-xl" icon={faTriangleExclamation} />
                         </div>
-                    </Link>
-                ))}
-            </div>
-        </>
+                        <div className='p-6'>
+                            <img src={pumpLogo} alt="" className="w-full h-auto object-contain mix-blend-multiply" />
+                        </div>
+                        <div className="p-6">
+                            <ul>
+                                <li className="py-3">
+                                    <div className="flex items-center">
+                                        <FontAwesomeIcon icon={faLocationDot} className="text-red-700" />
+                                        <p className="flex-1 ml-4 font-normal text-gray-900">
+                                            {pomp.postcode}
+                                        </p>
+                                    </div>
+                                </li>
+                                <hr className="border-red-200" />
+                                <li className="py-3">
+                                    <div className="flex items-center">
+                                        <p className="flex-1 font-normal text-gray-900">
+                                            <span className="font-bold text-red-800">Opgetreden sinds:</span><br />
+                                            {formatDate(pomp.laatsteDataUpdate)}
+                                        </p>
+                                    </div>
+                                </li>
+                                <li className="py-3">
+                                    <div className="flex items-center">
+                                        <p className="flex-1 font-normal text-gray-900 break-words">
+                                            <span className="font-bold text-red-800">Storing:</span><br />
+                                            {pomp.error_message || "Onbekende storing"}
+                                            {pomp.error_code && <span className="block text-sm text-red-600 mt-1">Code: {pomp.error_code}</span>}
+                                        </p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </Link>
+            ))}
+        </div>
     )
 }
 
