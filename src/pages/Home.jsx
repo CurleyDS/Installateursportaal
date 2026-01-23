@@ -76,21 +76,28 @@ function Home() {
         };
     }, []);
 
-    useEffect(() => {
-        const filterPompen = () => {
-            let filteredPompen = [...data];
-            Object.keys(filters).forEach(key => {
-                if (filters[key] !== null) {
-                    filteredPompen = filteredPompen.filter(pomp => pomp[key] === filters[key]);
-                }
-            });
-            if (search !== null) {
-                filteredPompen = filteredPompen.filter(pomp => pomp.postcode.toLowerCase().includes(search));
+    const filterHeatPumps = (allData, activeFilters, searchTerm) => {
+        if (!allData || !Array.isArray(allData)) return [];
+        return allData.filter(pomp => {
+            // Search (Postcode)
+            if (searchTerm) {
+                const postcode = pomp.postcode || "";
+                if (!postcode.toLowerCase().includes(searchTerm.toLowerCase())) return false;
             }
-            setPompen(filteredPompen);
-        }
+            // Filter Mapping
+            const filterMappings = { bedrijf: 'fabrikant', merk: 'merk' };
+            for (const [filterKey, filterValue] of Object.entries(activeFilters)) {
+                if (!filterValue) continue;
+                const dataKey = filterMappings[filterKey] || filterKey;
+                const dataValue = pomp[dataKey];
+                if (!dataValue || String(dataValue).toLowerCase() !== String(filterValue).toLowerCase()) return false;
+            }
+            return true;
+        });
+    };
 
-        filterPompen();
+    useEffect(() => {
+        setPompen(filterHeatPumps(data, filters, search));
     }, [search, filters, data]);
 
     const handleSearch = (e) => {
@@ -263,9 +270,9 @@ function Home() {
                     </div>
                 </div>
             </aside>
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 min-[2500px]:grid-cols-5 gap-6 justify-items-center">
                 {error && (
-                    <div className="col-span-4 p-4 text-red-700 bg-red-100 border border-red-400 rounded">
+                    <div className="col-span-full p-4 text-red-700 bg-red-100 border border-red-400 rounded w-full">
                         <p className="font-bold">Error loading data:</p>
                         <p>{error.message}</p>
                         <p className="text-sm mt-2">Check your .env.local configuration and database connection.</p>
@@ -273,13 +280,13 @@ function Home() {
                 )}
 
                 {!loading && !error && (
-                    <div className="col-span-4 p-4 text-center text-gray-500">
+                    <div className="col-span-full p-4 text-center text-gray-500 w-full">
                         <p>Loading...</p>
                     </div>
                 )}
 
                 {loading && !error && pompen.length === 0 && (
-                    <div className="col-span-4 p-4 text-center text-gray-500 bg-gray-50 border rounded-lg">
+                    <div className="col-span-full p-4 text-center text-gray-500 bg-gray-50 border rounded-lg w-full">
                         <h3 className="text-lg font-medium">No heat pumps found</h3>
                         <p>Try adjusting your search or filters.</p>
                     </div>
