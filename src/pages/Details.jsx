@@ -1,18 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom';
 import { heatPumpService } from '../services/heatPumpService';
-import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { LineChart } from '@mui/x-charts/LineChart';
 import { format } from 'date-fns';
-import { BarPlot } from '@mui/x-charts/BarChart';
-import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
-import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
-import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 
 function Details() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const { id } = useParams();
-    const [selectedFilter, setSelectedFilter] = useState("status");
     const [pomp, setPomp] = useState({});
     const [currentChartData, setCurrentChartData] = useState([]);
 
@@ -29,52 +24,24 @@ function Details() {
         return (value !== null && value !== undefined) ? `${value}${unit}` : '-';
     };
 
-    const chartConfig = {
-        status: {
-            type: "bar",
-            label: "Status (%)",
-            accessor: (item) => (item.status === 200 ? 100 : 0),
-            xAxisKey: "x-band",
-            min: 0,
-            max: 100,
-            maxInterval: 100,
-        },
-        temperatuur: {
-            type: "line",
-            label: "Temperatuur (°C)",
-            accessor: (item) => item.temperatuur ?? null,
-            xAxisKey: "x-point",
-            min: 0,
-            max: 30,
-            maxInterval: 1,
-        },
-        druk: {
-            type: "line",
-            label: "Druk (bar)",
-            accessor: (item) => item.druk ?? null,
-            xAxisKey: "x-point",
-            min: 0,
-            max: 2,
-            maxInterval: 0.1,
-        },
-        vermogen: {
-            type: "line",
-            label: "Vermogen (kW)",
-            accessor: (item) => item.vermogen ?? null,
-            xAxisKey: "x-point",
-            min: 0,
-            max: 6,
-            maxInterval: 0.1,
-        },
-    };
-
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const item = await heatPumpService.getHeatPumpById(id);
                 
                 setPomp(item);
-                setCurrentChartData(item.warmtepompData || []);
+                
+                // Process chart data: format time for X-axis
+                const processedData = (item.warmtepompData || []).map(d => ({
+                    ...d,
+                    tijd: d.original_timestamp 
+                        ? format(new Date(d.original_timestamp), 'HH:mm') // Format as 14:30
+                        : d.datum,
+                    temperatuur: d.temperatuur ?? null,
+                    druk: d.druk ?? null
+                }));
+
+                setCurrentChartData(processedData);
             } catch (error) {
                 setError(error);
             } finally {
@@ -84,20 +51,6 @@ function Details() {
 
         fetchData();
     }, [id]);
-
-    const toggleDropdown = (dropdownId) => {
-        let dropdownFilter = document.getElementById(dropdownId);
-        if (dropdownFilter.classList.contains('hidden')) {
-            dropdownFilter.classList.remove('hidden');
-        } else {
-            dropdownFilter.classList.add('hidden');
-        }
-    }
-
-    const selectFilter = (filter) => {
-        setSelectedFilter(filter);
-        toggleDropdown("dropdownChart");
-    }
 
     const pompStatus = (status) => {
         if (status == 300) {
@@ -121,66 +74,57 @@ function Details() {
     if (loading) {
         return (
             <>
-                <div className='flex flex-wrap items-center justify-between gap-y-3 gap-x-2'>
-                    <Link to={"/"} className="p-2 bg-gray-200 rounded-lg">Terug</Link>
-
-                    <span className="p-2 bg-gray-200 rounded-lg">Naar dagweergave</span> {/* Nog niet functioneel */}
-                    
-                    <span className='relative cursor-pointer' onClick={() => toggleDropdown('dropdownChart')}>
-                        <span className='p-2 bg-gray-200 rounded-lg'>{selectedFilter.charAt(0).toUpperCase() + selectedFilter.slice(1)}</span>
-
-                        <div id="dropdownChart" className="absolute top-8 right-0 z-10 hidden bg-white divide-y divide-gray-100 w-44 p-2 rounded-lg">
-                            <ul className="py-2">
-                                <li onClick={() => selectFilter("status")}>
-                                    <span className="block px-4 py-2 hover:bg-gray-100">Status Filter</span>
-                                </li>
-                                <li onClick={() => selectFilter("temperatuur")}>
-                                    <span className="block px-4 py-2 hover:bg-gray-100">Temperatuur Filter</span>
-                                </li>
-                                <li onClick={() => selectFilter("druk")}>
-                                    <span className="block px-4 py-2 hover:bg-gray-100">Druk Filter</span>
-                                </li>
-                                <li onClick={() => selectFilter("vermogen")}>
-                                    <span className="block px-4 py-2 hover:bg-gray-100">Vermogen Filter</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </span>
+                <div className='flex flex-wrap items-center justify-between gap-y-3 gap-x-2 mb-4'>
+                    <Link to={"/"} className="p-2 bg-gray-200 rounded-lg text-sm hover:bg-gray-300 transition-colors">Terug naar overzicht</Link>
                 </div>
-                <ChartContainer
-                    dataset={currentChartData}
-                    series={[
-                        {
-                            type: chartConfig[selectedFilter].type,
-                            data: currentChartData.map(chartConfig[selectedFilter].accessor),
-                            label: chartConfig[selectedFilter].label,
-                            xAxisKey: chartConfig[selectedFilter].xAxisKey,
-                        },
-                    ]}
-                    xAxis={[
-                        {
-                            id: chartConfig[selectedFilter].xAxisKey,
-                            data: currentChartData.length > 0 ? currentChartData.map(d => d.datum) : ["Geen data"], 
-                            scaleType: chartConfig[selectedFilter].type === "bar" ? "band" : "point",
-                            label: "Tijdstip",
-                        },
-                    ]}
-                    yAxis={[
-                        { 
-                            id: "y-axis-id",
-                            min: chartConfig[selectedFilter].min,
-                            max: chartConfig[selectedFilter].max,
-                            maxInterval: chartConfig[selectedFilter].maxInterval,
-                        }
-                    ]}
-                    height={300}
-                >
-                    {chartConfig[selectedFilter].type === "bar" && <BarPlot />}
-                    {chartConfig[selectedFilter].type === "line" && <LinePlot />}
-                    {chartConfig[selectedFilter].type === "line" && <MarkPlot />}
-                    <ChartsYAxis label={chartConfig[selectedFilter].label} axisId="y-axis-id" />
-                    <ChartsXAxis label="Tijdstip" axisId={chartConfig[selectedFilter].xAxisKey} />
-                </ChartContainer>
+
+                <div className="w-full bg-white p-4 rounded-lg border border-gray-200 mb-6 shadow-sm">
+                    <h3 className="text-lg font-semibold mb-2 text-gray-800">Prestaties (Laatste 24 uur)</h3>
+                    <div className="w-full" style={{ height: 400 }}>
+                        <LineChart
+                            dataset={currentChartData}
+                            xAxis={[{ 
+                                scaleType: 'point', 
+                                dataKey: 'tijd', 
+                                label: 'Tijdstip' 
+                            }]}
+                            series={[
+                                { 
+                                    dataKey: 'temperatuur', 
+                                    label: 'Temperatuur (°C)', 
+                                    yAxisKey: 'tempAxis', 
+                                    color: '#ef4444', 
+                                    showMark: false 
+                                },
+                                { 
+                                    dataKey: 'druk', 
+                                    label: 'Waterdruk (Bar)', 
+                                    yAxisKey: 'pressureAxis', 
+                                    color: '#3b82f6', 
+                                    showMark: false 
+                                }
+                            ]}
+                            yAxis={[
+                                { 
+                                    id: 'tempAxis', 
+                                    label: 'Temperatuur (°C)',
+                                    min: 0,
+                                    max: 80 
+                                },
+                                { 
+                                    id: 'pressureAxis', 
+                                    label: 'Druk (Bar)', 
+                                    position: 'right',
+                                    min: 0,
+                                    max: 3  
+                                }
+                            ]}
+                            grid={{ vertical: true, horizontal: true }}
+                            margin={{ left: 50, right: 50, top: 20, bottom: 40 }}
+                        />
+                    </div>
+                </div>
+
                 <div className='flex flex-col md:flex-row justify-between items-start gap-4'>
                     <div className='w-full md:w-2/3 border border-gray-200 rounded-lg'>
                         <div className="p-5">
