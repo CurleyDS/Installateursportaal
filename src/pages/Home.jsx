@@ -270,8 +270,7 @@ function Home() {
                     </div>
                 </div>
             </aside>
-            <div className="w-full max-w-screen-2xl mx-auto px-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 justify-items-center">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 min-[2500px]:grid-cols-5 gap-6 justify-items-center">
                 {error && (
                     <div className="col-span-full p-4 text-red-700 bg-red-100 border border-red-400 rounded w-full">
                         <p className="font-bold">Error loading data:</p>
@@ -351,7 +350,6 @@ function Home() {
                         </div>
                     </Link>
                 ))}
-                </div>
             </div>
         </>
     )
