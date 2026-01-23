@@ -153,7 +153,7 @@ function Main() {
             </aside>
 
             {/* Main Content Area */}
-            <main className="flex-1 ml-64 overflow-x-hidden pt-20">
+            <main className="flex-1 ml-0 md:ml-64 overflow-x-hidden pt-20">
                 {/* Clean Wrapper: Percentage width, no scaling transforms */}
                 <div className="w-[95%] mx-auto p-4">
                     <Outlet context={{ search, filters }} />
