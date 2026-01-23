@@ -3,12 +3,13 @@ import { Outlet, useParams, useOutletContext } from 'react-router-dom';
 import { Sidebar } from '../components/NavigationComponent';
 import { NotificationToggle } from '../components/NotificationComponent';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faXmark, faBars } from '@fortawesome/free-solid-svg-icons';
 
 function Main() {
     const { id } = useParams();
     
     // Global Search & Filter State
+    const [isSidebarOpen, setSidebarOpen] = useState(false);
     const [search, setSearch] = useState(null);
     const [inputValue, setInputValue] = useState("");
     const [filters, setFilters] = useState({
@@ -70,11 +71,20 @@ function Main() {
 
     return (
         <>
-            <Sidebar />
+            <Sidebar isOpen={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
             
             {/* Top Navigation Bar - Fixed */}
-            <nav className="fixed top-0 left-64 right-0 z-40 bg-white border-b border-gray-200">
-                <div className='flex items-center justify-between w-full p-3'>
+            <nav className="fixed top-0 left-0 md:left-64 right-0 z-40 bg-white border-b border-gray-200">
+                <div className='flex items-center justify-between w-full p-3 gap-3'>
+                    
+                    {/* Mobile Menu Toggle */}
+                    <button 
+                        className="md:hidden p-2 text-gray-600 hover:bg-gray-100 rounded"
+                        onClick={() => setSidebarOpen(!isSidebarOpen)}
+                    >
+                        <FontAwesomeIcon icon={faBars} size="lg" />
+                    </button>
+
                     <div className="flex items-center justify-around w-full">
                         <input 
                             className="w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg mr-2 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" 
@@ -143,7 +153,7 @@ function Main() {
             </aside>
 
             {/* Main Content Area */}
-            <main className="flex-1 ml-64 overflow-x-hidden pt-20">
+            <main className="flex-1 ml-0 md:ml-64 overflow-x-hidden pt-20">
                 {/* Clean Wrapper: Percentage width, no scaling transforms */}
                 <div className="w-[95%] mx-auto p-4">
                     <Outlet context={{ search, filters }} />

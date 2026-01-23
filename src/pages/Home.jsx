@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useOutletContext, Link } from 'react-router-dom';
 import { heatPumpService } from '../services/heatPumpService';
+import { filterHeatPumps } from '../utils/heatPumpLogic';
 import pumpLogo from '../assets/logo-placeholder.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck, faTriangleExclamation, faCircleQuestion, faLocationDot, faTemperatureHalf, faGauge, faBolt, faFilePen } from '@fortawesome/free-solid-svg-icons';
@@ -71,26 +72,6 @@ function Home() {
         };
     }, []);
 
-    const filterHeatPumps = (allData, activeFilters, searchTerm) => {
-        if (!allData || !Array.isArray(allData)) return [];
-        return allData.filter(pomp => {
-            // Search (Postcode)
-            if (searchTerm) {
-                const postcode = pomp.postcode || "";
-                if (!postcode.toLowerCase().includes(searchTerm.toLowerCase())) return false;
-            }
-            // Filter Mapping
-            const filterMappings = { bedrijf: 'fabrikant', merk: 'merk' };
-            for (const [filterKey, filterValue] of Object.entries(activeFilters)) {
-                if (!filterValue) continue;
-                const dataKey = filterMappings[filterKey] || filterKey;
-                const dataValue = pomp[dataKey];
-                if (!dataValue || String(dataValue).toLowerCase() !== String(filterValue).toLowerCase()) return false;
-            }
-            return true;
-        });
-    };
-
     useEffect(() => {
         setPompen(filterHeatPumps(data, filters, search));
     }, [search, filters, data]);
@@ -144,10 +125,10 @@ function Home() {
                 )}
 
                 {pompen.map((pomp, index) => (
-                    <Link to={"/" + pomp.id} key={index} className="block w-full">
-                        <div className="w-full bg-white border border-gray-200 rounded-lg hover:shadow-lg transition-shadow h-full">
+                    <Link to={"/" + pomp.id} key={index} className="block w-full min-w-0">
+                        <div className="w-full bg-white border border-gray-200 rounded-lg hover:shadow-lg transition-shadow h-full overflow-hidden">
                             <div className="flex items-center justify-between p-6">
-                                <p className="mb-3 font-normal text-gray-700">ID: {pomp.id}</p>
+                                <p className="mb-3 font-normal text-gray-700 truncate" title={pomp.id}>ID: {pomp.id}</p>
                                 <FontAwesomeIcon className={pompStatus(pomp.huidigeStatus).style} icon={pompStatus(pomp.huidigeStatus).icon} />
                             </div>
                             <div className='p-6'>

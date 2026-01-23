@@ -1,20 +1,17 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom';
 import { heatPumpService } from '../services/heatPumpService';
-import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { LineChart } from '@mui/x-charts/LineChart';
 import { format } from 'date-fns';
-import { BarPlot } from '@mui/x-charts/BarChart';
-import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
-import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
-import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 
 function Details() {
     const [loading, setLoading] = useState(false);
+    const [chartLoading, setChartLoading] = useState(false);
     const [error, setError] = useState(null);
     const { id } = useParams();
-    const [selectedFilter, setSelectedFilter] = useState("status");
     const [pomp, setPomp] = useState({});
     const [currentChartData, setCurrentChartData] = useState([]);
+    const [timeRange, setTimeRange] = useState('24h');
 
     const formatDate = (dateString, fmt = 'dd-MM-yyyy') => {
         if (!dateString) return '-';
@@ -29,75 +26,50 @@ function Details() {
         return (value !== null && value !== undefined) ? `${value}${unit}` : '-';
     };
 
-    const chartConfig = {
-        status: {
-            type: "bar",
-            label: "Status (%)",
-            accessor: (item) => (item.status === 200 ? 100 : 0),
-            xAxisKey: "x-band",
-            min: 0,
-            max: 100,
-            maxInterval: 100,
-        },
-        temperatuur: {
-            type: "line",
-            label: "Temperatuur (°C)",
-            accessor: (item) => item.temperatuur ?? null,
-            xAxisKey: "x-point",
-            min: 0,
-            max: 30,
-            maxInterval: 1,
-        },
-        druk: {
-            type: "line",
-            label: "Druk (bar)",
-            accessor: (item) => item.druk ?? null,
-            xAxisKey: "x-point",
-            min: 0,
-            max: 2,
-            maxInterval: 0.1,
-        },
-        vermogen: {
-            type: "line",
-            label: "Vermogen (kW)",
-            accessor: (item) => item.vermogen ?? null,
-            xAxisKey: "x-point",
-            min: 0,
-            max: 6,
-            maxInterval: 0.1,
-        },
-    };
-
+    // Fetch initial Pump Details
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchPumpDetails = async () => {
             try {
                 const item = await heatPumpService.getHeatPumpById(id);
-                
                 setPomp(item);
-                setCurrentChartData(item.warmtepompData || []);
             } catch (error) {
                 setError(error);
             } finally {
                 setLoading(true);
             }
         }
-
-        fetchData();
+        fetchPumpDetails();
     }, [id]);
 
-    const toggleDropdown = (dropdownId) => {
-        let dropdownFilter = document.getElementById(dropdownId);
-        if (dropdownFilter.classList.contains('hidden')) {
-            dropdownFilter.classList.remove('hidden');
-        } else {
-            dropdownFilter.classList.add('hidden');
-        }
-    }
+    // Fetch Chart Data when timeRange changes
+    useEffect(() => {
+        const fetchChartData = async () => {
+            setChartLoading(true);
+            try {
+                const history = await heatPumpService.getHeatPumpHistory(id, timeRange);
+                
+                // Format X-Axis based on range
+                const dateFormat = timeRange === '24h' ? 'HH:mm' : 'dd-MM HH:mm';
+                
+                const processedData = history.map(d => ({
+                    ...d,
+                    tijd: d.original_timestamp 
+                        ? format(new Date(d.original_timestamp), dateFormat)
+                        : d.datum,
+                    temperatuur: d.temperatuur ?? null,
+                    druk: d.druk ?? null
+                }));
 
-    const selectFilter = (filter) => {
-        setSelectedFilter(filter);
-        toggleDropdown("dropdownChart");
-    }
+                setCurrentChartData(processedData);
+            } catch (error) {
+                console.error("Chart fetch error:", error);
+            } finally {
+                setChartLoading(false);
+            }
+        }
+
+        if (id) fetchChartData();
+    }, [id, timeRange]);
 
     const pompStatus = (status) => {
         if (status == 300) {
@@ -119,75 +91,90 @@ function Details() {
     }
 
     if (loading) {
+        const cleanTemp = currentChartData.map(d => parseFloat(d.temperatuur || 0));
+        const cleanPressure = currentChartData.map(d => parseFloat(d.druk || 0));
+        const cleanLabels = currentChartData.map(d => d.tijd);
+
         return (
             <>
-                <div className='flex items-center justify-between'>
-                    <Link to={"/"} className="p-2 bg-gray-200 rounded-lg">Terug</Link>
-
-                    <span className="p-2 bg-gray-200 rounded-lg">Naar dagweergave</span> {/* Nog niet functioneel */}
-                    
-                    <span className='relative cursor-pointer' onClick={() => toggleDropdown('dropdownChart')}>
-                        <span className='p-2 bg-gray-200 rounded-lg'>{selectedFilter.charAt(0).toUpperCase() + selectedFilter.slice(1)}</span>
-
-                        <div id="dropdownChart" className="absolute top-8 right-0 z-10 hidden bg-white divide-y divide-gray-100 w-44 p-2 rounded-lg">
-                            <ul className="py-2">
-                                <li onClick={() => selectFilter("status")}>
-                                    <span className="block px-4 py-2 hover:bg-gray-100">Status Filter</span>
-                                </li>
-                                <li onClick={() => selectFilter("temperatuur")}>
-                                    <span className="block px-4 py-2 hover:bg-gray-100">Temperatuur Filter</span>
-                                </li>
-                                <li onClick={() => selectFilter("druk")}>
-                                    <span className="block px-4 py-2 hover:bg-gray-100">Druk Filter</span>
-                                </li>
-                                <li onClick={() => selectFilter("vermogen")}>
-                                    <span className="block px-4 py-2 hover:bg-gray-100">Vermogen Filter</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </span>
+                <div className='flex flex-wrap items-center justify-between gap-y-3 gap-x-2 mb-4'>
+                    <Link to={"/"} className="p-2 bg-gray-200 rounded-lg text-sm hover:bg-gray-300 transition-colors">Terug naar overzicht</Link>
                 </div>
-                <ChartContainer
-                    dataset={currentChartData}
-                    series={[
-                        {
-                            type: chartConfig[selectedFilter].type,
-                            data: currentChartData.map(chartConfig[selectedFilter].accessor),
-                            label: chartConfig[selectedFilter].label,
-                            xAxisKey: chartConfig[selectedFilter].xAxisKey,
-                        },
-                    ]}
-                    xAxis={[
-                        {
-                            id: chartConfig[selectedFilter].xAxisKey,
-                            data: currentChartData.length > 0 ? currentChartData.map(d => d.datum) : ["Geen data"], 
-                            scaleType: chartConfig[selectedFilter].type === "bar" ? "band" : "point",
-                            label: "Tijdstip",
-                        },
-                    ]}
-                    yAxis={[
-                        { 
-                            id: "y-axis-id",
-                            min: chartConfig[selectedFilter].min,
-                            max: chartConfig[selectedFilter].max,
-                            maxInterval: chartConfig[selectedFilter].maxInterval,
-                        }
-                    ]}
-                    height={300}
-                >
-                    {chartConfig[selectedFilter].type === "bar" && <BarPlot />}
-                    {chartConfig[selectedFilter].type === "line" && <LinePlot />}
-                    {chartConfig[selectedFilter].type === "line" && <MarkPlot />}
-                    <ChartsYAxis label={chartConfig[selectedFilter].label} axisId="y-axis-id" />
-                    <ChartsXAxis label="Tijdstip" axisId={chartConfig[selectedFilter].xAxisKey} />
-                </ChartContainer>
-                <div className='flex flex-row justify-between items-start gap-4'>
-                    <div className='w-2/3 border border-gray-200 rounded-lg'>
+
+                <div className="w-full bg-white p-4 rounded-lg border border-gray-200 mb-6 shadow-sm">
+                    <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
+                        <h3 className="text-lg font-semibold text-gray-800">Prestaties</h3>
+                        <div className="flex gap-2 bg-gray-100 p-1 rounded-lg">
+                            {['24h', '7d', '30d'].map((range) => (
+                                <button
+                                    key={range}
+                                    onClick={() => setTimeRange(range)}
+                                    className={`px-3 py-1 text-sm rounded-md transition-all ${
+                                        timeRange === range 
+                                            ? 'bg-white shadow text-blue-600 font-medium' 
+                                            : 'text-gray-500 hover:text-gray-700'
+                                    }`}
+                                >
+                                    {range.toUpperCase()}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                    
+                    <div className="w-full relative h-[350px] md:h-[450px]">
+                        {chartLoading && (
+                            <div className="absolute inset-0 bg-white/80 z-10 flex items-center justify-center">
+                                <span className="text-gray-500">Laden...</span>
+                            </div>
+                        )}
+                        <LineChart
+                            autosize
+                            series={[
+                                {
+                                    data: cleanTemp,
+                                    label: 'Temperatuur (°C)',
+                                    color: '#ef4444',
+                                    yAxisKey: 'leftAxis',
+                                    showMark: false,
+                                },
+                                {
+                                    data: cleanPressure,
+                                    label: 'Waterdruk (Bar)',
+                                    color: '#3b82f6',
+                                    yAxisKey: 'rightAxis',
+                                    showMark: false,
+                                },
+                            ]}
+                            yAxis={[
+                                {
+                                    id: 'leftAxis',
+                                    scaleType: 'linear',
+                                    label: 'Temperatuur (°C)',
+                                    min: 0,
+                                    max: 80,
+                                },
+                                {
+                                    id: 'rightAxis',
+                                    scaleType: 'linear',
+                                    label: 'Druk (Bar)',
+                                    position: 'right',
+                                    min: 0, 
+                                    max: 4, 
+                                },
+                            ]}
+                            xAxis={[{ scaleType: 'point', data: cleanLabels }]}
+                            margin={{ top: 20, right: 50, bottom: 30, left: 50 }}
+                        />
+                    </div>
+                </div>
+
+                <div className='flex flex-col md:flex-row justify-between items-start gap-4'>
+                    <div className='w-full md:w-2/3 border border-gray-200 rounded-lg'>
                         <div className="p-5">
                             <ul>
                                 <li>
                                     <div className='flex items-center py-3'>
-                                        <p><span className='font-semibold'>ID: </span>{pomp.id}</p>
+                                        <p className="break-all"><span className='font-semibold'>ID: </span>{pomp.id}</p>
                                     </div>
                                 </li>
                                 <li>
@@ -267,7 +254,7 @@ function Details() {
                             </ul>
                         </div>
                     </div>
-                    <div className='w-1/3 border border-gray-200 rounded-lg'>
+                    <div className='w-full md:w-1/3 border border-gray-200 rounded-lg'>
                         <div className={'p-5 rounded-t-lg ' + pompStatus(pomp.huidigeStatus).style}>
                             <span className='font-semibold'>{pompStatus(pomp.huidigeStatus).text}</span>
                         </div>

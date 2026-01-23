@@ -67,6 +67,33 @@ export const heatPumpService = {
     },
 
     /**
+     * Fetch historical measurements for a heatpump based on time range.
+     * @param {string|number} id 
+     * @param {string} range '24h', '7d', '30d'
+     */
+    async getHeatPumpHistory(id, range) {
+        if (!supabase) throw new Error("Supabase is not configured.");
+
+        let startDate = new Date();
+        if (range === '7d') startDate.setDate(startDate.getDate() - 7);
+        else if (range === '30d') startDate.setDate(startDate.getDate() - 30);
+        else startDate.setDate(startDate.getDate() - 1); // Default to 24h
+
+        const { data, error } = await supabase
+            .from('measurements')
+            .select('created_at, temperatuur, druk, status')
+            .eq('pump_id', id)
+            .gte('created_at', startDate.toISOString())
+            .order('created_at', { ascending: true });
+
+        if (error) throw error;
+        return data.map(m => ({
+            ...m,
+            original_timestamp: m.created_at
+        }));
+    },
+
+    /**
      * Update settings for a heatpump.
      * This updates the 'settings' JSONB column.
      * @param {string|number} id 
