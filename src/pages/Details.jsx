@@ -91,10 +91,6 @@ function Details() {
     }
 
     if (loading) {
-        const cleanTemp = currentChartData.map(d => parseFloat(d.temperatuur || 0));
-        const cleanPressure = currentChartData.map(d => parseFloat(d.druk || 0));
-        const cleanLabels = currentChartData.map(d => d.tijd);
-
         return (
             <>
                 <div className='flex flex-wrap items-center justify-between gap-y-3 gap-x-2 mb-4'>
@@ -102,7 +98,7 @@ function Details() {
                 </div>
 
                 <div className="w-full bg-white p-4 rounded-lg border border-gray-200 mb-6 shadow-sm">
-                    <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
+                    <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
                         <h3 className="text-lg font-semibold text-gray-800">Prestaties</h3>
                         <div className="flex gap-2 bg-gray-100 p-1 rounded-lg">
                             {['24h', '7d', '30d'].map((range) => (
@@ -121,50 +117,84 @@ function Details() {
                         </div>
                     </div>
                     
-                    <div className="w-full relative h-[350px] md:h-[450px]">
-                        {chartLoading && (
-                            <div className="absolute inset-0 bg-white/80 z-10 flex items-center justify-center">
-                                <span className="text-gray-500">Laden...</span>
+                    <div className="flex flex-col gap-6 w-full relative">
+                         {chartLoading && (
+                            <div className="absolute inset-0 bg-white/80 z-10 flex items-center justify-center rounded-xl">
+                                <span className="text-gray-500 font-medium">Laden...</span>
                             </div>
                         )}
-                        <LineChart
-                            autosize
-                            series={[
-                                {
-                                    data: cleanTemp,
-                                    label: 'Temperatuur (°C)',
-                                    color: '#ef4444',
-                                    yAxisKey: 'leftAxis',
-                                    showMark: false,
-                                },
-                                {
-                                    data: cleanPressure,
-                                    label: 'Waterdruk (Bar)',
-                                    color: '#3b82f6',
-                                    yAxisKey: 'rightAxis',
-                                    showMark: false,
-                                },
-                            ]}
-                            yAxis={[
-                                {
-                                    id: 'leftAxis',
-                                    scaleType: 'linear',
-                                    label: 'Temperatuur (°C)',
-                                    min: 0,
-                                    max: 80,
-                                },
-                                {
-                                    id: 'rightAxis',
-                                    scaleType: 'linear',
-                                    label: 'Druk (Bar)',
-                                    position: 'right',
-                                    min: 0, 
-                                    max: 4, 
-                                },
-                            ]}
-                            xAxis={[{ scaleType: 'point', data: cleanLabels }]}
-                            margin={{ top: 20, right: 50, bottom: 30, left: 50 }}
-                        />
+
+                          {/* CHART 1: TEMPERATURE */}
+                          <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+                            <h3 className="text-sm font-semibold text-gray-500 mb-2">Temperatuur Verloop</h3>
+                            <div className="h-[200px] w-full">
+                              <LineChart
+                                dataset={currentChartData}
+                                xAxis={[{ 
+                                  scaleType: 'point', 
+                                  dataKey: 'created_at',
+                                  tickLabelStyle: { fontSize: 10 },
+                                  valueFormatter: (date) => new Date(date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                                }]}
+                                yAxis={[{ min: 0, max: 80, label: '°C' }]}
+                                series={[{
+                                  dataKey: 'temperatuur',
+                                  area: true, // <--- MAKES IT COOL
+                                  showMark: false,
+                                  color: '#ef4444',
+                                  label: 'Temp',
+                                }]}
+                                margin={{ top: 10, right: 10, bottom: 20, left: 40 }}
+                                autosize
+                                sx={{
+                                  '.MuiAreaElement-root': { fill: 'url(#tempGradient)' } // Custom Gradient Link
+                                }}
+                              >
+                                <defs>
+                                  <linearGradient id="tempGradient" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3} />
+                                    <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
+                                  </linearGradient>
+                                </defs>
+                              </LineChart>
+                            </div>
+                          </div>
+
+                          {/* CHART 2: PRESSURE */}
+                          <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+                            <h3 className="text-sm font-semibold text-gray-500 mb-2">Waterdruk Verloop</h3>
+                            <div className="h-[200px] w-full">
+                              <LineChart
+                                dataset={currentChartData}
+                                xAxis={[{ 
+                                  scaleType: 'point', 
+                                  dataKey: 'created_at', 
+                                  tickLabelStyle: { fontSize: 10 },
+                                  valueFormatter: (date) => new Date(date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                                }]}
+                                yAxis={[{ min: 0, max: 4, label: 'Bar' }]} // <--- GUARANTEED SCALING 0-4
+                                series={[{
+                                  dataKey: 'druk',
+                                  area: true, // <--- MAKES IT COOL
+                                  showMark: false,
+                                  color: '#3b82f6',
+                                  label: 'Druk',
+                                }]}
+                                margin={{ top: 10, right: 10, bottom: 20, left: 40 }}
+                                autosize
+                                sx={{
+                                  '.MuiAreaElement-root': { fill: 'url(#pressureGradient)' } 
+                                }}
+                              >
+                                <defs>
+                                  <linearGradient id="pressureGradient" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
+                                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                                  </linearGradient>
+                                </defs>
+                              </LineChart>
+                            </div>
+                          </div>
                     </div>
                 </div>
 
