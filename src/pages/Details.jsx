@@ -91,6 +91,10 @@ function Details() {
     }
 
     if (loading) {
+        const cleanTemp = currentChartData.map(d => parseFloat(d.temperatuur || 0));
+        const cleanPressure = currentChartData.map(d => parseFloat(d.druk || 0));
+        const cleanLabels = currentChartData.map(d => d.tijd);
+
         return (
             <>
                 <div className='flex flex-wrap items-center justify-between gap-y-3 gap-x-2 mb-4'>
@@ -124,46 +128,42 @@ function Details() {
                             </div>
                         )}
                         <LineChart
-                            dataset={currentChartData}
-                            xAxis={[{ 
-                                scaleType: 'point', 
-                                dataKey: 'tijd', 
-                                label: 'Tijdstip',
-                                tickLabelStyle: { fontSize: 12 }
-                            }]}
+                            autosize
                             series={[
-                                { 
-                                    dataKey: 'temperatuur', 
-                                    label: 'Temperatuur (°C)', 
-                                    yAxisKey: 'leftAxis', 
-                                    color: '#ef4444', 
-                                    showMark: false 
+                                {
+                                    data: cleanTemp,
+                                    label: 'Temperatuur (°C)',
+                                    color: '#ef4444',
+                                    yAxisKey: 'leftAxis',
+                                    showMark: false,
                                 },
-                                { 
-                                    dataKey: 'druk', 
-                                    label: 'Waterdruk (Bar)', 
-                                    yAxisKey: 'rightAxis', 
-                                    color: '#3b82f6', 
-                                    showMark: false 
-                                }
+                                {
+                                    data: cleanPressure,
+                                    label: 'Waterdruk (Bar)',
+                                    color: '#3b82f6',
+                                    yAxisKey: 'rightAxis',
+                                    showMark: false,
+                                },
                             ]}
                             yAxis={[
-                                { 
-                                    id: 'leftAxis', 
+                                {
+                                    id: 'leftAxis',
+                                    scaleType: 'linear',
                                     label: 'Temperatuur (°C)',
-                                    min: 0, 
-                                    max: 80
-                                },
-                                { 
-                                    id: 'rightAxis', 
-                                    label: 'Druk (Bar)', 
-                                    position: 'right',
                                     min: 0,
-                                    max: 4.0 
-                                }
+                                    max: 80,
+                                },
+                                {
+                                    id: 'rightAxis',
+                                    scaleType: 'linear',
+                                    label: 'Druk (Bar)',
+                                    position: 'right',
+                                    min: 0, 
+                                    max: 4, 
+                                },
                             ]}
-                            grid={{ vertical: true, horizontal: true }}
-                            margin={{ left: 50, right: 50, top: 20, bottom: 40 }}
+                            xAxis={[{ scaleType: 'point', data: cleanLabels }]}
+                            margin={{ top: 20, right: 50, bottom: 30, left: 50 }}
                         />
                     </div>
                 </div>
