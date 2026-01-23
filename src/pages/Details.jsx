@@ -131,6 +131,7 @@ function Details() {
                             autosize
                             series={[
                                 {
+                                    id: 'temp_series',
                                     data: cleanTemp,
                                     label: 'Temperatuur (°C)',
                                     color: '#ef4444',
@@ -138,6 +139,7 @@ function Details() {
                                     showMark: false,
                                 },
                                 {
+                                    id: 'pressure_series',
                                     data: cleanPressure,
                                     label: 'Waterdruk (Bar)',
                                     color: '#3b82f6',
