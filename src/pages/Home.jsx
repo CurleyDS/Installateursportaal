@@ -270,7 +270,7 @@ function Home() {
                     </div>
                 </div>
             </aside>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 min-[2500px]:grid-cols-5 gap-6 justify-items-center">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 min-[2500px]:grid-cols-5 gap-6">
                 {error && (
                     <div className="col-span-full p-4 text-red-700 bg-red-100 border border-red-400 rounded w-full">
                         <p className="font-bold">Error loading data:</p>
@@ -293,16 +293,16 @@ function Home() {
                 )}
 
                 {pompen.map((pomp, index) => (
-                    <Link to={"/" + pomp.id} key={index}>
-                        <div className="max-w-sm bg-white border border-gray-200 rounded-lg hover:shadow-lg transition-shadow">
-                            <div className="flex items-center justify-between p-5">
+                    <Link to={"/" + pomp.id} key={index} className="block w-full">
+                        <div className="w-full bg-white border border-gray-200 rounded-lg hover:shadow-lg transition-shadow h-full">
+                            <div className="flex items-center justify-between p-6">
                                 <p className="mb-3 font-normal text-gray-700">ID: {pomp.id}</p>
                                 <FontAwesomeIcon className={pompStatus(pomp.huidigeStatus).style} icon={pompStatus(pomp.huidigeStatus).icon} />
                             </div>
-                            <div className='p-5'>
-                                <img src={pumpLogo} alt="" />
+                            <div className='p-6'>
+                                <img src={pumpLogo} alt="" className="w-full h-auto object-contain" />
                             </div>
-                            <div className="p-5">
+                            <div className="p-6">
                                 <ul>
                                     <li className="py-3">
                                         <div className="flex items-center">
