@@ -125,10 +125,10 @@ function Home() {
                 )}
 
                 {pompen.map((pomp, index) => (
-                    <Link to={"/" + pomp.id} key={index} className="block w-full">
-                        <div className="w-full bg-white border border-gray-200 rounded-lg hover:shadow-lg transition-shadow h-full">
+                    <Link to={"/" + pomp.id} key={index} className="block w-full min-w-0">
+                        <div className="w-full bg-white border border-gray-200 rounded-lg hover:shadow-lg transition-shadow h-full overflow-hidden">
                             <div className="flex items-center justify-between p-6">
-                                <p className="mb-3 font-normal text-gray-700">ID: {pomp.id}</p>
+                                <p className="mb-3 font-normal text-gray-700 truncate" title={pomp.id}>ID: {pomp.id}</p>
                                 <FontAwesomeIcon className={pompStatus(pomp.huidigeStatus).style} icon={pompStatus(pomp.huidigeStatus).icon} />
                             </div>
                             <div className='p-6'>

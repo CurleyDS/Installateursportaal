@@ -1,12 +1,21 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom';
 
-function Sidebar() {
+function Sidebar({ isOpen, onClose }) {
     const { id } = useParams();
     
     return (
-        <aside className="fixed top-0 left-0 z-50 w-64 h-screen bg-white border-r border-gray-200">
-            <div className="h-full px-3 py-4 overflow-y-auto bg-white">
+        <>
+            {/* Mobile Overlay */}
+            {isOpen && (
+                <div 
+                    className="fixed inset-0 z-40 bg-gray-900/50 md:hidden"
+                    onClick={onClose}
+                ></div>
+            )}
+
+            <aside className={`fixed top-0 left-0 z-50 w-64 h-screen bg-white border-r border-gray-200 transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
+                <div className="h-full px-3 py-4 overflow-y-auto bg-white">
                 <Link to="/" className="flex items-center mb-5">
                     <span className="self-center text-xl font-semibold">TDI500</span>
                 </Link>
@@ -45,6 +54,7 @@ function Sidebar() {
                 </ul>
             </div>
         </aside>
+    </>
     )
 }
 
