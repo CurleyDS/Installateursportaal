@@ -27,7 +27,19 @@ function Home() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [data, setData] = useState([]);
-    const [pompen, setPompen] = useState([]);
+    
+    // Filter Logic in Rendering Body
+    const filteredHeatPumps = data.filter(item => {
+        // Search Filter (Postcode)
+        if (search && !item.postcode.toLowerCase().includes(search)) return false;
+
+        // Attribute Filters
+        if (filters.fabrikant && item.fabrikant !== filters.fabrikant) return false;
+        if (filters.bedrijf && item.bedrijf !== filters.bedrijf) return false;
+        if (filters.merk && item.merk !== filters.merk) return false;
+
+        return true;
+    });
 
     useEffect(() => {
         const fetchData = async () => {
@@ -72,9 +84,7 @@ function Home() {
         };
     }, []);
 
-    useEffect(() => {
-        setPompen(filterHeatPumps(data, filters, search));
-    }, [search, filters, data]);
+    // NOTE: We no longer need the useEffect that sets 'pompen', we use 'filteredHeatPumps' directly.
 
     const pompStatus = (status) => {
         if (status == 200) {
@@ -117,14 +127,14 @@ function Home() {
                     </div>
                 )}
 
-                {loading && !error && pompen.length === 0 && (
+                {loading && !error && filteredHeatPumps.length === 0 && (
                     <div className="col-span-full p-4 text-center text-gray-500 bg-gray-50 border rounded-lg w-full">
                         <h3 className="text-lg font-medium">No heat pumps found</h3>
                         <p>Try adjusting your search or filters.</p>
                     </div>
                 )}
 
-                {pompen.map((pomp, index) => (
+                {filteredHeatPumps.map((pomp, index) => (
                     <Link to={"/" + pomp.id} key={index} className="block w-full min-w-0">
                         <div className="w-full bg-white border border-gray-200 rounded-lg hover:shadow-lg transition-shadow h-full overflow-hidden">
                             <div className="flex items-center justify-between p-6">

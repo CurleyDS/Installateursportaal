@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import { Outlet, useParams, useOutletContext } from 'react-router-dom';
-import { Sidebar } from '../components/NavigationComponent';
+import { Outlet, useParams, useOutletContext, useLocation } from 'react-router-dom';
+import { Sidebar } from '../components/Sidebar';
 import { NotificationToggle } from '../components/NotificationComponent';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark, faBars } from '@fortawesome/free-solid-svg-icons';
 
 function Main() {
     const { id } = useParams();
+    const location = useLocation();
     
     // Global Search & Filter State
     const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -86,17 +87,21 @@ function Main() {
                     </button>
 
                     <div className="flex items-center justify-around w-full">
-                        <input 
-                            className="w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg mr-2 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" 
-                            onChange={handleSearch} 
-                            value={inputValue} 
-                            type="text" 
-                            placeholder="Voer postcode in..." 
-                        />
-                        {search != null && <FontAwesomeIcon className="cursor-pointer" onClick={resetSearch} icon={faXmark} />}
+                        {location.pathname === '/' && (
+                            <>
+                                <input 
+                                    className="w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg mr-2 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" 
+                                    onChange={handleSearch} 
+                                    value={inputValue} 
+                                    type="text" 
+                                    placeholder="Voer postcode in..." 
+                                />
+                                {search != null && <FontAwesomeIcon className="cursor-pointer" onClick={resetSearch} icon={faXmark} />}
+                            </>
+                        )}
                     </div>
                     <div>
-                        <span className='p-2 cursor-pointer' onClick={toggleFilter}>Filter</span>
+                        {location.pathname === '/' && <span className='p-2 cursor-pointer' onClick={toggleFilter}>Filter</span>}
                     </div>
                 </div>
             </nav>

@@ -1,14 +1,27 @@
 import { supabase } from '../supabaseClient';
+import { mockDataService } from './mockData';
 
 /**
  * Service to handle interactions with the Supabase database.
  * This abstracts the database logic from the React components.
+ * 
+ * Supports a "Demo Mode" toggled via localStorage.
  */
+
+const isDemoMode = () => {
+    return localStorage.getItem('useDemoMode') === 'true';
+};
+
 export const heatPumpService = {
     /**
      * Fetch all heatpumps for the dashboard.
      */
     async getAllHeatPumps() {
+        if (isDemoMode()) {
+            console.log("⚠️ Serving Demo Data: getAllHeatPumps");
+            return mockDataService.getAllHeatPumps();
+        }
+
         if (!supabase) throw new Error("Supabase is not configured. Please check your .env.local file.");
         const { data, error } = await supabase
             .from('heatpumps')
@@ -24,6 +37,11 @@ export const heatPumpService = {
      * @param {string|number} id 
      */
     async getHeatPumpById(id) {
+        if (isDemoMode()) {
+            console.log("⚠️ Serving Demo Data: getHeatPumpById", id);
+            return mockDataService.getHeatPumpById(id);
+        }
+
         if (!supabase) throw new Error("Supabase is not configured. Please check your .env.local file.");
         
         const { data: heatpump, error: heatpumpError } = await supabase
@@ -72,6 +90,11 @@ export const heatPumpService = {
      * @param {string} range '24h', '7d', '30d'
      */
     async getHeatPumpHistory(id, range) {
+        if (isDemoMode()) {
+            console.log("⚠️ Serving Demo Data: getHeatPumpHistory", range);
+            return mockDataService.getHeatPumpHistory(id, range);
+        }
+
         if (!supabase) throw new Error("Supabase is not configured.");
 
         let startDate = new Date();
