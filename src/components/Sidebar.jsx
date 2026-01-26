@@ -1,5 +1,6 @@
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { LayoutDashboard, Activity, Settings, Wrench, AlertTriangle, LogOut, X } from 'lucide-react';
+import tnoLogo from '../assets/tno.svg';
 
 function Sidebar({ isOpen, onClose }) {
     const { id } = useParams();
