@@ -116,7 +116,7 @@ function Sidebar({ isOpen, onClose }) {
                         <img src={tnoLogo} alt="TNO Logo" className="w-20 mb-2 object-contain" />
                         <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Powered by</p>
                         <span className="inline-block px-3 py-1 bg-[#002484] text-white text-base font-bold rounded-full">
-                            Datasteker
+                            Datastekker
                         </span>
 >>>>>>> Marvel-dev
                     </div>
