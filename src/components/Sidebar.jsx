@@ -112,7 +112,7 @@ function Sidebar({ isOpen, onClose }) {
                         <img src={tnoLogo} alt="TNO Logo" className="w-20 mb-2 object-contain" />
                         <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Powered by</p>
                         <span className="inline-block px-3 py-1 bg-[#002484] text-white text-base font-bold rounded-full">
-                            Datastekker
+                            Datasteker
                         </span>
                     </div>
                     <button className="flex items-center gap-3 px-4 py-3 w-full text-sm font-medium text-gray-600 rounded-lg hover:bg-red-50 hover:text-red-600 transition-colors">
