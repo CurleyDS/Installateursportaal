@@ -109,16 +109,11 @@ function Sidebar({ isOpen, onClose }) {
                 {/* Footer */}
                 <div className="p-4 border-t border-gray-100">
                     <div className="px-4 mb-4">
-<<<<<<< HEAD
-                        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Powered by</p>
-                        <p className="text-xl font-bold text-gray-800">Datastekker</p>
-=======
                         <img src={tnoLogo} alt="TNO Logo" className="w-20 mb-2 object-contain" />
                         <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Powered by</p>
                         <span className="inline-block px-3 py-1 bg-[#002484] text-white text-base font-bold rounded-full">
                             Datastekker
                         </span>
->>>>>>> Marvel-dev
                     </div>
                     <button className="flex items-center gap-3 px-4 py-3 w-full text-sm font-medium text-gray-600 rounded-lg hover:bg-red-50 hover:text-red-600 transition-colors">
                         <LogOut size={20} />
