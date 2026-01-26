@@ -107,6 +107,10 @@ function Sidebar({ isOpen, onClose }) {
 
                 {/* Footer */}
                 <div className="p-4 border-t border-gray-100">
+                    <div className="px-4 mb-4">
+                        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Powered by</p>
+                        <p className="text-sm font-bold text-gray-800">Datasteker</p>
+                    </div>
                     <button className="flex items-center gap-3 px-4 py-3 w-full text-sm font-medium text-gray-600 rounded-lg hover:bg-red-50 hover:text-red-600 transition-colors">
                         <LogOut size={20} />
                         Uitloggen
