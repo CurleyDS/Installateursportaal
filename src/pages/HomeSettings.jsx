@@ -5,7 +5,7 @@ import { Calendar } from '../components/CalendarComponent';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 
-function DetailsSettings() {
+function HomeSettings() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const { id } = useParams();
@@ -130,7 +130,7 @@ function DetailsSettings() {
 
                         <fieldset className="p-2">
                             <label htmlFor="save-submit" className='block mb-2'>
-                                <span className="block mb-2">Warmtepomp-instellingen opslaan:</span>
+                                <span className="block mb-2">Woning-instellingen opslaan:</span>
                                 <button type="button" className="p-2 bg-gray-200 rounded-lg" onClick={() => {openModal(0)}}>Opslaan</button>
                             </label>
                         </fieldset>
@@ -144,34 +144,6 @@ function DetailsSettings() {
                             </label>
                         </fieldset>
                     </form>
-
-                    {/* Developer Settings */}
-                    <div className="w-full mt-8 border-t border-gray-200 pt-8">
-                        <h2 className="text-xl font-bold mb-4 text-gray-800">Ontwikkelaars Instellingen</h2>
-                        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <h3 className="font-semibold text-yellow-900">Demo Modus</h3>
-                                    <p className="text-sm text-yellow-700">Gebruik dummy data om de interface te testen.</p>
-                                </div>
-                                <label className="inline-flex items-center cursor-pointer">
-                                    <input 
-                                        type="checkbox" 
-                                        checked={demoMode} 
-                                        onChange={(e) => {
-                                            const newVal = e.target.checked;
-                                            setDemoMode(newVal);
-                                            localStorage.setItem('useDemoMode', newVal);
-                                            // Force reload to switch data source
-                                            window.location.reload();
-                                        }} 
-                                        className="sr-only peer" 
-                                    />
-                                    <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-yellow-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-yellow-500"></div>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <div id="confirmModal" className="fixed top-0 left-0 z-10 hidden bg-black/40 w-full h-full overflow-auto">
                     <div className="flex items-center justify-center w-full">
@@ -206,4 +178,4 @@ function DetailsSettings() {
     }
 }
 
-export default DetailsSettings
+export default HomeSettings

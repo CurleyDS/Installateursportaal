@@ -22,7 +22,7 @@ function Sidebar({ isOpen, onClose }) {
 
         // 4. Details (The "Default" View for an ID)
         if (key === 'details') {
-            const isSubPage = ['instellingen', 'onderhoud', 'storingen'].some(page => 
+            const isSubPage = ['instellingen', 'home-settings', 'onderhoud', 'storingen'].some(page => 
                 currentPath.endsWith(page)
             );
             return currentPath !== '/' && currentPath !== '/settings' && !isSubPage;
@@ -89,6 +89,10 @@ function Sidebar({ isOpen, onClose }) {
                             <Link to={`/${id}/Instellingen`} className={navItemClass(`/${id}/Instellingen`, 'instellingen')}>
                                 <Wrench size={20} />
                                 Apparaat Config
+                            </Link>
+                            <Link to={`/${id}/home-settings`} className={navItemClass(`/${id}/home-settings`, 'home-settings')}>
+                                <Wrench size={20} />
+                                Woning Config
                             </Link>
                         </>
                     )}
