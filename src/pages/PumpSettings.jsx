@@ -78,71 +78,61 @@ function PumpSettings() {
     if (loading) {
         return (
             <>
-                <div className='flex items-center justify-start'>
-                    <Link to={"/" + pomp.id} className="p-2 bg-gray-200 rounded-lg">Terug</Link>
+                {/* Back button */}
+                <div className='flex items-center justify-between mb-4'>
+                    <Link to={"/" + pomp.id} className="p-2 bg-gray-200 rounded-lg text-sm hover:bg-gray-300 transition-colors">Terug</Link>
                 </div>
-                <div className='flex flex-col items-start'>
-                    <form method='POST'>
-                        <fieldset className="p-2">
-                            <label className="inline-flex items-center">
-                                <span className="me-3">Automatisch optimaliseren inschakelen</span>
+
+                {/* Main card */}
+                <div className='w-full bg-white border border-gray-200 rounded-lg shadow-sm p-6 mb-6'>
+                    <h2 className="text-lg font-semibold text-gray-800 mb-6"> Warmtepomp instellingen</h2>
+
+                    <form method='POST' className='space-y-4'>
+                        <fieldset>
+                            <label className="flex items-center justify-between gap-4">
+                                <span className="text-gray-700">Automatisch optimaliseren inschakelen</span>
                                 <input type="checkbox" name="autoOptimalisatie" defaultChecked={currentSettings.autoOptimalisatie} onChange={handleChange} className="sr-only peer" />
-                                <div className="relative bg-gray-200 w-11 h-6 rounded-full peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                <div className="relative w-11 h-6 bg-gray-200 rounded-full peer-focus:ring-4 peer-focus:ring-blue-300 peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
                             </label>
                         </fieldset>
 
-                        <fieldset className="p-2">
-                            <label htmlFor="profile-range">
-                                <span className="mb-3">Profiel selecteren:</span>
-                                <input id="profile-range" type="range" name="profiel" defaultValue={currentSettings.profiel} onChange={handleChange} min="0" max="5" step="1" className="bg-gray-200 w-full h-2 appearance-none rounded-lg" />
-                            </label>
+                        <fieldset>
+                            <label className="block text-gray-700 mb-1">Profiel selecteren</label>
+                            <input type="range" name="profiel" defaultValue={currentSettings.profiel} onChange={handleChange} min="0" max="5" step="1" className="w-full h-2 bg-gray-200 rounded-lg appearance-none" />
                         </fieldset>
 
-                        <fieldset className="p-2">
-                            <label className="inline-flex items-center">
-                                <span className="me-3">Deelname aan netoptimalisatie</span>
+                        <fieldset>
+                            <label className="flex items-center justify-between gap-4">
+                                <span className="text-gray-700">Deelname aan netoptimalisatie</span>
                                 <input type="checkbox" name="netOptimalisatie" defaultChecked={currentSettings.netOptimalisatie} onChange={handleChange} className="sr-only peer" />
-                                <div className="relative bg-gray-200 w-11 h-6 rounded-full peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                <div className="relative w-11 h-6 bg-gray-200 rounded-full peer-focus:ring-4 peer-focus:ring-blue-300 peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
                             </label>
                         </fieldset>
                         
-                        <fieldset className="p-2">
-                            <label htmlFor="cap-range">
-                                <span className="mb-3">Sta power-capping toe tot {currentSettings.powerCap}% tijdens netpieken:</span>
-                                <input id="cap-range" type="range" name="powerCap" defaultValue={currentSettings.powerCap} onChange={handleChange} min="0" max="100" step="25" className="bg-gray-200 w-full h-2 appearance-none rounded-lg" />
-                            </label>
+                        <fieldset>
+                            <label className="block text-gray-700 mb-1">Sta power-capping toe tot {currentSettings.powerCap}%</label>
+                            <input type="range" name="powerCap" defaultValue={currentSettings.powerCap} onChange={handleChange} min="0" max="100" step="25" className="w-full h-2 bg-gray-200 rounded-lg appearance-none" />
                         </fieldset>
                         
-                        <fieldset className="p-2">
-                            <label htmlFor="number" className='block mb-2'>Huidige temperatuur:</label>
-                            <input id="number" type="number" name="temperatuur" defaultValue={currentSettings.temperatuur} onChange={handleChange} min="0" className="p-2 bg-gray-200 rounded-lg" />
+                        <fieldset>
+                            <label className='block text-gray-700 mb-1'>Huidige temperatuur</label>
+                            <input type="number" name="temperatuur" defaultValue={currentSettings.temperatuur} onChange={handleChange} min="0" className="p-2 bg-gray-100 border border-gray-300 rounded-lg w-full" />
                         </fieldset>
                         
-                        <fieldset className="p-2">
-                            <label className="inline-flex items-center">
-                                <span className="me-3">Tijdschema's instellen</span>
+                        <fieldset>
+                            <label className="flex items-center justify-between gap-4">
+                                <span className="text-gray-700">Tijdschema's instellen</span>
                                 <input type="checkbox" name="tijdschemaInstelling" defaultValue={currentSettings.tijdschemaInstelling} onChange={handleChange} className="sr-only peer" />
-                                <div className="relative bg-gray-200 w-11 h-6 rounded-full peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                <div className="relative w-11 h-6 bg-gray-200 rounded-full peer-focus:ring-4 peer-focus:ring-blue-300 peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
                             </label>
                         </fieldset>
 
                         <Calendar tijdschemaInstelling={settings.tijdschemaInstelling} tijdschemas={currentSettings.tijdschemas} onUpdate={handleCalendarUpdate} />
 
-                        <fieldset className="p-2">
-                            <label htmlFor="save-submit" className='block mb-2'>
-                                <span className="block mb-2">Warmtepomp-instellingen opslaan:</span>
-                                <button type="button" className="p-2 bg-gray-200 rounded-lg" onClick={() => {openModal(0)}}>Opslaan</button>
-                            </label>
-                        </fieldset>
-                    </form>
-                    
-                    <form method='POST'>
-                        <fieldset className="p-2">
-                            <label htmlFor="reset-submit" className='block mb-2'>
-                                <span className="block mb-2">Reset warmtepomp:</span>
-                                <button type="button" className="p-2 bg-gray-200 rounded-lg" onClick={() => openModal(1)}>Reset</button>
-                            </label>
-                        </fieldset>
+                        <div className="flex gap-2 pt-4">
+                            <button type="button" className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors" onClick={() => openModal(0)}>Opslaan</button>
+                            <button type="button" className="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors" onClick={() => openModal(1)}>Reset</button>
+                        </div>
                     </form>
 
                     {/* Developer Settings */}
@@ -154,7 +144,7 @@ function PumpSettings() {
                                     <h3 className="font-semibold text-yellow-900">Demo Modus</h3>
                                     <p className="text-sm text-yellow-700">Gebruik dummy data om de interface te testen.</p>
                                 </div>
-                                <label className="inline-flex items-center cursor-pointer">
+                                <label className="flex items-center justify-between gap-4 cursor-pointer">
                                     <input 
                                         type="checkbox" 
                                         checked={demoMode} 
@@ -189,7 +179,7 @@ function PumpSettings() {
                                 <>
                                     <span className="self-center text-xl font-semibold">{modal == 0 ? "Instellingen opgeslagen!" : "Warmtepomp reset!"}</span>
 
-                                    <button type="submit" className="p-2" onClick={() => {setSubmitModal(false); closeModal()}}><FontAwesomeIcon icon={faCircleCheck} className="p-2 text-9xl" /></button>
+                                    <button type="submit" onClick={() => {setSubmitModal(false); closeModal()}}><FontAwesomeIcon icon={faCircleCheck} className="p-2 text-9xl" /></button>
                                 </>
                             )}
                         </div>
