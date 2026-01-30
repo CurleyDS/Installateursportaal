@@ -242,194 +242,212 @@ function Calendar({ tijdschemaInstelling = false, tijdschemas = [], onUpdate }) 
     if (loading) {
         return (
             <>
-                <fieldset className="p-2">
-                    <div className={"flex flex-col items-center p-2 bg-gray-100 rounded-lg mb-2" + (tijdschemaInstelling ? " text-black" : " text-gray-400")}>
-                        <div className="flex items-center justify-between p-2 w-full">
-                            <button type="button" onClick={() => navigateMonth(-1)}><FontAwesomeIcon icon={faAngleLeft} /></button>
-                            
-                            <span className={"font-bold"}>{current.toLocaleString("default", { month: "long" }) /* month-name */} {year}</span>
-                            
-                            <button type="button" onClick={() => navigateMonth(1)}><FontAwesomeIcon icon={faAngleRight} /></button>
-                        </div>
+                {/* Calendar card */}
+                <div className="w-full bg-white border border-gray-200 rounded-lg shadow-sm p-4 mb-4">
+                    <fieldset>
+                        <div className={"flex flex-col items-center p-4 rounded-lg mb-4 " + (tijdschemaInstelling ? "bg-gray-50 text-gray-900" : "bg-gray-100 text-gray-400")}>
+                            {/* Month navigation */}
+                            <div className="flex items-center justify-between w-full mb-3">
+                                <button type="button" onClick={() => navigateMonth(-1)} className="p-2 rounded hover:bg-gray-200 transition-colors"><FontAwesomeIcon icon={faAngleLeft} /></button>
+                                
+                                <span className="font-semibold text-gray-800">{current.toLocaleString("default", { month: "long" /* month-name */})} {year}</span>
+                                
+                                <button type="button" onClick={() => navigateMonth(1)} className="p-2 rounded hover:bg-gray-200 transition-colors"><FontAwesomeIcon icon={faAngleRight} /></button>
+                            </div>
 
-                        <table className="p-2 bg-gray-100 w-full">
-                            <thead>
-                                <tr>
-                                    {['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map((day) => (
-                                        <th key={day}>{day}</th>
-                                    ))}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {Array.from({ length: calendar.length / 7 }).map((_, week) => (
-                                    <tr key={week}>
-                                        {calendar.slice(week * 7, week * 7 + 7).map((date, i) => {
-                                            if (!date) {
-                                                return <td key={i} className="p-2" />;
-                                            } else {
+                            {/* Calendar grid */}
+                            <table className="w-full text-sm">
+                                <thead>
+                                    <tr className="text-gray-500">
+                                        {['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map((day) => (
+                                            <th key={day} className="py-2 font-medium">{day}</th>
+                                        ))}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {Array.from({ length: calendar.length / 7 }).map((_, week) => (
+                                        <tr key={week}>
+                                            {calendar.slice(week * 7, week * 7 + 7).map((date, i) => {
+                                                if (!date) {
+                                                    return <td key={i} className="p-2" />;
+                                                }
+
                                                 return (
                                                     <td key={i} className="relative p-1 text-center">
                                                         <button
                                                             type="button"
                                                             onClick={(e) => handleSelect(e, date)}
-                                                            className={`${selected === ymd(date) ? "bg-gray-500 text-white" : (ymd(date) === ymd(new Date()) ? "bg-gray-200 border border-gray-500" : ("bg-gray-200 border border-transparent" + (tijdschemaInstelling ? " hover:bg-gray-300" : "")))} w-full rounded transition-colors duration-150`}
+                                                            className={`${
+                                                                selected === ymd(date) /* selected date */
+                                                                    ? "bg-blue-600 text-white"
+                                                                    : (ymd(date) === ymd(new Date()) /* current date */
+                                                                        ? "bg-gray-200 border border-gray-400"
+                                                                        : ("bg-gray-100" + (
+                                                                            tijdschemaInstelling /* enabled  */
+                                                                                ? " hover:bg-gray-300"
+                                                                                : ""
+                                                                        )
+                                                                    )
+                                                                )
+                                                            } w-full rounded-md py-1 transition-colors`}
                                                         >
                                                             {date.getDate()}
                                                         </button>
+
                                                         {hasEventOnDate(date) && (
-                                                            <FontAwesomeIcon icon={faCircle} className="absolute top-2 right-2 text-[8px]" />
+                                                            <FontAwesomeIcon icon={faCircle} className="absolute top-2 right-2 text-[7px] text-blue-600" />
                                                         )}
                                                     </td>
                                                 );
-                                            }
-                                        })}
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
+                                            })}
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
 
-                    <div>
-                        <button type="button" className="p-2 bg-gray-200 rounded-lg" onClick={() => openModal()} disabled={selected == null}>Tijdschema's toevoegen</button>
-                    </div>
-                </fieldset>
+                        {/* Add schedule button */}
+                        <div>
+                            <button type="button" onClick={() => openModal()} disabled={selected == null} className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors disabled:opacity-50">Tijdschema's toevoegen</button>
+                        </div>
+                    </fieldset>
+                </div>
 
-                <div id="tijdschemaModal" className="fixed top-0 left-64 right-0 z-10 hidden bg-black/40 w-full h-full overflow-auto">
-                    <div className="flex flex-col items-start p-2 bg-white w-full rounded">
-                            <fieldset className="mb-2">
-                                <legend className='block mb-2'>Schakel modus op:</legend>
-                                <input type="date" name="date" value={createSchema.date} min={ymd(current)} onChange={handleChange} className="p-2 bg-gray-200 rounded-lg" /> om <input type="time" name="time" value={createSchema.time} min={minTime} onChange={handleChange} className="p-2 bg-gray-200 rounded-lg" />
-                            </fieldset>
-                            
-                            <fieldset className="mb-2">
-                                <label htmlFor="modus-select" className="block mb-2">Naar:</label>
-                                <select id="modus-select" name="modus" value={createSchema.modus} onChange={handleChange} className="p-2 bg-gray-200 rounded-lg">
-                                    <option value="normaal">Normaal</option>
-                                    <option value="eco">Eco</option>
-                                </select>
-                            </fieldset>
+                {/* Modal */}
+                <div id="tijdschemaModal" className="fixed inset-0 z-20 hidden bg-black/40 flex items-center justify-center">
+                    <div className="bg-white w-full max-w-xl rounded-lg shadow-lg p-6">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-4">Tijdschema toevoegen</h3>
 
-                            <fieldset className="mb-2">
-                                <label className="inline-flex items-center">
-                                    <span className="me-3">Herhalen</span>
-                                    <input type="checkbox" name="onRepeat" checked={createSchema.onRepeat} onChange={handleChange} className="sr-only peer" />
-                                    <div className="relative bg-gray-200 w-11 h-6 rounded-full peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                                </label>
-                            </fieldset>
-                            
-                            {intervalTypes.map((intervalType, index) => (
-                                <fieldset className="mb-2" key={index}>
+                        <fieldset className="mb-4">
+                            <legend className="block mb-2 text-sm font-medium text-gray-700">Schakel modus op:</legend>
+                            <div className="flex gap-2">
+                                <input type="date" name="date" value={createSchema.date} min={ymd(current)} onChange={handleChange} className="p-2 bg-gray-100 border border-gray-300 rounded-lg" />{" om "}
+                                <input type="time" name="time" value={createSchema.time} min={minTime} onChange={handleChange} className="p-2 bg-gray-100 border border-gray-300 rounded-lg" />
+                            </div>
+                        </fieldset>
+                        
+                        <fieldset className="mb-4">
+                            <label htmlFor="modus-select" className="block mb-2 text-sm font-medium text-gray-700">Naar</label>
+                            <select id="modus-select" name="modus" value={createSchema.modus} onChange={handleChange} className="p-2 bg-gray-100 border border-gray-300 rounded-lg w-full">
+                                <option value="normaal">Normaal</option>
+                                <option value="eco">Eco</option>
+                            </select>
+                        </fieldset>
+
+                        <fieldset className="mb-4">
+                            <label className="flex items-center justify-between">
+                                <span className="text-gray-700">Herhalen</span>
+                                <input type="checkbox" name="onRepeat" checked={createSchema.onRepeat} onChange={handleChange} className="sr-only peer" />
+                                <div className="relative w-11 h-6 bg-gray-200 rounded-full peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
+                            </label>
+                        </fieldset>
+                        
+                        {intervalTypes.map((intervalType, index) => (
+                            <fieldset key={index} className="mb-2 text-sm text-gray-700">
+                                <input
+                                    type="radio"
+                                    name="repeatInterval"
+                                    value={intervalType}
+                                    onChange={handleChange}
+                                    disabled={!createSchema.onRepeat}
+                                    className="mr-2"
+                                />
+                                <label htmlFor={intervalLabels[intervalType]}>
+                                    Elke{" "}
                                     <input
-                                        type="radio"
-                                        name="repeatInterval"
-                                        value={intervalType}
+                                        key={`${intervalType}-${createSchema.repeatInterval}`}
+                                        id={intervalLabels[intervalType]}
+                                        type="number"
+                                        name="repeat"
+                                        value={(createSchema.onRepeat && createSchema.repeatInterval === intervalType) ? createSchema.repeat : ""}
+                                        min={1}
                                         onChange={handleChange}
-                                        disabled={!createSchema.onRepeat}
-                                    />
-                                    <label htmlFor={intervalLabels[intervalType]} className="mb-2">
-                                        <span className="ms-1">
-                                            Elke{" "}
-                                            <input
-                                                key={`${intervalType}-${createSchema.repeatInterval}`}
-                                                id={intervalLabels[intervalType]}
-                                                type="number"
-                                                name="repeat"
-                                                value={(createSchema.onRepeat && createSchema.repeatInterval === intervalType) ? createSchema.repeat : ""}
-                                                min={1}
-                                                onChange={handleChange}
-                                                className="border-b"
-                                                disabled={!createSchema.onRepeat || createSchema.repeatInterval !== intervalType}
-                                            />{" "}
-                                            {intervalLabels[intervalType]} herhalen
-                                        </span>
-                                    </label>
-                                </fieldset>
-                            ))}
-
-                            <fieldset className="mb-2">
-                                <label className="inline-flex items-center">
-                                    <span className="me-3">Voor welke duratie</span>
+                                        disabled={!createSchema.onRepeat || createSchema.repeatInterval !== intervalType}
+                                        className="mx-1 w-16 border-b border-gray-400 bg-transparent text-center disabled:opacity-50"
+                                    />{" "}
+                                    {intervalLabels[intervalType]} herhalen
                                 </label>
                             </fieldset>
-                            
-                            <fieldset className="mb-2">
-                                <input
-                                    type="radio"
-                                    name="durationType"
-                                    value="count"
+                        ))}
+
+                        <fieldset className="mb-2 text-sm font-medium text-gray-700">
+                            Voor welke duratie
+                        </fieldset>
+                        
+                        <fieldset className="mb-2 text-sm text-gray-700">
+                            <input
+                                type="radio"
+                                name="durationType"
+                                value="count"
+                                onChange={handleChange}
+                                disabled={!createSchema.onRepeat || !hasRepInterval}
+                                className="mr-2"
+                            />
+                            <label htmlFor="specifieke-hoeveelheid">
+                                Specifiek <input
+                                    key={`count-${createSchema.durationType}`}
+                                    id="specifieke-hoeveelheid"
+                                    type="number"
+                                    name="duration"
+                                    value={(createSchema.onRepeat && hasRepInterval && createSchema.durationType === "count") ? createSchema.duration : ""}
+                                    min={0}
                                     onChange={handleChange}
-                                    disabled={!createSchema.onRepeat || !hasRepInterval}
-                                />
-                                <label htmlFor="specifieke-hoeveelheid" className="mb-2">
-                                    <span className="ms-1">
-                                        Specifiek <input
-                                            key={`count-${createSchema.durationType}`}
-                                            id="specifieke-hoeveelheid"
-                                            type="number"
-                                            name="duration"
-                                            value={(createSchema.onRepeat && hasRepInterval && createSchema.durationType === "count") ? createSchema.duration : ""}
-                                            min={0}
-                                            onChange={handleChange}
-                                            className="border-b"
-                                            disabled={!createSchema.onRepeat || !hasRepInterval || createSchema.durationType !== "count"}
-                                        /> keer herhalen
-                                    </span>
-                                </label>
-                            </fieldset>
+                                    disabled={!createSchema.onRepeat || !hasRepInterval || createSchema.durationType !== "count"}
+                                    className="mx-1 w-16 border-b border-gray-400 bg-transparent text-center disabled:opacity-50"
+                                /> keer herhalen
+                            </label>
+                        </fieldset>
 
-                            <fieldset className="mb-2">
-                                <input
-                                    type="radio"
-                                    name="durationType"
-                                    value="until"
+                        <fieldset className="mb-2 text-sm text-gray-700">
+                            <input
+                                type="radio"
+                                name="durationType"
+                                value="until"
+                                onChange={handleChange}
+                                disabled={!createSchema.onRepeat || !hasRepInterval}
+                                className="mr-2"
+                            />
+                            <label htmlFor="tot-datum">
+                                Tot <input
+                                    key={`until-${createSchema.durationType}`}
+                                    id="tot-datum"
+                                    type="date"
+                                    name="duration"
+                                    value={(createSchema.onRepeat && hasRepInterval && createSchema.durationType === "until") ? createSchema.duration : ""}
+                                    min={createSchema.date}
                                     onChange={handleChange}
-                                    disabled={!createSchema.onRepeat || !hasRepInterval}
-                                />
-                                <label htmlFor="tot-datum" className="mb-2">
-                                    <span className="ms-1">
-                                        Tot <input
-                                            key={`until-${createSchema.durationType}`}
-                                            id="tot-datum"
-                                            type="date"
-                                            name="duration"
-                                            value={(createSchema.onRepeat && hasRepInterval && createSchema.durationType === "until") ? createSchema.duration : ""}
-                                            min={createSchema.date}
-                                            onChange={handleChange}
-                                            className="border-b"
-                                            disabled={!createSchema.onRepeat || !hasRepInterval || createSchema.durationType !== "until"}
-                                        /> herhalen
-                                    </span>
-                                </label>
-                            </fieldset>
+                                    disabled={!createSchema.onRepeat || !hasRepInterval || createSchema.durationType !== "until"}
+                                    className="mx-1 border-b border-gray-400 bg-transparent disabled:opacity-50"
+                                /> herhalen
+                            </label>
+                        </fieldset>
 
-                            <fieldset className="mb-2">
-                                <input
-                                    type="radio"
-                                    name="durationType"
-                                    value="forever"
+                        <fieldset className="mb-4 text-sm text-gray-700">
+                            <input
+                                type="radio"
+                                name="durationType"
+                                value="forever"
+                                onChange={handleChange}
+                                disabled={!createSchema.onRepeat || !hasRepInterval}
+                                className="mr-2"
+                            />
+                            <label htmlFor="altijd">
+                                Altijd <input
+                                    key={`forever-${createSchema.durationType}`}
+                                    id="altijd"
+                                    type="hidden"
+                                    name="duration"
+                                    value={(createSchema.onRepeat && hasRepInterval && createSchema.durationType === "forever") ? createSchema.duration : ""}
                                     onChange={handleChange}
-                                    disabled={!createSchema.onRepeat || !hasRepInterval}
-                                />
-                                <label htmlFor="altijd" className="mb-2">
-                                    <span className="ms-1">
-                                        Altijd <input
-                                            key={`forever-${createSchema.durationType}`}
-                                            id="altijd"
-                                            type="hidden"
-                                            name="duration"
-                                            value={(createSchema.onRepeat && hasRepInterval && createSchema.durationType === "forever") ? createSchema.duration : ""}
-                                            onChange={handleChange}
-                                            className="border-b"
-                                            disabled={!createSchema.onRepeat || !hasRepInterval || createSchema.durationType !== "forever"}
-                                        /> herhalen
-                                    </span>
-                                </label>
-                            </fieldset>
+                                    disabled={!createSchema.onRepeat || !hasRepInterval || createSchema.durationType !== "forever"}
+                                /> herhalen
+                            </label>
+                        </fieldset>
 
-                            <fieldset className="mb-2">
-                                <button type="button" onClick={() => closeModal()}>Annuleren</button>
-                                <button type="button" onClick={() => {submitCalendar(); closeModal()}}>Opslaan</button>
-                            </fieldset>
+                        <fieldset className="flex justify-end gap-2">
+                            <button type="button" onClick={() => closeModal()} className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">Annuleren</button>
+                            <button type="button" onClick={() => { submitCalendar(); closeModal(); }} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">Opslaan</button>
+                        </fieldset>
                     </div>
                 </div>
             </>
