@@ -18,7 +18,7 @@ const pompData = [
       { x: 31, y: 155 }
 ];
 
-function District() {
+function Districts() {
     const [wijken, setWijken] = useState([]);
     const [selectedWijk, setSelectedWijk] = useState(null);
     const [pompen, setPompen] = useState([]);
@@ -154,4 +154,4 @@ function District() {
     )
 }
 
-export default District
+export default Districts
