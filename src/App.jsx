@@ -1,10 +1,10 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Main from './layouts/MainLayout';
 import Test from './pages/Test';
-import District from './pages/District';
+import Districts from './pages/Districts';
 import Home from './pages/Home';
 import Details from './pages/Details';
-import DetailsSettings from './pages/DetailsSettings';
+import PumpSettings from './pages/PumpSettings';
 import HomeSettings from './pages/HomeSettings';
 import Settings from './pages/Settings';
 import Maintenance from './pages/Maintenance';
@@ -18,14 +18,14 @@ function App() {
                 <Route path='/' element={<Main />}>
                     <Route path="/test" element={<Test />} />
 
-                    <Route path="/wijken" element={<District />} />
+                    <Route path="/districts" element={<Districts />} />
                     <Route index element={<Home />} />
                     <Route path="/settings" element={<Settings />} />
                     <Route path="/:id" element={<Details />} />
-                    <Route path="/:id/Instellingen" element={<DetailsSettings />} />
+                    <Route path="/:id/pump-settings" element={<PumpSettings />} />
                     <Route path="/:id/home-settings" element={<HomeSettings />} />
-                    <Route path="/Onderhoud" element={<Maintenance />} />
-                    <Route path="/Storingen" element={<Malfunction />} />
+                    <Route path="/maintenance" element={<Maintenance />} />
+                    <Route path="/malfunction" element={<Malfunction />} />
                 </Route>
             </Routes>
         </Router>

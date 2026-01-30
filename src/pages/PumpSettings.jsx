@@ -5,7 +5,7 @@ import { Calendar } from '../components/CalendarComponent';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 
-function DetailsSettings() {
+function PumpSettings() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const { id } = useParams();
@@ -206,4 +206,4 @@ function DetailsSettings() {
     }
 }
 
-export default DetailsSettings
+export default PumpSettings

@@ -16,13 +16,13 @@ function Sidebar({ isOpen, onClose }) {
         if (key === 'settings') return currentPath === '/settings';
 
         // 3. Specific Sub-pages (Settings, Maintenance, etc.)
-        if (['instellingen', 'onderhoud', 'storingen'].includes(key)) {
+        if (['pump-settings', 'home-settings', 'maintenance', 'malfunction'].includes(key)) {
             return currentPath.endsWith(key);
         }
 
         // 4. Details (The "Default" View for an ID)
         if (key === 'details') {
-            const isSubPage = ['instellingen', 'home-settings', 'onderhoud', 'storingen'].some(page => 
+            const isSubPage = ['pump-settings', 'home-settings', 'maintenance', 'malfunction'].some(page => 
                 currentPath.endsWith(page)
             );
             return currentPath !== '/' && currentPath !== '/settings' && !isSubPage;
@@ -86,7 +86,7 @@ function Sidebar({ isOpen, onClose }) {
                                 <Activity size={20} />
                                 Details
                             </Link>
-                            <Link to={`/${id}/Instellingen`} className={navItemClass(`/${id}/Instellingen`, 'instellingen')}>
+                            <Link to={`/${id}/pump-settings`} className={navItemClass(`/${id}/pump-settings`, 'pump-settings')}>
                                 <Wrench size={20} />
                                 Apparaat Config
                             </Link>
@@ -100,11 +100,11 @@ function Sidebar({ isOpen, onClose }) {
                     <div className="px-4 py-2 mt-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">
                         Beheer
                     </div>
-                    <Link to="/Onderhoud" className={navItemClass('/Onderhoud', 'onderhoud')}>
+                    <Link to="/maintenance" className={navItemClass('/maintenance', 'maintenance')}>
                         <Wrench size={20} />
                         Onderhoud
                     </Link>
-                    <Link to="/Storingen" className={navItemClass('/Storingen', 'storingen')}>
+                    <Link to="/malfunction" className={navItemClass('/malfunction', 'malfunction')}>
                         <AlertTriangle size={20} />
                         Storingen
                     </Link>
